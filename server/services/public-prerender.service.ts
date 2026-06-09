@@ -13,9 +13,9 @@ interface PublicHtmlSnapshot {
   jsonLd?: Array<Record<string, unknown>>;
 }
 
-const DEFAULT_TITLE = "Core Platform - Find Your Core Platform-Informed Therapist";
+const DEFAULT_TITLE = "EC Painting - Professional Painting Services";
 const DEFAULT_DESCRIPTION =
-  "Core Platform connects Third Culture Kids with culturally informed therapists worldwide. Find your therapist today.";
+  "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.";
 
 const FALLBACK_STATIC_PAGES: Record<
   string,
@@ -24,23 +24,23 @@ const FALLBACK_STATIC_PAGES: Record<
   "/": {
     title: "Home",
     description:
-      "Explore Core Platform-informed mental health support, featured articles, and upcoming events from Core Platform.",
+      "Explore professional residential and commercial painting services from EC Painting.",
     body:
-      "Core Platform connects Third Culture Kids with culturally informed care, featured articles, and upcoming events.",
+      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.",
   },
   "/about": {
     title: "About",
     description:
-      "Learn what it means for a provider to be vetted and how Core Platform supports cross-cultural mental health care.",
+      "Learn about EC Painting and our approach to clean, careful painting work.",
     body:
-      "Learn what it means for a provider to be vetted and how Core Platform supports cross-cultural mental health care.",
+      "Learn about EC Painting and our approach to clean, careful painting work.",
   },
   "/contact": {
     title: "Contact Us",
     description:
-      "Get in touch with Core Platform through the contact form and company information.",
+      "Contact EC Painting to request a free painting estimate.",
     body:
-      "Contact Core Platform with questions, feedback, or partnership inquiries through the contact form and company information.",
+      "Contact EC Painting to request a free painting estimate for your next interior, exterior, cabinet, deck, fence, or commercial painting project.",
   },
   "/join": {
     title: "Join the Network",
@@ -128,7 +128,28 @@ function collectTextFragments(value: unknown): string[] {
     return value.flatMap((entry) => collectTextFragments(entry));
   }
   if (typeof value === "object") {
-    return Object.values(value as Record<string, unknown>).flatMap((entry) =>
+    const textKeys = Object.entries(value as Record<string, unknown>).filter(([key]) => {
+      const normalized = key.toLowerCase();
+      return ![
+        "id",
+        "type",
+        "isactive",
+        "slug",
+        "layout",
+        "ctalink",
+        "ctaaction",
+        "ctasecondarylink",
+        "ctasecondaryaction",
+        "ctaformslug",
+        "minheight",
+        "videobackgroundurl",
+        "backgroundimageurl",
+        "imageurl",
+        "sectionbackgroundcolor",
+        "overlaycolor",
+      ].includes(normalized);
+    });
+    return textKeys.flatMap(([, entry]) =>
       collectTextFragments(entry),
     );
   }
@@ -181,7 +202,8 @@ function absoluteUrl(path: string | null | undefined, siteUrl: string) {
 
 function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
   const suffix = seo?.titleSuffix ?? " | Core Platform";
-  return rawTitle.includes("Core Platform") ? rawTitle : `${rawTitle}${suffix}`;
+  const siteName = seo?.siteName || seo?.organizationName || "";
+  return siteName && rawTitle.includes(siteName) ? rawTitle : `${rawTitle}${suffix}`;
 }
 
 function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
@@ -487,6 +509,15 @@ function buildFallbackSnapshot(
   };
 }
 
+function resolveCmsSlugForPathname(pathname: string) {
+  if (pathname === "/") return "home";
+  const normalized = pathname.replace(/^\/+|\/+$/g, "");
+  if (!normalized) return "";
+  const serviceMatch = normalized.match(/^services\/([^/]+)$/);
+  if (serviceMatch) return serviceMatch[1];
+  return normalized.includes("/") ? "" : normalized;
+}
+
 export async function getPublicHtmlSnapshot(
   pathname: string,
   search = "",
@@ -504,7 +535,7 @@ export async function getPublicHtmlSnapshot(
   }
 
   const seo = (await storage.seoSettings.get()) ?? null;
-  const siteUrl = (seo?.siteUrl || "").replace(/\/$/, "") || "https://coreplatform.com";
+  const siteUrl = (seo?.siteUrl || "").replace(/\/$/, "") || "https://ec-painting-production.up.railway.app";
 
   if (pathname === "/search") {
     const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
@@ -530,8 +561,8 @@ export async function getPublicHtmlSnapshot(
     return buildTherapistSnapshot(decodeURIComponent(therapistMatch[1]), seo, siteUrl);
   }
 
-  const slug = pathname === "/" ? "home" : pathname.replace(/^\/+/, "");
-  if (slug && !slug.includes("/")) {
+  const slug = resolveCmsSlugForPathname(pathname);
+  if (slug) {
     const page = await storage.cmsPages.getPageBySlug(slug);
     if (page?.status === "published") {
       return buildCmsSnapshot(page, seo, siteUrl);

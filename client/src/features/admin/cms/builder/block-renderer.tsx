@@ -73,6 +73,12 @@ import {
   Building2,
   ExternalLink,
   XCircle,
+  PaintBucket,
+  Paintbrush,
+  Home,
+  Layers,
+  Sun,
+  Fence,
 } from "lucide-react";
 import { LoginDialog } from "@/components/auth/login-dialog";
 import { MapView } from "@/components/directory/map-view";
@@ -164,6 +170,13 @@ const LUCIDE_MAP: Record<string, React.ElementType> = {
   Building2,
   ExternalLink,
   XCircle,
+  PaintBucket,
+  Paintbrush,
+  Home,
+  Layers,
+  Sun,
+  Fence,
+  Clock,
 };
 
 function LucideIcon({ name, className }: { name: string; className?: string }) {

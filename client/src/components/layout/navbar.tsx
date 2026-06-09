@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useUnreadNotificationCount } from "@/hooks/use-unread-notification-count";
-import logoImg from "@assets/IMG_0002_1772999718659.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
@@ -30,15 +29,9 @@ import { NavbarSearchPopover } from "@/components/layout/navbar-search-popover";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
 const defaultNavLinks = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
-  { label: "Find a Mental Health Professional", href: "/directory" },
-  { label: "Join the Network", href: "/join" },
-];
-
-const allResourceLinks = [
-  { label: "Events", href: "/events" },
-  { label: "Recording Archives", href: "/recordings", hideFromClients: true },
-  { label: "Insights & Articles", href: "/insights" },
 ];
 
 const navButtonClass =
@@ -119,7 +112,7 @@ function DynamicDropdown({ item, location: currentPath }: { item: MenuItem; loca
 export function Navbar() {
   const [location] = useLocation();
   const { user, isLoading, logout, isAdmin, isTherapist } = useAuth();
-  const { frontendLogoUrl } = useBranding();
+  const { frontendLogoUrl, companyName } = useBranding();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -141,11 +134,9 @@ export function Navbar() {
     return items.length > 0 ? items : null;
   }, [publicMenus]);
 
-  const isClient = user && user.role === "client";
-  const resourceLinks = allResourceLinks.filter((link) => !(link.hideFromClients && isClient));
-
   const unreadNotifCount = useUnreadNotificationCount();
-  const brandLogo = frontendLogoUrl || logoImg;
+  const brandName = companyName?.trim() || "EC Painting";
+  const brandLogo = frontendLogoUrl || "/img/ec-painting-logo.png";
 
   return (
     <nav
@@ -154,7 +145,7 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link href="/" data-testid="link-brand">
-          <img src={brandLogo} alt="Core Platform" className="h-10 w-auto md:h-12" />
+          <img src={brandLogo} alt={brandName} className="h-10 w-auto md:h-12" />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -199,37 +190,6 @@ export function Navbar() {
                   </Button>
                 </Link>
               ))}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={
-                      resourceLinks.some((r) => location === r.href)
-                        ? activeNavButtonClass
-                        : navButtonClass
-                    }
-                    data-testid="link-nav-resources"
-                  >
-                    Resources
-                    <ChevronDown className="ml-1 h-3.5 w-3.5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="z-[1000] w-64 rounded-md border-border bg-white p-2 shadow-lg"
-                >
-                  {resourceLinks.map((link) => (
-                    <DropdownMenuItem key={link.href} asChild>
-                      <Link
-                        href={link.href}
-                        data-testid={`link-nav-resource-${link.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                      >
-                        {link.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
               <Link href="/contact">
                 <Button
                   variant="ghost"
@@ -396,21 +356,6 @@ export function Navbar() {
                           variant="ghost"
                           className={`w-full justify-start ${location === link.href ? "toggle-elevate toggle-elevated" : ""}`}
                           data-testid={`link-mobile-${link.label.toLowerCase()}`}
-                          aria-current={location === link.href ? "page" : undefined}
-                        >
-                          {link.label}
-                        </Button>
-                      </Link>
-                    ))}
-                    <p className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Resources
-                    </p>
-                    {resourceLinks.map((link) => (
-                      <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className={`w-full justify-start pl-6 ${location === link.href ? "toggle-elevate toggle-elevated" : ""}`}
-                          data-testid={`link-mobile-resource-${link.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                           aria-current={location === link.href ? "page" : undefined}
                         >
                           {link.label}

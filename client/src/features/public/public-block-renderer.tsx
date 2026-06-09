@@ -68,6 +68,13 @@ import {
   Lock,
   Building2,
   Loader2,
+  PaintBucket,
+  Paintbrush,
+  Home,
+  Layers,
+  Sun,
+  Fence,
+  Clock,
 } from "lucide-react";
 import type { BlockInstance, BuilderContent } from "@/features/admin/cms/builder/block-registry";
 import { mergeJoinHeroBlocks } from "@shared/cms-blocks";
@@ -103,6 +110,13 @@ const LUCIDE_MAP: Record<string, React.ElementType> = {
   ShieldCheck,
   Lock,
   Building2,
+  PaintBucket,
+  Paintbrush,
+  Home,
+  Layers,
+  Sun,
+  Fence,
+  Clock,
 };
 
 function LucideIcon({ name, className }: { name: string; className?: string }) {

@@ -1,30 +1,25 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import logoImg from "@assets/IMG_0002_1772999718659.png";
 import { useBranding } from "@/components/shared/branding-provider";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
 const defaultPlatformLinks = [
-  {
-    href: "/directory",
-    label: "Find a Mental Health Professional",
-    testId: "link-footer-directory",
-  },
-  { href: "/events", label: "Events & Workshops", testId: "link-footer-events" },
-  { href: "/about", label: "How It Works", testId: "link-footer-how-it-works" },
+  { href: "/services", label: "All Services", testId: "link-footer-services" },
+  { href: "/about", label: "About", testId: "link-footer-about" },
+  { href: "/contact", label: "Contact", testId: "link-footer-contact" },
 ];
 
 const defaultTherapistLinks = [
-  { href: "/join", label: "Applications open in June", testId: "link-footer-join" },
-  { href: "/auth/login", label: "Mental Health Professional Login", testId: "link-footer-login" },
-  { href: "/therapist/subscription", label: "Membership Plans", testId: "link-footer-membership" },
+  { href: "/services/interior-painting", label: "Interior Painting", testId: "link-footer-interior" },
+  { href: "/services/exterior-painting", label: "Exterior Painting", testId: "link-footer-exterior" },
+  { href: "/services/kitchen-cabinet-painting", label: "Cabinet Painting", testId: "link-footer-cabinets" },
 ];
 
 const defaultResourceLinks = [
-  { href: "/about", label: "About Core Platforms", testId: "link-footer-about-corePlatforms" },
-  { href: "/events", label: "Upcoming Events", testId: "link-footer-upcoming-events" },
-  { href: "/directory", label: "Browse Specializations", testId: "link-footer-specializations" },
+  { href: "/services/deck-staining", label: "Deck Staining", testId: "link-footer-deck" },
+  { href: "/services/fence-staining", label: "Fence Staining", testId: "link-footer-fence" },
+  { href: "/services/commercial-painting", label: "Commercial Painting", testId: "link-footer-commercial" },
 ];
 
 const defaultCompanyLinks = [
@@ -160,7 +155,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
 }
 
 export function Footer() {
-  const { frontendLogoUrl } = useBranding();
+  const { frontendLogoUrl, companyName } = useBranding();
   const { data: publicMenus } = useQuery<Partial<Record<PublicMenuLocation, CmsMenu>>>({
     queryKey: ["/api/cms/menus"],
     queryFn: async () => {
@@ -207,7 +202,8 @@ export function Footer() {
   }, [publicMenus]) as FooterLegalLink[];
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
-  const brandLogo = frontendLogoUrl || logoImg;
+  const brandName = companyName?.trim() || "EC Painting";
+  const brandLogo = frontendLogoUrl || "/img/ec-painting-logo.png";
 
   return (
     <footer
@@ -222,12 +218,12 @@ export function Footer() {
           <div className="col-span-2">
             <img
               src={brandLogo}
-              alt="Core Platform"
+              alt={brandName}
               className="h-8 sm:h-10 w-auto mb-4 object-contain"
             />
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
-              Connecting Third Culture Kids with culturally informed mental health professionals
-              worldwide. Find support that understands your unique journey.
+              Professional painting for interiors, exteriors, cabinets, decks, fences, and
+              commercial spaces.
             </p>
           </div>
 
@@ -267,12 +263,12 @@ export function Footer() {
             )
           ) : (
             <>
-              <FooterColumn title="Platform" links={defaultPlatformLinks} />
-              <FooterColumn title="For Mental Health Professionals" links={defaultTherapistLinks} />
+              <FooterColumn title="Company" links={defaultPlatformLinks} />
+              <FooterColumn title="Services" links={defaultTherapistLinks} />
               <div className="col-span-2 sm:col-span-1">
-                <FooterColumn title="Resources" links={defaultResourceLinks} />
+                <FooterColumn title="More Services" links={defaultResourceLinks} />
                 <div className="mt-6 sm:mt-8">
-                  <FooterColumn title="Company" links={defaultCompanyLinks} />
+                  <FooterColumn title="Contact" links={defaultCompanyLinks} />
                 </div>
               </div>
             </>
@@ -284,7 +280,7 @@ export function Footer() {
           data-testid="text-copyright"
         >
           <span className="text-center sm:text-left">
-            &copy; {new Date().getFullYear()} Interaction International. All rights reserved.
+            &copy; {new Date().getFullYear()} {brandName}. All rights reserved.
           </span>
           <div className="flex items-center gap-4 sm:gap-6">
             {legalLinks.map((link) =>
