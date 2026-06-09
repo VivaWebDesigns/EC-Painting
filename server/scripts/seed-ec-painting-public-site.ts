@@ -30,6 +30,7 @@ const services = [
     title: "Interior Painting",
     slug: "interior-painting",
     icon: "PaintBucket",
+    heroImage: "/img/services/interior.webp",
     short:
       "Flawless finishes for walls, ceilings, trim, and lived-in rooms that need a clean refresh.",
     bullets: ["Walls, ceilings, and accent features", "Trim, molding, and baseboards", "Drywall patching and surface repair"],
@@ -42,6 +43,7 @@ const services = [
     title: "Exterior Painting",
     slug: "exterior-painting",
     icon: "Home",
+    heroImage: "/img/services/exterior.webp",
     short:
       "Weather-ready exterior painting that improves curb appeal and protects your home.",
     bullets: ["Siding, brick, stucco, and wood", "Shutters, fascia, soffit, and trim", "Pressure washing and surface prep"],
@@ -54,6 +56,7 @@ const services = [
     title: "Kitchen Cabinet Painting",
     slug: "kitchen-cabinet-painting",
     icon: "Layers",
+    heroImage: "/img/services/cabinets.webp",
     short:
       "A smooth cabinet finish that modernizes your kitchen without the cost of replacement.",
     bullets: ["Factory-style finish", "Doors and hardware removed", "Color consulting and multi-coat application"],
@@ -66,6 +69,7 @@ const services = [
     title: "Deck Staining & Painting",
     slug: "deck-staining",
     icon: "Sun",
+    heroImage: "/img/services/deck.webp",
     short:
       "Restore your deck with stain or paint that helps defend outdoor wood from weather.",
     bullets: ["Deep cleaning and sanding", "Transparent stain or solid paint", "Weatherproof sealing"],
@@ -78,6 +82,7 @@ const services = [
     title: "Fence Staining & Painting",
     slug: "fence-staining",
     icon: "Fence",
+    heroImage: "/img/services/fence.webp",
     short:
       "Protect and refresh fences with even stain or paint coverage on exposed wood.",
     bullets: ["Full fence prep", "Even coverage on visible surfaces", "Moisture and UV protection"],
@@ -90,6 +95,7 @@ const services = [
     title: "Commercial Painting",
     slug: "commercial-painting",
     icon: "Building2",
+    heroImage: "/img/services/commercial.webp",
     short:
       "Clean, professional painting for offices, retail spaces, restaurants, and commercial properties.",
     bullets: ["Interior and exterior commercial painting", "Flexible scheduling", "Low-odor paint options"],
@@ -327,8 +333,9 @@ function serviceDetailContent(service: (typeof services)[number]) {
         ctaSecondaryText: "All Services",
         ctaSecondaryAction: "internal-link",
         ctaSecondaryLink: "/services",
+        backgroundImageUrl: service.heroImage,
         overlayColor: "#021824",
-        overlayOpacity: 88,
+        overlayOpacity: 72,
         layout: "stacked",
         minHeight: "420",
       }),
