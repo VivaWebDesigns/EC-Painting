@@ -155,7 +155,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
 }
 
 export function Footer() {
-  const { frontendLogoUrl, companyName } = useBranding();
+  const { companyName } = useBranding();
   const { data: publicMenus } = useQuery<Partial<Record<PublicMenuLocation, CmsMenu>>>({
     queryKey: ["/api/cms/menus"],
     queryFn: async () => {
@@ -203,7 +203,7 @@ export function Footer() {
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
   const brandName = companyName?.trim() || "EC Painting";
-  const brandLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
+  const footerLogo = "/img/593-ec-painting-logo-footer.png";
 
   return (
     <footer
@@ -217,9 +217,9 @@ export function Footer() {
         >
           <div className="col-span-2">
             <img
-              src={brandLogo}
+              src={footerLogo}
               alt={brandName}
-              className="h-8 sm:h-10 w-auto mb-4 object-contain"
+              className="h-10 sm:h-12 w-auto mb-4 object-contain"
             />
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
               Professional painting for interiors, exteriors, cabinets, decks, fences, and
