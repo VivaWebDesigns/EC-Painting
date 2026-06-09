@@ -62,10 +62,10 @@ export const BRANDING_SANS_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) 
 export const BRANDING_SERIF_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) => option.category === "serif");
 
 export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
-  frontendLogoUrl: null,
-  faviconUrl: null,
-  companyName: null,
-  companyAddress: null,
+  frontendLogoUrl: "/img/593-ec-painting-logo-full-color.png",
+  faviconUrl: "/favicon.ico",
+  companyName: "EC Painting",
+  companyAddress: "Charlotte, NC",
   companyPhoneNumbers: null,
   companyGoogleBusinessUrl: null,
   bodyFont: null,

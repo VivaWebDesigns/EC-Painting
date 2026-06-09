@@ -5,8 +5,8 @@ import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } fro
 
 const SITE_URL = process.env.APP_URL || "https://ec-painting-production.up.railway.app";
 const BRAND_NAME = "EC Painting";
-const LOGO_URL = "/img/ec-painting-logo.png";
-const OG_IMAGE_URL = "/img/ec-painting-og.jpg";
+const LOGO_URL = "/img/593-ec-painting-logo-full-color.png";
+const OG_IMAGE_URL = "/img/593-ec-painting-og.jpg";
 const FAVICON_URL = "/favicon.ico";
 
 function id() {

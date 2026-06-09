@@ -136,7 +136,7 @@ export function Navbar() {
 
   const unreadNotifCount = useUnreadNotificationCount();
   const brandName = companyName?.trim() || "EC Painting";
-  const brandLogo = frontendLogoUrl || "/img/ec-painting-logo.png";
+  const brandLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
 
   return (
     <nav

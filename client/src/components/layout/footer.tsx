@@ -203,9 +203,7 @@ export function Footer() {
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
   const brandName = companyName?.trim() || "EC Painting";
-  const brandLogo = frontendLogoUrl || "/img/ec-painting-logo.png";
-  const footerLogo =
-    brandLogo === "/img/ec-painting-logo.png" ? "/img/ec-painting-logo-white.png" : brandLogo;
+  const brandLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
 
   return (
     <footer
@@ -219,7 +217,7 @@ export function Footer() {
         >
           <div className="col-span-2">
             <img
-              src={footerLogo}
+              src={brandLogo}
               alt={brandName}
               className="h-8 sm:h-10 w-auto mb-4 object-contain"
             />

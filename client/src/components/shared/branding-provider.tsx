@@ -272,7 +272,7 @@ export function BrandingProvider({ children }: { children: React.ReactNode }) {
   ]);
 
   useEffect(() => {
-    const faviconHref = isAdminRoute ? "/favicon.png" : branding.faviconUrl || "/favicon.png";
+    const faviconHref = branding.faviconUrl || "/favicon.ico";
     let faviconEl = document.head.querySelector<HTMLLinkElement>('link[rel="icon"]');
 
     if (!faviconEl) {
@@ -289,7 +289,7 @@ export function BrandingProvider({ children }: { children: React.ReactNode }) {
     } else {
       faviconEl.setAttribute("type", "image/png");
     }
-  }, [branding.faviconUrl, isAdminRoute]);
+  }, [branding.faviconUrl]);
 
   return <BrandingContext.Provider value={branding}>{children}</BrandingContext.Provider>;
 }

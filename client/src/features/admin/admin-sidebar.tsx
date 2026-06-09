@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
-import logoIcon from "@assets/Core-Platform_Icon.webp";
+import { useBranding } from "@/components/shared/branding-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -295,7 +295,9 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const adminLogo = logoIcon;
+  const { frontendLogoUrl, companyName } = useBranding();
+  const adminLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
+  const adminBrandName = companyName?.trim() || "EC Painting";
   const { data: siteFeaturesData } = useQuery<SiteFeatures>({
     queryKey: ["/api/site-config"],
     staleTime: 60_000,
@@ -343,7 +345,9 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
         <span
           className={cn(
             "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium cursor-pointer hover-elevate whitespace-nowrap overflow-hidden",
-            parentIsActive ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+            parentIsActive
+              ? "bg-[#0A83A5] text-white"
+              : "text-muted-foreground hover:text-[#0F5F7A]",
           )}
           data-testid={`link-admin-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
         >
@@ -391,15 +395,15 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
                     className={cn(
                       "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm cursor-pointer",
                       childActive
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-muted-foreground hover:text-foreground",
+                        ? "bg-[#0A83A5]/10 text-[#0F5F7A] font-medium"
+                        : "text-muted-foreground hover:text-[#0F5F7A]",
                     )}
                     data-testid={`link-admin-${child.title.toLowerCase().replace(/\s+/g, "-")}`}
                   >
                     <child.icon
                       className={cn(
                         "h-3.5 w-3.5 flex-shrink-0",
-                        childActive ? "text-primary" : child.iconColor,
+                        childActive ? "text-[#0A83A5]" : child.iconColor,
                       )}
                     />
                     <span>{child.title}</span>
@@ -421,25 +425,28 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
         <div className="relative flex-shrink-0">
           <aside
             className={cn(
-              "border-r bg-muted/30 h-full flex flex-col transition-[width] duration-300 ease-in-out overflow-hidden",
+              "border-r border-[#0A83A5]/20 bg-white h-full flex flex-col transition-[width] duration-300 ease-in-out overflow-hidden",
               collapsed ? "w-[68px]" : "w-64",
             )}
           >
-            <div className="p-4">
+            <div className="border-b border-[#0A83A5]/15 bg-[#F3F7FA] p-4">
               <div className="flex items-center gap-3" data-testid="text-admin-title">
                 <img
-                  src={adminLogo}
-                  alt="Core Platform"
-                  className="h-9 w-9 object-contain flex-shrink-0"
+                  src={collapsed ? "/img/593-ec-painting-icon.png" : adminLogo}
+                  alt={adminBrandName}
+                  className={cn(
+                    "object-contain flex-shrink-0",
+                    collapsed ? "h-9 w-9" : "h-10 w-32 object-left",
+                  )}
                   data-testid="img-admin-logo"
                 />
                 <h2
                   className={cn(
-                    "font-heading text-lg font-semibold whitespace-nowrap transition-opacity duration-200",
+                    "font-heading text-sm font-semibold uppercase tracking-[0.14em] text-[#0F5F7A] whitespace-nowrap transition-opacity duration-200",
                     collapsed ? "opacity-0 w-0" : "opacity-100",
                   )}
                 >
-                  Admin Dashboard
+                  Admin
                 </h2>
               </div>
             </div>
@@ -504,8 +511,8 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
                 {!collapsed && (
                   <div className="px-3 mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-semibold text-primary">
+                      <div className="h-8 w-8 rounded-full bg-[#0A83A5]/10 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-semibold text-[#0A83A5]">
                           {user.firstName?.[0]}
                           {user.lastName?.[0]}
                         </span>
