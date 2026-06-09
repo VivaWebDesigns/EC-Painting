@@ -131,6 +131,44 @@ const reviews = [
   },
 ];
 
+const galleryImages = [
+  {
+    url: "/img/gallery/kitchen-cabinets.webp",
+    alt: "Kitchen with painted cabinets and blue island",
+    caption: "Kitchen Cabinet Painting",
+  },
+  {
+    url: "/img/gallery/exterior-home.webp",
+    alt: "Freshly painted home exterior",
+    caption: "Exterior Painting",
+  },
+  {
+    url: "/img/gallery/living-room.webp",
+    alt: "Interior living room with freshly painted walls",
+    caption: "Interior Painting",
+  },
+  {
+    url: "/img/gallery/front-door.webp",
+    alt: "Painted blue front door",
+    caption: "Door and Trim Painting",
+  },
+  {
+    url: "/img/gallery/painted-kitchen.webp",
+    alt: "Kitchen with bright painted cabinetry",
+    caption: "Cabinet Refinish",
+  },
+  {
+    url: "/img/gallery/covered-porch.webp",
+    alt: "Covered porch with stained deck boards",
+    caption: "Deck Staining",
+  },
+  {
+    url: "/img/gallery/stained-fence.webp",
+    alt: "Stained wooden privacy fence",
+    caption: "Fence Staining",
+  },
+];
+
 function serviceCards() {
   return services.map((service) => ({
     title: service.title,
@@ -343,6 +381,35 @@ function serviceDetailContent(service: (typeof services)[number]) {
   };
 }
 
+function galleryContent() {
+  return {
+    blocks: [
+      block("section-header", {
+        eyebrow: "Our Work",
+        title: "Project Gallery",
+        subtitle:
+          "A look at painting, staining, and cabinet refreshes inspired by the EC Painting service lineup.",
+        alignment: "center",
+        headingLevel: "h1",
+      }),
+      block("image-grid", {
+        title: "",
+        columns: "3",
+        gap: "md",
+        images: galleryImages,
+      }),
+      block("cta", {
+        heading: "Like what you see?",
+        subheading: "Tell us about your next painting project and request a free estimate.",
+        primaryText: "Get a Free Estimate",
+        primaryAction: "form-modal",
+        primaryFormSlug: "contact-form",
+        variant: "dark",
+      }),
+    ],
+  };
+}
+
 function aboutContent() {
   return {
     blocks: [
@@ -517,6 +584,14 @@ async function seedPages() {
   );
   await upsertPage(
     page({
+      title: "Project Gallery",
+      slug: "gallery",
+      content: galleryContent(),
+      description: "View EC Painting project gallery examples for interiors, exteriors, cabinets, decks, and fences.",
+    }),
+  );
+  await upsertPage(
+    page({
       title: "Reviews",
       slug: "reviews",
       content: reviewsContent(),
@@ -557,6 +632,7 @@ async function seedMenus() {
       item("Home", "/"),
       item("Services", "/services", [item("All Services", "/services"), ...serviceItems]),
       item("About", "/about"),
+      item("Gallery", "/gallery"),
       item("Reviews", "/reviews"),
       item("Contact", "/contact"),
     ],
@@ -565,7 +641,7 @@ async function seedMenus() {
   await upsertMenu({
     name: "Company",
     location: "footer_platform",
-    items: [item("Home", "/"), item("Services", "/services"), item("About", "/about"), item("Contact", "/contact")],
+    items: [item("Home", "/"), item("Services", "/services"), item("About", "/about"), item("Gallery", "/gallery"), item("Contact", "/contact")],
   });
   await upsertMenu({
     name: "Services",
@@ -580,7 +656,7 @@ async function seedMenus() {
   await upsertMenu({
     name: "Reviews",
     location: "footer_company",
-    items: [item("Client Reviews", "/reviews"), item("Request Estimate", "/contact")],
+    items: [item("Project Gallery", "/gallery"), item("Client Reviews", "/reviews"), item("Request Estimate", "/contact")],
   });
   await upsertMenu({
     name: "Legal",

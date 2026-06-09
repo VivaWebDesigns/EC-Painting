@@ -123,6 +123,7 @@ function Router() {
       <Switch>
         <Route path="/" component={() => <CmsHybridPage slug="home" fallback={<HomePage />} />} />
         <Route path="/about" component={() => <CmsHybridPage slug="about" fallback={<AboutPage />} />} />
+        <Route path="/gallery" component={() => <CmsHybridPage slug="gallery" fallback={<NotFound />} />} />
         <Route path="/reviews" component={() => <CmsHybridPage slug="reviews" fallback={<NotFound />} />} />
         <Route path="/contact" component={() => <CmsHybridPage slug="contact" fallback={<ContactPage />} />} />
         <Route path="/services" component={() => <CmsHybridPage slug="services" fallback={<NotFound />} />} />
