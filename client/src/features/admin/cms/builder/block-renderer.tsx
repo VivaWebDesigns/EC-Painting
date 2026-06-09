@@ -229,6 +229,7 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
   const bgPosX = Math.max(0, Math.min(100, num(props.backgroundPositionX as number, 50)));
   const bgPosY = Math.max(0, Math.min(100, num(props.backgroundPositionY as number, 50)));
   const isSplit = layout === "split";
+  const hasVisualBackground = Boolean(bg || videoBg);
   const overlayStrength = Math.max(0, Math.min(opacity, 100)) / 100;
   const sectionStyleConfig = getSectionStyleConfig(props, { resolveAssetUrl: resolveCmsAssetUrl });
   const overlayStyle = { backgroundColor: hexToRgba(overlayColor, overlayStrength) };
@@ -271,13 +272,16 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
       <div
         className={`relative z-10 px-5 py-24 sm:px-8 ${isSplit ? "max-w-3xl" : "max-w-4xl mx-auto"}`}
       >
+        {hasVisualBackground && !isSplit && (
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.5)_0%,_rgba(0,0,0,0)_70%)]" />
+        )}
         {badge && (
           <span className="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
             {badge}
           </span>
         )}
         <h1
-          className="mb-5 text-4xl font-heading font-extrabold leading-[1.04] text-white sm:text-6xl lg:text-7xl"
+          className={`mb-5 text-4xl font-heading font-extrabold leading-[1.04] text-white sm:text-6xl lg:text-7xl ${hasVisualBackground ? "drop-shadow-lg" : ""}`}
           style={headingTextStyle}
         >
           {str(props.heading) || "Hero Heading"}
@@ -292,7 +296,7 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
         </h1>
         {str(props.subheading) && (
           <div
-            className={`text-lg text-white/80 mb-8 [&_a]:text-white [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-white/80 [&_p]:m-0 ${isSplit ? "" : "max-w-xl mx-auto"}`}
+            className={`mb-10 text-lg text-white/85 [&_a]:text-white [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-white/80 [&_p]:m-0 ${hasVisualBackground ? "font-medium drop-shadow-md md:text-2xl" : ""} ${isSplit ? "" : "max-w-3xl mx-auto"}`}
             style={subheadingTextStyle}
             dangerouslySetInnerHTML={{ __html: str(props.subheading) }}
           />
@@ -308,7 +312,7 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
               modalTitle={props.ctaModalTitle}
               modalDescription={props.ctaModalDescription}
               size="lg"
-              className="min-h-12 rounded-md bg-primary px-7 text-white shadow-[0_14px_30px_rgba(8,145,178,0.22)] hover:bg-primary/90"
+              className="min-h-12 rounded-md bg-[#3089a8] px-10 text-base font-bold text-white shadow-[0_14px_30px_rgba(8,145,178,0.22)] hover:bg-[#256d86] md:text-lg"
               testId="hero-cta-primary"
             />
           )}

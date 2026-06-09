@@ -31,6 +31,9 @@ const services = [
     slug: "interior-painting",
     icon: "PaintBucket",
     heroImage: "/img/services/interior.webp",
+    heroTitle: "Interior Painting in Charlotte, NC",
+    heroSubtitle:
+      "Refresh any room in your home with clean, professional results that make your space feel brand new.",
     short:
       "Flawless finishes for walls, ceilings, trim, and lived-in rooms that need a clean refresh.",
     bullets: ["Walls, ceilings, and accent features", "Trim, molding, and baseboards", "Drywall patching and surface repair"],
@@ -44,6 +47,9 @@ const services = [
     slug: "exterior-painting",
     icon: "Home",
     heroImage: "/img/services/exterior.webp",
+    heroTitle: "Exterior Painting in Charlotte, NC",
+    heroSubtitle:
+      "Restore your home's curb appeal and protect it from Charlotte's tough weather with a professional exterior paint job.",
     short:
       "Weather-ready exterior painting that improves curb appeal and protects your home.",
     bullets: ["Siding, brick, stucco, and wood", "Shutters, fascia, soffit, and trim", "Pressure washing and surface prep"],
@@ -57,6 +63,9 @@ const services = [
     slug: "kitchen-cabinet-painting",
     icon: "Layers",
     heroImage: "/img/services/cabinets.webp",
+    heroTitle: "Kitchen Cabinet Painting in Charlotte, NC",
+    heroSubtitle:
+      "Give your kitchen a stunning makeover without the cost of a full renovation - professional cabinet painting delivers factory-quality results.",
     short:
       "A smooth cabinet finish that modernizes your kitchen without the cost of replacement.",
     bullets: ["Factory-style finish", "Doors and hardware removed", "Color consulting and multi-coat application"],
@@ -70,6 +79,9 @@ const services = [
     slug: "deck-staining",
     icon: "Sun",
     heroImage: "/img/services/deck.webp",
+    heroTitle: "Deck Staining & Painting in Charlotte, NC",
+    heroSubtitle:
+      "Protect your deck from Charlotte's weather and restore the natural beauty of your outdoor living space.",
     short:
       "Restore your deck with stain or paint that helps defend outdoor wood from weather.",
     bullets: ["Deep cleaning and sanding", "Transparent stain or solid paint", "Weatherproof sealing"],
@@ -83,6 +95,9 @@ const services = [
     slug: "fence-staining",
     icon: "Fence",
     heroImage: "/img/services/fence.webp",
+    heroTitle: "Fence Staining & Painting in Charlotte, NC",
+    heroSubtitle:
+      "Protect your fence from Charlotte's weather and restore its color, strength, and curb appeal with professional staining or painting.",
     short:
       "Protect and refresh fences with even stain or paint coverage on exposed wood.",
     bullets: ["Full fence prep", "Even coverage on visible surfaces", "Moisture and UV protection"],
@@ -96,6 +111,9 @@ const services = [
     slug: "commercial-painting",
     icon: "Building2",
     heroImage: "/img/services/commercial.webp",
+    heroTitle: "Commercial Painting in Charlotte, NC",
+    heroSubtitle:
+      "Professional painting for offices, retail spaces, restaurants, and commercial properties - delivered on your schedule with minimal disruption.",
     short:
       "Clean, professional painting for offices, retail spaces, restaurants, and commercial properties.",
     bullets: ["Interior and exterior commercial painting", "Flexible scheduling", "Low-odor paint options"],
@@ -324,20 +342,20 @@ function serviceDetailContent(service: (typeof services)[number]) {
   return {
     blocks: [
       block("hero", {
-        heading: service.title,
-        subheading: `<p>${service.short}</p>`,
-        ctaText: "Get a Free Estimate",
+        heading: service.heroTitle,
+        subheading: `<p>${service.heroSubtitle}</p>`,
+        ctaText: "Schedule a Free Estimate",
         ctaAction: "form-modal",
         ctaFormSlug: "contact-form",
         ctaModalTitle: `Request a ${service.title} Estimate`,
-        ctaSecondaryText: "All Services",
+        ctaSecondaryText: "",
         ctaSecondaryAction: "internal-link",
         ctaSecondaryLink: "/services",
         backgroundImageUrl: service.heroImage,
-        overlayColor: "#021824",
-        overlayOpacity: 72,
+        overlayColor: "#000000",
+        overlayOpacity: 30,
         layout: "stacked",
-        minHeight: "420",
+        minHeight: "600",
       }),
       block("rich-text", {
         title: `${service.title} by EC Painting`,
