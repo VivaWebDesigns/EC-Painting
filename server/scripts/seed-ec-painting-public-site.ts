@@ -6,6 +6,8 @@ import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } fro
 const SITE_URL = process.env.APP_URL || "https://ec-painting-production.up.railway.app";
 const BRAND_NAME = "EC Painting";
 const LOGO_URL = "/img/ec-painting-logo.png";
+const OG_IMAGE_URL = "/img/ec-painting-og.jpg";
+const FAVICON_URL = "/favicon.ico";
 
 function id() {
   return randomUUID();
@@ -697,7 +699,7 @@ async function seedSettings() {
     defaultMetaDescription:
       "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.",
     siteUrl: SITE_URL,
-    defaultOgImageUrl: LOGO_URL,
+    defaultOgImageUrl: OG_IMAGE_URL,
     organizationName: BRAND_NAME,
     organizationLogoUrl: LOGO_URL,
     defaultRobotsNoindex: false,
@@ -709,7 +711,7 @@ async function seedSettings() {
     ["company_phone_numbers", ""],
     ["company_google_business_url", ""],
     ["frontend_logo_url", LOGO_URL],
-    ["favicon_url", LOGO_URL],
+    ["favicon_url", FAVICON_URL],
     ["frontend_body_font", "open-sans"],
     ["frontend_heading_font", "montserrat"],
     ["brand_primary_color", "#0A83A5"],
