@@ -4,8 +4,19 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { FormModalButton } from "@/components/forms/form-modal-button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   SectionStyleWrapper,
   DEFAULT_SECTION_LINEAR_GRADIENT,
@@ -30,10 +41,32 @@ import {
 import { SectionHeading } from "@/features/admin/cms/builder/section-heading";
 import { getEventPath } from "@shared/event-url";
 import {
-  Globe, Heart, Users, MapPin, Mail, Phone, Star, CheckCircle,
-  Quote, UserCheck, CalendarDays, BookOpen, Image, Play, Minus,
-  ChevronLeft, ChevronRight, ExternalLink, XCircle, BadgeCheck,
-  ArrowRight, Search, User, ShieldCheck, Lock, Building2,
+  Globe,
+  Heart,
+  Users,
+  MapPin,
+  Mail,
+  Phone,
+  Star,
+  CheckCircle,
+  Quote,
+  UserCheck,
+  CalendarDays,
+  BookOpen,
+  Image,
+  Play,
+  Minus,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  XCircle,
+  BadgeCheck,
+  ArrowRight,
+  Search,
+  User,
+  ShieldCheck,
+  Lock,
+  Building2,
   Loader2,
 } from "lucide-react";
 import type { BlockInstance, BuilderContent } from "@/features/admin/cms/builder/block-registry";
@@ -44,10 +77,32 @@ import { FULL_WIDTH_BLOCK_TYPES } from "@/features/admin/cms/builder/page-builde
 export type { BlockInstance, BuilderContent };
 
 const LUCIDE_MAP: Record<string, React.ElementType> = {
-  Globe, Heart, Users, MapPin, Mail, Phone, Star, CheckCircle,
-  Quote, UserCheck, CalendarDays, BookOpen, Image, Play, Minus,
-  ChevronLeft, ChevronRight, ExternalLink, XCircle, BadgeCheck,
-  ArrowRight, Search, User, ShieldCheck, Lock, Building2,
+  Globe,
+  Heart,
+  Users,
+  MapPin,
+  Mail,
+  Phone,
+  Star,
+  CheckCircle,
+  Quote,
+  UserCheck,
+  CalendarDays,
+  BookOpen,
+  Image,
+  Play,
+  Minus,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  XCircle,
+  BadgeCheck,
+  ArrowRight,
+  Search,
+  User,
+  ShieldCheck,
+  Lock,
+  Building2,
 };
 
 function LucideIcon({ name, className }: { name: string; className?: string }) {
@@ -55,17 +110,43 @@ function LucideIcon({ name, className }: { name: string; className?: string }) {
   return <Icon className={className} />;
 }
 
-const LazyTherapistMapBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.TherapistMapBlock })));
-const LazyContactFormBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.ContactFormBlock })));
-const LazyManagedFormEmbedBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.ManagedFormEmbedBlock })));
-const LazyJoinHeroBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.JoinHeroBlock })));
-const LazyJoinRegistrationFormBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.JoinRegistrationFormBlock })));
-const LazyBlogPostFeedBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.BlogPostFeedBlock })));
-const LazyBlogFeaturedPostBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.BlogFeaturedPostBlock })));
-const LazyStandardBlogPageBlock = lazy(() => import("./public-dynamic-blocks").then(m => ({ default: m.StandardBlogPageBlock })));
-const LazyEventsArchiveSection = lazy(() => import("@/features/public/events-page").then(m => ({ default: m.EventsArchiveSection })));
-const LazyRecordingArchivesSection = lazy(() => import("@/features/public/recording-archives-page").then(m => ({ default: m.RecordingArchivesSection })));
-const LazyDirectoryBrowserSection = lazy(() => import("@/features/directory/directory-page").then(m => ({ default: m.DirectoryBrowserSection })));
+const LazyTherapistMapBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.TherapistMapBlock })),
+);
+const LazyContactFormBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.ContactFormBlock })),
+);
+const LazyManagedFormEmbedBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.ManagedFormEmbedBlock })),
+);
+const LazyJoinHeroBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.JoinHeroBlock })),
+);
+const LazyJoinRegistrationFormBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.JoinRegistrationFormBlock })),
+);
+const LazyBlogPostFeedBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.BlogPostFeedBlock })),
+);
+const LazyBlogFeaturedPostBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.BlogFeaturedPostBlock })),
+);
+const LazyStandardBlogPageBlock = lazy(() =>
+  import("./public-dynamic-blocks").then((m) => ({ default: m.StandardBlogPageBlock })),
+);
+const LazyEventsArchiveSection = lazy(() =>
+  import("@/features/public/events-page").then((m) => ({ default: m.EventsArchiveSection })),
+);
+const LazyRecordingArchivesSection = lazy(() =>
+  import("@/features/public/recording-archives-page").then((m) => ({
+    default: m.RecordingArchivesSection,
+  })),
+);
+const LazyDirectoryBrowserSection = lazy(() =>
+  import("@/features/directory/directory-page").then((m) => ({
+    default: m.DirectoryBrowserSection,
+  })),
+);
 
 function DynamicFallback() {
   return (
@@ -97,35 +178,55 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
 
   return (
     <section
-      className={`relative flex items-center overflow-hidden ${isSplit ? "justify-start text-left" : "justify-center text-center"}`}
+      className={`relative isolate flex min-h-[80vh] items-center overflow-hidden bg-[#111827] text-white ${isSplit ? "justify-start text-left" : "justify-center text-center"}`}
       style={{
         minHeight: minHeightStyle,
-        ...(sectionStyleConfig.backgroundColor ? { backgroundColor: sectionStyleConfig.backgroundColor } : {}),
-        ...(bg && !videoBg
-          ? { backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: `${bgPosX}% ${bgPosY}%` }
-          : !videoBg && !sectionStyleConfig.backgroundColor
-          ? { background: DEFAULT_SECTION_LINEAR_GRADIENT }
+        ...(sectionStyleConfig.backgroundColor
+          ? { backgroundColor: sectionStyleConfig.backgroundColor }
           : {}),
+        ...(bg && !videoBg
+          ? {
+              backgroundImage: `url(${bg})`,
+              backgroundSize: "cover",
+              backgroundPosition: `${bgPosX}% ${bgPosY}%`,
+            }
+          : !videoBg && !sectionStyleConfig.backgroundColor
+            ? { background: DEFAULT_SECTION_LINEAR_GRADIENT }
+            : {}),
       }}
     >
       {videoBg && (
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
           <source src={videoBg} type="video/mp4" />
         </video>
       )}
       <div className="absolute inset-0" style={overlayStyle} />
-      <div className={`relative z-10 px-8 py-16 ${isSplit ? "max-w-2xl" : "max-w-3xl mx-auto"}`}>
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/45 to-transparent" />
+      <div
+        className={`relative z-10 px-5 py-24 sm:px-8 ${isSplit ? "max-w-3xl" : "max-w-4xl mx-auto"}`}
+      >
         {badge && (
-          <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-semibold mb-4 border border-accent/30">
+          <span className="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
             {badge}
           </span>
         )}
-        <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4 leading-tight" style={headingTextStyle}>
+        <h1
+          className="mb-5 text-4xl font-heading font-extrabold leading-[1.04] text-white sm:text-6xl lg:text-7xl"
+          style={headingTextStyle}
+        >
           {str(props.heading) || "Hero Heading"}
           {accentHeading && (
             <>
               {" "}
-              <span className="text-accent" style={accentHeadingTextStyle}>{accentHeading}</span>
+              <span className="text-white" style={accentHeadingTextStyle}>
+                {accentHeading}
+              </span>
             </>
           )}
         </h1>
@@ -147,7 +248,7 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
               modalTitle={props.ctaModalTitle}
               modalDescription={props.ctaModalDescription}
               size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
+              className="min-h-12 rounded-md bg-primary px-7 text-white shadow-[0_14px_30px_rgba(8,145,178,0.22)] hover:bg-primary/90"
               testId="hero-cta-primary"
             />
           )}
@@ -162,7 +263,7 @@ function HeroBlock({ props }: { props: Record<string, unknown> }) {
               modalDescription={props.ctaSecondaryModalDescription}
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="min-h-12 rounded-md border-white/30 bg-white/5 px-7 text-white backdrop-blur-sm hover:border-white/50 hover:bg-white hover:text-foreground"
               testId="hero-cta-secondary"
             />
           )}
@@ -199,7 +300,9 @@ function TwoColumnTextBlock({ props }: { props: Record<string, unknown> }) {
       <div className="grid gap-8 md:grid-cols-2">
         {columns.map((column, index) => (
           <div key={index} className="space-y-4">
-            {column.heading && <h3 className="text-xl font-heading font-semibold">{column.heading}</h3>}
+            {column.heading && (
+              <h3 className="text-xl font-heading font-semibold">{column.heading}</h3>
+            )}
             {column.body && (
               <div
                 className="prose prose-sm max-w-none text-foreground"
@@ -274,15 +377,21 @@ function LinkListBlock({ props }: { props: Record<string, unknown> }) {
             <a
               key={index}
               href={link.url || "#"}
-              className="group rounded-xl border p-4 transition-shadow hover:shadow-md sm:p-5"
+              className="group rounded-md border border-border bg-white p-4 shadow-sm transition-all hover:border-primary/50 hover:shadow-md sm:p-5"
               data-testid={`link-list-item-${index}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="font-semibold break-words transition-colors group-hover:text-accent">{link.label || "Untitled link"}</h3>
-                  {link.description && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{link.description}</p>}
+                  <h3 className="font-heading font-bold break-words transition-colors group-hover:text-primary">
+                    {link.label || "Untitled link"}
+                  </h3>
+                  {link.description && (
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {link.description}
+                    </p>
+                  )}
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors flex-shrink-0 mt-1" />
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
               </div>
             </a>
           ))
@@ -306,10 +415,15 @@ function SectionHeaderBlock({ props }: { props: Record<string, unknown> }) {
 
 function RichTextBlock({ props }: { props: Record<string, unknown> }) {
   const align = str(props.alignment) || "left";
-  const textAlign = align === "left" ? "text-left" : align === "right" ? "text-right" : "text-center";
+  const textAlign =
+    align === "left" ? "text-left" : align === "right" ? "text-right" : "text-center";
   return (
     <div>
-      <SectionHeading props={props} defaultAlignment={align === "right" ? "right" : align === "center" ? "center" : "left"} className="mb-6" />
+      <SectionHeading
+        props={props}
+        defaultAlignment={align === "right" ? "right" : align === "center" ? "center" : "left"}
+        className="mb-6"
+      />
       <div
         className={`prose prose-sm max-w-none ${textAlign} text-foreground`}
         dangerouslySetInnerHTML={{ __html: str(props.content) || "<p>No content.</p>" }}
@@ -323,11 +437,18 @@ function TextImageBlock({ props }: { props: Record<string, unknown> }) {
   const hasImage = !!str(props.imageUrl);
   const mobileImageStyles = getMobileImageStyles(props);
   const align = str(props.alignment) || "left";
-  const bodyAlign = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+  const bodyAlign =
+    align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
   return (
-    <div className={`flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} gap-8 py-4 md:items-stretch`}>
+    <div
+      className={`flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} gap-8 py-4 md:items-stretch`}
+    >
       <div className="min-w-0 flex-1 space-y-3">
-        <SectionHeading props={props} defaultAlignment={align === "center" ? "center" : align === "right" ? "right" : "left"} className="mb-4" />
+        <SectionHeading
+          props={props}
+          defaultAlignment={align === "center" ? "center" : align === "right" ? "right" : "left"}
+          className="mb-4"
+        />
         {str(props.body) && (
           <div
             className={`prose prose-sm max-w-none text-foreground ${bodyAlign}`}
@@ -339,17 +460,21 @@ function TextImageBlock({ props }: { props: Record<string, unknown> }) {
         {hasImage ? (
           <div className="flex h-full flex-col">
             <div className="relative min-h-72 md:h-full md:min-h-0 md:flex-1">
-            <img
-              src={str(props.imageUrl)}
-              alt={str(props.imageAlt)}
-              style={mobileImageStyles}
-              className="w-full rounded-xl [height:var(--mobile-image-height)] [object-fit:var(--mobile-image-fit)] [object-position:var(--mobile-image-position)] md:absolute md:inset-0 md:h-full md:w-full md:object-cover md:object-center"
-            />
+              <img
+                src={str(props.imageUrl)}
+                alt={str(props.imageAlt)}
+                style={mobileImageStyles}
+                className="w-full rounded-md shadow-lg [height:var(--mobile-image-height)] [object-fit:var(--mobile-image-fit)] [object-position:var(--mobile-image-position)] md:absolute md:inset-0 md:h-full md:w-full md:object-cover md:object-center"
+              />
             </div>
-            {str(props.imageCaption) && <p className="text-xs text-muted-foreground mt-2 text-center">{str(props.imageCaption)}</p>}
+            {str(props.imageCaption) && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                {str(props.imageCaption)}
+              </p>
+            )}
           </div>
         ) : (
-          <div className="flex h-full min-h-48 items-center justify-center rounded-xl border border-dashed bg-muted/40">
+          <div className="flex h-full min-h-48 items-center justify-center rounded-md border border-dashed bg-muted/40">
             <span className="text-muted-foreground text-sm">Image placeholder</span>
           </div>
         )}
@@ -360,17 +485,23 @@ function TextImageBlock({ props }: { props: Record<string, unknown> }) {
 
 function CtaBlock({ props }: { props: Record<string, unknown> }) {
   const variant = str(props.variant) || "dark";
-  const bgClass = variant === "dark"
-    ? "bg-foreground text-background"
-    : variant === "accent"
-    ? "bg-accent text-accent-foreground"
-    : "bg-muted/40 border";
+  const bgClass =
+    variant === "dark"
+      ? "relative overflow-hidden border-y border-slate-800 bg-[#021824] text-primary-foreground"
+      : variant === "accent"
+        ? "bg-primary text-primary-foreground"
+        : "bg-white border-y border-border";
   return (
     <div className={`px-4 py-10 text-center sm:px-8 sm:py-14 ${bgClass}`}>
-      <h2 className="mb-3 text-2xl font-heading font-bold leading-tight sm:text-3xl md:text-4xl">{str(props.heading) || "Ready to Get Started?"}</h2>
+      {variant === "dark" && <div className="absolute inset-x-0 top-0 h-px bg-primary/60" />}
+      <h2
+        className={`mb-3 text-2xl font-heading font-bold leading-tight sm:text-3xl md:text-4xl ${variant === "dark" ? "text-white" : ""}`}
+      >
+        {str(props.heading) || "Ready to Get Started?"}
+      </h2>
       {str(props.subheading) && (
         <div
-          className={`mb-8 mx-auto max-w-xl text-sm leading-relaxed sm:text-base [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_p]:m-0 ${variant === "light" ? "text-muted-foreground [&_a]:text-primary" : "opacity-80 [&_a]:text-current"}`}
+          className={`mb-8 mx-auto max-w-xl text-sm leading-relaxed sm:text-base [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_p]:m-0 ${variant === "light" ? "text-muted-foreground [&_a]:text-primary" : variant === "dark" ? "text-white/75 [&_a]:text-white" : "opacity-90 [&_a]:text-current"}`}
           dangerouslySetInnerHTML={{ __html: str(props.subheading) }}
         />
       )}
@@ -385,8 +516,8 @@ function CtaBlock({ props }: { props: Record<string, unknown> }) {
             modalTitle={props.primaryModalTitle}
             modalDescription={props.primaryModalDescription}
             size="lg"
-            variant={variant === "dark" ? "secondary" : "default"}
-            className="w-full sm:w-auto"
+            variant="default"
+            className="w-full rounded-md bg-primary text-white hover:bg-primary/90 sm:w-auto"
             testId="cta-primary"
           />
         )}
@@ -401,7 +532,7 @@ function CtaBlock({ props }: { props: Record<string, unknown> }) {
             modalDescription={props.secondaryModalDescription}
             size="lg"
             variant="outline"
-            className="w-full sm:w-auto"
+            className={`w-full rounded-md sm:w-auto ${variant === "dark" ? "border-white/30 bg-white/5 text-white hover:bg-white hover:text-foreground" : ""}`}
             testId="cta-secondary"
           />
         )}
@@ -412,25 +543,35 @@ function CtaBlock({ props }: { props: Record<string, unknown> }) {
 
 function CardsGridBlock({ props }: { props: Record<string, unknown> }) {
   const cols = str(props.columns) || "3";
-  const colsClass = cols === "2" ? "md:grid-cols-2" : cols === "4" ? "md:grid-cols-4" : "md:grid-cols-3";
+  const colsClass =
+    cols === "2" ? "md:grid-cols-2" : cols === "4" ? "md:grid-cols-4" : "md:grid-cols-3";
   const cards = arr<{ title: string; description: string; icon: string }>(props.cards);
   return (
     <div className="py-4">
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
       <div className={`grid grid-cols-1 ${colsClass} gap-4 sm:gap-6`}>
         {cards.length === 0 ? (
-          <div className="col-span-full text-center text-muted-foreground py-8">Add cards to display here</div>
-        ) : cards.map((card, i) => (
-          <Card key={i} className="h-full overflow-hidden text-center transition-shadow hover:shadow-md">
-            <CardContent className="px-4 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-8">
-              <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
-                <LucideIcon name={card.icon || "Globe"} className="h-6 w-6 text-accent" />
-              </div>
-              <h3 className="mb-2 text-base font-semibold leading-snug break-words">{card.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+          <div className="col-span-full text-center text-muted-foreground py-8">
+            Add cards to display here
+          </div>
+        ) : (
+          cards.map((card, i) => (
+            <Card
+              key={i}
+              className="h-full overflow-hidden rounded-md border-border bg-white text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <CardContent className="px-4 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-8">
+                <div className="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+                  <LucideIcon name={card.icon || "Globe"} className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mb-2 text-xl font-heading font-bold leading-snug break-words">
+                  {card.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
@@ -444,17 +585,19 @@ function FaqBlock({ props }: { props: Record<string, unknown> }) {
       <Accordion type="single" collapsible className="space-y-2">
         {items.length === 0 ? (
           <p className="text-muted-foreground">Add FAQ items to display here.</p>
-        ) : items.map((item, i) => (
-          <AccordionItem key={i} value={`faq-${i}`} className="border rounded-lg px-4">
-            <AccordionTrigger className="font-medium text-left">{item.question}</AccordionTrigger>
-            <AccordionContent>
-              <div
-                className="text-muted-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-primary/80 [&_p]:m-0"
-                dangerouslySetInnerHTML={{ __html: item.answer }}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+        ) : (
+          items.map((item, i) => (
+            <AccordionItem key={i} value={`faq-${i}`} className="border rounded-lg px-4">
+              <AccordionTrigger className="font-medium text-left">{item.question}</AccordionTrigger>
+              <AccordionContent>
+                <div
+                  className="text-muted-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-primary/80 [&_p]:m-0"
+                  dangerouslySetInnerHTML={{ __html: item.answer }}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          ))
+        )}
       </Accordion>
     </div>
   );
@@ -462,20 +605,31 @@ function FaqBlock({ props }: { props: Record<string, unknown> }) {
 
 function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   const items = arr<{ quote: string; name: string; role: string; location: string }>(props.items);
-  const shouldCarousel = items.length > 2;
+  const shouldCarousel = items.length > 3;
 
-  const renderCard = (item: { quote: string; name: string; role: string; location: string }, i: number) => (
-    <Card key={i} className="bg-muted/30 h-full">
+  const renderCard = (
+    item: { quote: string; name: string; role: string; location: string },
+    i: number,
+  ) => (
+    <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
       <CardContent className="pt-6">
-        <Quote className="h-5 w-5 text-accent mb-3" />
+        <Quote className="h-5 w-5 text-primary/30 mb-3" />
+        <div className="mb-3 flex gap-0.5 text-amber-400">
+          {Array.from({ length: 5 }).map((_, starIndex) => (
+            <Star key={starIndex} className="h-4 w-4 fill-current" />
+          ))}
+        </div>
         <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center">
-            <span className="text-xs font-semibold text-accent">{item.name?.[0] ?? "?"}</span>
+          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
           </div>
           <div>
             <p className="text-sm font-semibold">{item.name}</p>
-            <p className="text-xs text-muted-foreground">{item.role}{item.location ? ` · ${item.location}` : ""}</p>
+            <p className="text-xs text-muted-foreground">
+              {item.role}
+              {item.location ? ` · ${item.location}` : ""}
+            </p>
           </div>
         </div>
       </CardContent>
@@ -519,7 +673,9 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
 }
 
 function FeaturedProfessionalsBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: professionals } = useQuery<{ id: string; title: string; user?: { firstName?: string; lastName?: string } }[]>({
+  const { data: professionals } = useQuery<
+    { id: string; title: string; user?: { firstName?: string; lastName?: string } }[]
+  >({
     queryKey: ["/api/therapists/featured"],
   });
   const limit = num(props.limit, 3);
@@ -533,24 +689,39 @@ function FeaturedProfessionalsBlock({ props }: { props: Record<string, unknown> 
             <UserCheck className="h-8 w-8 mx-auto mb-2 opacity-30" />
             <p className="text-sm">Featured mental health professionals will appear here</p>
           </div>
-        ) : visible.map((c) => (
-          <Card key={c.id} className="text-center hover:shadow-md transition-shadow">
-            <CardContent className="pt-6">
-              <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
-                <UserCheck className="h-6 w-6 text-accent" />
-              </div>
-              <p className="font-semibold text-sm">{c.user?.firstName} {c.user?.lastName}</p>
-              <p className="text-xs public-meta-text">{c.title}</p>
-            </CardContent>
-          </Card>
-        ))}
+        ) : (
+          visible.map((c) => (
+            <Card key={c.id} className="text-center hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
+                  <UserCheck className="h-6 w-6 text-accent" />
+                </div>
+                <p className="font-semibold text-sm">
+                  {c.user?.firstName} {c.user?.lastName}
+                </p>
+                <p className="text-xs public-meta-text">{c.title}</p>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
 }
 
 function EventsPreviewBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: events } = useQuery<{ id: string; slug?: string | null; title: string; date: string; isVirtual: boolean; imageUrl?: string | null; imagePositionX?: number | null; imagePositionY?: number | null }[]>({
+  const { data: events } = useQuery<
+    {
+      id: string;
+      slug?: string | null;
+      title: string;
+      date: string;
+      isVirtual: boolean;
+      imageUrl?: string | null;
+      imagePositionX?: number | null;
+      imagePositionY?: number | null;
+    }[]
+  >({
     queryKey: ["/api/events"],
   });
   const limit = num(props.limit, 4);
@@ -559,18 +730,39 @@ function EventsPreviewBlock({ props }: { props: Record<string, unknown> }) {
   const visible = (events ?? []).filter((e) => new Date(e.date) > new Date()).slice(0, limit);
   const shouldCarousel = visible.length > 4;
 
-  const renderEventCard = (e: { id: string; slug?: string | null; title: string; date: string; isVirtual: boolean; imageUrl?: string | null; imagePositionX?: number | null; imagePositionY?: number | null }) => (
+  const renderEventCard = (e: {
+    id: string;
+    slug?: string | null;
+    title: string;
+    date: string;
+    isVirtual: boolean;
+    imageUrl?: string | null;
+    imagePositionX?: number | null;
+    imagePositionY?: number | null;
+  }) => (
     <Link key={e.id} href={getEventPath(e)} className="w-full max-w-[16.2rem]">
-      <Card className="mx-auto h-full w-full max-w-[16.2rem] overflow-hidden transition-shadow hover:shadow-md cursor-pointer" data-testid={`event-preview-${e.id}`}>
+      <Card
+        className="mx-auto h-full w-full max-w-[16.2rem] overflow-hidden transition-shadow hover:shadow-md cursor-pointer"
+        data-testid={`event-preview-${e.id}`}
+      >
         {e.imageUrl && (
           <div className="aspect-[16/10] overflow-hidden" data-testid={`img-event-preview-${e.id}`}>
-            <img src={e.imageUrl} alt={e.title} className="h-full w-full object-cover" style={getImageObjectPositionStyle(e.imagePositionX, e.imagePositionY)} />
+            <img
+              src={e.imageUrl}
+              alt={e.title}
+              className="h-full w-full object-cover"
+              style={getImageObjectPositionStyle(e.imagePositionX, e.imagePositionY)}
+            />
           </div>
         )}
         <CardContent className={e.imageUrl ? "p-4" : "pt-4"}>
-          <p className="mb-1 text-xs font-medium text-accent">{new Date(e.date).toLocaleDateString()}</p>
+          <p className="mb-1 text-xs font-medium text-accent">
+            {new Date(e.date).toLocaleDateString()}
+          </p>
           <p className="line-clamp-2 text-sm font-semibold public-heading-3">{e.title}</p>
-          <p className="mt-2 text-[11px] leading-relaxed public-meta-text">{e.isVirtual ? "Virtual" : "In Person"}</p>
+          <p className="mt-2 text-[11px] leading-relaxed public-meta-text">
+            {e.isVirtual ? "Virtual" : "In Person"}
+          </p>
         </CardContent>
       </Card>
     </Link>
@@ -595,7 +787,10 @@ function EventsPreviewBlock({ props }: { props: Record<string, unknown> }) {
           >
             <CarouselContent className="-ml-4">
               {visible.map((e) => (
-                <CarouselItem key={e.id} className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <CarouselItem
+                  key={e.id}
+                  className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                >
                   {renderEventCard(e)}
                 </CarouselItem>
               ))}
@@ -629,7 +824,18 @@ function EventsPreviewBlock({ props }: { props: Record<string, unknown> }) {
 }
 
 function BlogPreviewBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: posts } = useQuery<{ id: string; title: string; excerpt: string; slug: string; coverImageUrl?: string | null; coverImagePositionX?: number | null; coverImagePositionY?: number | null; isPublished: boolean }[]>({
+  const { data: posts } = useQuery<
+    {
+      id: string;
+      title: string;
+      excerpt: string;
+      slug: string;
+      coverImageUrl?: string | null;
+      coverImagePositionX?: number | null;
+      coverImagePositionY?: number | null;
+      isPublished: boolean;
+    }[]
+  >({
     queryKey: ["/api/blog"],
   });
   const limit = num(props.limit, 5);
@@ -637,12 +843,30 @@ function BlogPreviewBlock({ props }: { props: Record<string, unknown> }) {
   const visible = (posts ?? []).filter((p) => p.isPublished).slice(0, limit);
   const shouldCarousel = visible.length > 5;
 
-  const renderBlogCard = (p: { id: string; title: string; excerpt: string; slug: string; coverImageUrl?: string | null; coverImagePositionX?: number | null; coverImagePositionY?: number | null }) => (
+  const renderBlogCard = (p: {
+    id: string;
+    title: string;
+    excerpt: string;
+    slug: string;
+    coverImageUrl?: string | null;
+    coverImagePositionX?: number | null;
+    coverImagePositionY?: number | null;
+  }) => (
     <Link key={p.id} href={`/insights/${p.slug}`} className="w-full max-w-[13.5rem]">
-      <Card className={`mx-auto h-full w-full max-w-[13.5rem] overflow-hidden cursor-pointer ${enableHoverMotion ? "blog-card-motion" : ""}`} data-testid={`blog-preview-${p.id}`}>
+      <Card
+        className={`mx-auto h-full w-full max-w-[13.5rem] overflow-hidden cursor-pointer ${enableHoverMotion ? "blog-card-motion" : ""}`}
+        data-testid={`blog-preview-${p.id}`}
+      >
         {p.coverImageUrl && (
           <div className="aspect-[16/10] overflow-hidden">
-            <img src={p.coverImageUrl} alt={p.title} className="h-full w-full object-cover" style={getImageObjectPositionStyle(p.coverImagePositionX, p.coverImagePositionY)} data-blog-card-image data-testid={`img-blog-preview-${p.id}`} />
+            <img
+              src={p.coverImageUrl}
+              alt={p.title}
+              className="h-full w-full object-cover"
+              style={getImageObjectPositionStyle(p.coverImagePositionX, p.coverImagePositionY)}
+              data-blog-card-image
+              data-testid={`img-blog-preview-${p.id}`}
+            />
           </div>
         )}
         <CardContent className={p.coverImageUrl ? "p-3.5" : "pt-3.5"}>
@@ -672,7 +896,10 @@ function BlogPreviewBlock({ props }: { props: Record<string, unknown> }) {
           >
             <CarouselContent className="-ml-4">
               {visible.map((p) => (
-                <CarouselItem key={p.id} className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/5">
+                <CarouselItem
+                  key={p.id}
+                  className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/5"
+                >
                   {renderBlogCard(p)}
                 </CarouselItem>
               ))}
@@ -703,29 +930,52 @@ function BlogPreviewBlock({ props }: { props: Record<string, unknown> }) {
 
 function ButtonGroupBlock({ props }: { props: Record<string, unknown> }) {
   const align = str(props.alignment) || "center";
-  const justifyClass = align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center";
-  const buttons = arr<{ text: string; link: string; variant: string; action?: string; openInNewTab?: boolean; formSlug?: string; modalTitle?: string; modalDescription?: string }>(props.buttons);
+  const justifyClass =
+    align === "left" ? "justify-start" : align === "right" ? "justify-end" : "justify-center";
+  const buttons = arr<{
+    text: string;
+    link: string;
+    variant: string;
+    action?: string;
+    openInNewTab?: boolean;
+    formSlug?: string;
+    modalTitle?: string;
+    modalDescription?: string;
+  }>(props.buttons);
   return (
     <div className="py-4">
-      <SectionHeading props={props} defaultAlignment={align === "right" ? "right" : align === "center" ? "center" : "left"} className="mb-6" />
+      <SectionHeading
+        props={props}
+        defaultAlignment={align === "right" ? "right" : align === "center" ? "center" : "left"}
+        className="mb-6"
+      />
       <div className={`flex flex-wrap gap-3 ${justifyClass}`}>
         {buttons.length === 0 ? (
           <p className="text-muted-foreground text-sm">Add buttons to display here</p>
-        ) : buttons.map((btn, i) => (
-          <FormModalButton
-            key={i}
-            label={btn.text}
-            action={btn.action}
-            href={btn.link}
-            openInNewTab={btn.openInNewTab}
-            formSlug={btn.formSlug}
-            modalTitle={btn.modalTitle}
-            modalDescription={btn.modalDescription}
-            variant={(btn.variant === "outline" || btn.variant === "secondary" || btn.variant === "ghost" || btn.variant === "destructive") ? btn.variant : "default"}
-            size="lg"
-            testId={`button-group-${i}`}
-          />
-        ))}
+        ) : (
+          buttons.map((btn, i) => (
+            <FormModalButton
+              key={i}
+              label={btn.text}
+              action={btn.action}
+              href={btn.link}
+              openInNewTab={btn.openInNewTab}
+              formSlug={btn.formSlug}
+              modalTitle={btn.modalTitle}
+              modalDescription={btn.modalDescription}
+              variant={
+                btn.variant === "outline" ||
+                btn.variant === "secondary" ||
+                btn.variant === "ghost" ||
+                btn.variant === "destructive"
+                  ? btn.variant
+                  : "default"
+              }
+              size="lg"
+              testId={`button-group-${i}`}
+            />
+          ))
+        )}
       </div>
     </div>
   );
@@ -758,7 +1008,9 @@ function ImageBlockRenderer({ props }: { props: Record<string, unknown> }) {
             style={mobileImageStyles}
             className="w-full rounded-xl [height:var(--mobile-image-height)] [object-fit:var(--mobile-image-fit)] [object-position:var(--mobile-image-position)] md:h-auto md:object-cover md:object-center"
           />
-          {str(props.caption) && <p className="text-xs text-muted-foreground text-center mt-2">{str(props.caption)}</p>}
+          {str(props.caption) && (
+            <p className="text-xs text-muted-foreground text-center mt-2">{str(props.caption)}</p>
+          )}
         </div>
       ) : (
         <div className="rounded-xl bg-muted/40 border border-dashed h-48 flex items-center justify-center">
@@ -781,7 +1033,12 @@ function VideoEmbedBlock({ props }: { props: Record<string, unknown> }) {
   const paddingBottom = paddingMap[aspect] ?? "56.25%";
   return (
     <div className="py-4">
-      <SectionHeading props={props} defaultAlignment="left" className="mb-4" titleClassName="font-medium text-base" />
+      <SectionHeading
+        props={props}
+        defaultAlignment="left"
+        className="mb-4"
+        titleClassName="font-medium text-base"
+      />
       {!url ? (
         <div className="rounded-xl bg-muted/40 border border-dashed h-48 flex items-center justify-center">
           <div className="text-center text-muted-foreground">
@@ -825,17 +1082,19 @@ function ContactInfoBlock({ props }: { props: Record<string, unknown> }) {
       <div className="space-y-4">
         {items.length === 0 ? (
           <p className="text-muted-foreground text-sm">Add contact items to display here.</p>
-        ) : items.map((item, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <div className="h-9 w-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-              <LucideIcon name={item.icon || "Globe"} className="h-4 w-4 text-accent" />
+        ) : (
+          items.map((item, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <LucideIcon name={item.icon || "Globe"} className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">{item.label}</p>
+                <p className="break-words font-medium text-sm">{item.value}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{item.label}</p>
-              <p className="break-words font-medium text-sm">{item.value}</p>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
@@ -846,19 +1105,21 @@ function DividerBlock({ props }: { props: Record<string, unknown> }) {
   const spacing = str(props.spacing) || "md";
   const heightClass = SPACING_MAP[spacing] ?? SPACING_MAP.md;
   if (style === "spacer") return <div className={heightClass} />;
-  if (style === "dots") return (
-    <div className={`flex justify-center items-center gap-2 ${heightClass}`}>
-      <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
-      <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
-      <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
-    </div>
-  );
+  if (style === "dots")
+    return (
+      <div className={`flex justify-center items-center gap-2 ${heightClass}`}>
+        <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+        <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+        <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+      </div>
+    );
   return <hr className={`border-border ${heightClass} border-0 border-t-[1px] my-auto`} />;
 }
 
 function FeatureListBlock({ props }: { props: Record<string, unknown> }) {
   const cols = str(props.columns) || "3";
-  const colsClass = cols === "1" ? "grid-cols-1" : cols === "2" ? "md:grid-cols-2" : "md:grid-cols-3";
+  const colsClass =
+    cols === "1" ? "grid-cols-1" : cols === "2" ? "md:grid-cols-2" : "md:grid-cols-3";
   const features = arr<{ icon: string; title: string; description: string }>(props.features);
   return (
     <div className="py-4" data-testid="block-feature-list">
@@ -866,11 +1127,11 @@ function FeatureListBlock({ props }: { props: Record<string, unknown> }) {
       <div className={`grid grid-cols-1 ${colsClass} gap-6 sm:gap-8`}>
         {features.map((f, i) => (
           <div key={i} className="flex items-start gap-4" data-testid={`feature-item-${i}`}>
-            <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-              <LucideIcon name={f.icon || "CheckCircle"} className="h-5 w-5 text-accent" />
+            <div className="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <LucideIcon name={f.icon || "CheckCircle"} className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-sm mb-1">{f.title}</h3>
+              <h3 className="font-heading font-bold text-sm mb-1">{f.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
             </div>
           </div>
@@ -922,7 +1183,9 @@ function BeforeAfterBlock({ props }: { props: Record<string, unknown> }) {
                   <p className="text-sm text-muted-foreground">{item.before}</p>
                 </div>
                 <div className="rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-3">
-                  <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-1">After</p>
+                  <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-1">
+                    After
+                  </p>
                   <p className="text-sm text-muted-foreground">{item.after}</p>
                 </div>
               </div>
@@ -937,12 +1200,16 @@ function BeforeAfterBlock({ props }: { props: Record<string, unknown> }) {
 function TrustBarBlock({ props }: { props: Record<string, unknown> }) {
   const items = arr<{ icon: string; label: string }>(props.items);
   return (
-    <div className="py-4 border-y bg-muted/20" data-testid="block-trust-bar">
+    <div className="py-6 border-y border-border bg-white" data-testid="block-trust-bar">
       <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
       <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-2 text-muted-foreground" data-testid={`trust-signal-${i}`}>
-            <LucideIcon name={item.icon || "CheckCircle"} className="h-4 w-4 text-accent" />
+          <div
+            key={i}
+            className="flex items-center gap-2 text-foreground/75"
+            data-testid={`trust-signal-${i}`}
+          >
+            <LucideIcon name={item.icon || "CheckCircle"} className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium">{item.label}</span>
           </div>
         ))}
@@ -959,17 +1226,32 @@ function PressMentionsBlock({ props }: { props: Record<string, unknown> }) {
       <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
         {items.map((item, i) => {
           const content = item.logoUrl ? (
-            <img src={item.logoUrl} alt={item.name} className="h-8 sm:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+            <img
+              src={item.logoUrl}
+              alt={item.name}
+              className="h-8 sm:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity"
+            />
           ) : (
-            <span className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">{item.name}</span>
+            <span className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+              {item.name}
+            </span>
           );
           return item.link ? (
-            <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1" data-testid={`press-item-${i}`}>
+            <a
+              key={i}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1"
+              data-testid={`press-item-${i}`}
+            >
               {content}
               <ExternalLink className="h-3 w-3 text-muted-foreground" />
             </a>
           ) : (
-            <div key={i} data-testid={`press-item-${i}`}>{content}</div>
+            <div key={i} data-testid={`press-item-${i}`}>
+              {content}
+            </div>
           );
         })}
       </div>
@@ -991,7 +1273,9 @@ function SocialProofStatsBlock({ props }: { props: Record<string, unknown> }) {
         ))}
       </div>
       {str(props.disclaimer) && (
-        <p className="text-xs text-muted-foreground text-center mt-6 italic">{str(props.disclaimer)}</p>
+        <p className="text-xs text-muted-foreground text-center mt-6 italic">
+          {str(props.disclaimer)}
+        </p>
       )}
     </div>
   );
@@ -999,9 +1283,11 @@ function SocialProofStatsBlock({ props }: { props: Record<string, unknown> }) {
 
 function ImageGridBlock({ props }: { props: Record<string, unknown> }) {
   const cols = str(props.columns) || "3";
-  const colsClass = cols === "2" ? "md:grid-cols-2" : cols === "4" ? "md:grid-cols-4" : "md:grid-cols-3";
+  const colsClass =
+    cols === "2" ? "md:grid-cols-2" : cols === "4" ? "md:grid-cols-4" : "md:grid-cols-3";
   const gapSize = str(props.gap) || "md";
-  const gapClass = gapSize === "sm" ? "gap-2" : gapSize === "lg" ? "gap-6" : gapSize === "xl" ? "gap-8" : "gap-4";
+  const gapClass =
+    gapSize === "sm" ? "gap-2" : gapSize === "lg" ? "gap-6" : gapSize === "xl" ? "gap-8" : "gap-4";
   const images = arr<{ url: string; alt: string; caption: string }>(props.images);
   return (
     <div className="py-4" data-testid="block-image-grid">
@@ -1014,8 +1300,14 @@ function ImageGridBlock({ props }: { props: Record<string, unknown> }) {
         <div className={`grid grid-cols-1 ${colsClass} ${gapClass}`}>
           {images.map((img, i) => (
             <div key={i} data-testid={`grid-image-${i}`}>
-              <img src={img.url} alt={img.alt} className="w-full rounded-lg object-cover aspect-square" />
-              {img.caption && <p className="text-xs text-muted-foreground text-center mt-1">{img.caption}</p>}
+              <img
+                src={img.url}
+                alt={img.alt}
+                className="w-full rounded-lg object-cover aspect-square"
+              />
+              {img.caption && (
+                <p className="text-xs text-muted-foreground text-center mt-1">{img.caption}</p>
+              )}
             </div>
           ))}
         </div>
@@ -1030,11 +1322,12 @@ function SliderBlock({ props }: { props: Record<string, unknown> }) {
   useEffect(() => {
     if (slides.length > 0 && current >= slides.length) setCurrent(Math.max(0, slides.length - 1));
   }, [slides.length, current]);
-  if (slides.length === 0) return (
-    <div className="py-4 rounded-xl bg-muted/40 border border-dashed h-48 flex items-center justify-center">
-      <p className="text-sm text-muted-foreground">Add slides to display here</p>
-    </div>
-  );
+  if (slides.length === 0)
+    return (
+      <div className="py-4 rounded-xl bg-muted/40 border border-dashed h-48 flex items-center justify-center">
+        <p className="text-sm text-muted-foreground">Add slides to display here</p>
+      </div>
+    );
   const safeIdx = Math.min(current, slides.length - 1);
   const slide = slides[safeIdx];
   return (
@@ -1042,24 +1335,57 @@ function SliderBlock({ props }: { props: Record<string, unknown> }) {
       <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
       <div className="relative rounded-xl overflow-hidden bg-muted/20 border">
         {slide.imageUrl && (
-          <img src={slide.imageUrl} alt={slide.heading} className="w-full aspect-[16/9] object-cover" />
+          <img
+            src={slide.imageUrl}
+            alt={slide.heading}
+            className="w-full aspect-[16/9] object-cover"
+          />
         )}
-        <div className={`${slide.imageUrl ? "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent" : ""} p-6 sm:p-8`}>
-          {slide.heading && <h3 className={`text-xl font-heading font-bold mb-2 ${slide.imageUrl ? "text-white" : ""}`}>{slide.heading}</h3>}
-          {slide.description && <p className={`text-sm ${slide.imageUrl ? "text-white/80" : "text-muted-foreground"}`}>{slide.description}</p>}
+        <div
+          className={`${slide.imageUrl ? "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent" : ""} p-6 sm:p-8`}
+        >
+          {slide.heading && (
+            <h3
+              className={`text-xl font-heading font-bold mb-2 ${slide.imageUrl ? "text-white" : ""}`}
+            >
+              {slide.heading}
+            </h3>
+          )}
+          {slide.description && (
+            <p className={`text-sm ${slide.imageUrl ? "text-white/80" : "text-muted-foreground"}`}>
+              {slide.description}
+            </p>
+          )}
         </div>
       </div>
       {slides.length > 1 && (
         <div className="flex items-center justify-center gap-4 mt-4">
-          <Button variant="outline" size="icon" className="rounded-full h-8 w-8" onClick={() => setCurrent((c) => (c - 1 + slides.length) % slides.length)} data-testid="button-slider-prev">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full h-8 w-8"
+            onClick={() => setCurrent((c) => (c - 1 + slides.length) % slides.length)}
+            data-testid="button-slider-prev"
+          >
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="flex gap-1.5">
             {slides.map((_, i) => (
-              <button key={i} className={`w-2 h-2 rounded-full transition-colors ${i === current ? "bg-accent" : "bg-muted-foreground/30"}`} onClick={() => setCurrent(i)} data-testid={`button-slider-dot-${i}`} />
+              <button
+                key={i}
+                className={`w-2 h-2 rounded-full transition-colors ${i === current ? "bg-accent" : "bg-muted-foreground/30"}`}
+                onClick={() => setCurrent(i)}
+                data-testid={`button-slider-dot-${i}`}
+              />
             ))}
           </div>
-          <Button variant="outline" size="icon" className="rounded-full h-8 w-8" onClick={() => setCurrent((c) => (c + 1) % slides.length)} data-testid="button-slider-next">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full h-8 w-8"
+            onClick={() => setCurrent((c) => (c + 1) % slides.length)}
+            data-testid="button-slider-next"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -1071,13 +1397,17 @@ function SliderBlock({ props }: { props: Record<string, unknown> }) {
 function StatsBarBlock({ props }: { props: Record<string, unknown> }) {
   const items = arr<{ icon: string; value: string; label: string }>(props.items);
   return (
-    <div className="py-6 bg-muted/30 rounded-xl" data-testid="block-stats-bar">
+    <div className="border-y border-border bg-white py-8" data-testid="block-stats-bar">
       <SectionHeading props={props} defaultAlignment="center" className="mb-6 px-4" />
-      <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         {items.map((item, i) => (
-          <div key={i} className="flex items-center justify-center gap-3 rounded-xl border border-border/50 bg-background/70 px-4 py-4 text-center sm:justify-start" data-testid={`stats-bar-item-${i}`}>
-            <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center">
-              <LucideIcon name={item.icon || "Star"} className="h-5 w-5 text-accent" />
+          <div
+            key={i}
+            className="flex items-center justify-center gap-3 rounded-md border border-border bg-secondary/70 px-4 py-4 text-center sm:justify-start"
+            data-testid={`stats-bar-item-${i}`}
+          >
+            <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+              <LucideIcon name={item.icon || "Star"} className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="text-lg font-bold">{item.value}</p>
@@ -1106,9 +1436,13 @@ function IconGridBlock({ props }: { props: Record<string, unknown> }) {
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
       <div className={`grid grid-cols-1 ${colsClass} gap-4`}>
         {items.map((item, i) => (
-          <div key={i} className="flex min-w-0 flex-col items-center gap-3 rounded-xl border p-4 text-center transition-shadow hover:shadow-sm sm:p-5" data-testid={`icon-grid-item-${i}`}>
-            <div className="flex h-12 w-12 rounded-xl bg-accent/10 items-center justify-center">
-              <LucideIcon name={item.icon || "Globe"} className="h-6 w-6 text-accent" />
+          <div
+            key={i}
+            className="flex min-w-0 flex-col items-center gap-3 rounded-md border border-border bg-white p-4 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md sm:p-5"
+            data-testid={`icon-grid-item-${i}`}
+          >
+            <div className="flex h-12 w-12 rounded-md bg-primary/10 items-center justify-center">
+              <LucideIcon name={item.icon || "Globe"} className="h-6 w-6 text-primary" />
             </div>
             <p className="text-sm font-medium leading-snug break-words">{item.title}</p>
           </div>
@@ -1129,9 +1463,17 @@ function BenefitStackBlock({ props }: { props: Record<string, unknown> }) {
         {isTimeline && <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-accent/20" />}
         <div className={isTimeline ? "space-y-6" : "space-y-4"}>
           {items.map((item, i) => (
-            <div key={i} className={`flex items-start gap-4 ${isTimeline ? "relative" : "p-4 rounded-lg border"}`} data-testid={`benefit-item-${i}`}>
-              {isTimeline && <div className="absolute -left-5 top-1 h-4 w-4 rounded-full bg-accent border-2 border-background" />}
-              <div className={`h-9 w-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0`}>
+            <div
+              key={i}
+              className={`flex items-start gap-4 ${isTimeline ? "relative" : "p-4 rounded-lg border"}`}
+              data-testid={`benefit-item-${i}`}
+            >
+              {isTimeline && (
+                <div className="absolute -left-5 top-1 h-4 w-4 rounded-full bg-accent border-2 border-background" />
+              )}
+              <div
+                className={`h-9 w-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0`}
+              >
                 <LucideIcon name={item.icon || "CheckCircle"} className="h-4 w-4 text-accent" />
               </div>
               <div>
@@ -1152,19 +1494,31 @@ function ScienceExplainerBlock({ props }: { props: Record<string, unknown> }) {
     <div className="py-4" data-testid="block-science-explainer">
       <SectionHeading props={props} defaultAlignment="left" className="mb-6" />
       {str(props.body) && (
-        <div className="prose prose-sm max-w-none text-foreground mb-6" dangerouslySetInnerHTML={{ __html: str(props.body) }} />
+        <div
+          className="prose prose-sm max-w-none text-foreground mb-6"
+          dangerouslySetInnerHTML={{ __html: str(props.body) }}
+        />
       )}
       {citations.length > 0 && (
         <div className="border-t pt-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Sources</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            Sources
+          </p>
           <ol className="space-y-1">
             {citations.map((c, i) => (
               <li key={i} className="text-xs text-muted-foreground" data-testid={`citation-${i}`}>
                 {c.url ? (
-                  <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2 hover:text-accent/80">
+                  <a
+                    href={c.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent underline underline-offset-2 hover:text-accent/80"
+                  >
                     {c.text}
                   </a>
-                ) : c.text}
+                ) : (
+                  c.text
+                )}
               </li>
             ))}
           </ol>
@@ -1182,16 +1536,24 @@ function SafetyChecklistBlock({ props }: { props: Record<string, unknown> }) {
       <div className="space-y-3 max-w-2xl">
         {items.map((item, i) => (
           <div key={i} className="flex items-start gap-3" data-testid={`checklist-item-${i}`}>
-            <CheckCircle className={`h-5 w-5 flex-shrink-0 mt-0.5 ${item.required ? "text-accent" : "text-muted-foreground/50"}`} />
+            <CheckCircle
+              className={`h-5 w-5 flex-shrink-0 mt-0.5 ${item.required ? "text-accent" : "text-muted-foreground/50"}`}
+            />
             <div className="flex items-center gap-2">
               <span className="text-sm">{item.text}</span>
-              {item.required && <span className="text-[10px] font-medium text-accent bg-accent/10 px-1.5 py-0.5 rounded">Required</span>}
+              {item.required && (
+                <span className="text-[10px] font-medium text-accent bg-accent/10 px-1.5 py-0.5 rounded">
+                  Required
+                </span>
+              )}
             </div>
           </div>
         ))}
       </div>
       {str(props.disclaimer) && (
-        <p className="text-xs text-muted-foreground mt-6 italic border-t pt-4">{str(props.disclaimer)}</p>
+        <p className="text-xs text-muted-foreground mt-6 italic border-t pt-4">
+          {str(props.disclaimer)}
+        </p>
       )}
     </div>
   );
@@ -1285,7 +1647,11 @@ function RecoveryUseCasesBlock({ props }: { props: Record<string, unknown> }) {
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {personas.map((p, i) => (
-          <Card key={i} className="text-center hover:shadow-md transition-shadow" data-testid={`persona-card-${i}`}>
+          <Card
+            key={i}
+            className="text-center hover:shadow-md transition-shadow"
+            data-testid={`persona-card-${i}`}
+          >
             <CardContent className="pt-8 pb-6">
               <div className="h-14 w-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
                 <LucideIcon name={p.icon || "User"} className="h-7 w-7 text-accent" />
@@ -1312,7 +1678,9 @@ function ProtocolBuilderBlock({ props }: { props: Record<string, unknown> }) {
     <div className="py-4" data-testid="block-protocol-builder">
       <div className="flex flex-wrap items-start gap-3 mb-6">
         <SectionHeading props={props} defaultAlignment="left" className="flex-1 min-w-[220px]" />
-        <span className={`text-xs font-semibold px-2 py-1 rounded-full capitalize ${levelColors[level] || levelColors.beginner}`}>
+        <span
+          className={`text-xs font-semibold px-2 py-1 rounded-full capitalize ${levelColors[level] || levelColors.beginner}`}
+        >
           {level}
         </span>
       </div>
@@ -1525,8 +1893,11 @@ export function PublicPageRenderer({ blocks }: { blocks: BlockInstance[] }) {
         }
 
         const isFullWidth = FULL_WIDTH_BLOCK_TYPES.has(block.type);
-        const sectionStyleConfig = getSectionStyleConfig(block.props, { resolveAssetUrl: resolveCmsAssetUrl });
-        const hasCustomSectionStyle = block.type !== "hero" && hasSectionStyleConfig(sectionStyleConfig);
+        const sectionStyleConfig = getSectionStyleConfig(block.props, {
+          resolveAssetUrl: resolveCmsAssetUrl,
+        });
+        const hasCustomSectionStyle =
+          block.type !== "hero" && hasSectionStyleConfig(sectionStyleConfig);
         const idx = isFullWidth ? nonFullWidthIndex : nonFullWidthIndex++;
         const isAlternate = idx % 2 === 1 && !hasCustomSectionStyle;
 
@@ -1557,15 +1928,11 @@ export function PublicPageRenderer({ blocks }: { blocks: BlockInstance[] }) {
         return (
           <section
             key={block.id}
-            className={`relative overflow-hidden ${isAlternate ? "bg-muted/30" : ""}`}
+            className={`relative overflow-hidden ${isAlternate ? "bg-secondary" : "bg-white"}`}
           >
-            {isAlternate && (
-              <div
-                className="pointer-events-none absolute top-0 left-0 right-0 h-32"
-                style={{ background: "radial-gradient(ellipse at 50% 0%, hsl(var(--accent) / 0.10) 0%, transparent 70%)" }}
-              />
-            )}
-            <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 ${getSectionPaddingClasses(block.props)}`}>
+            <div
+              className={`relative max-w-7xl mx-auto px-4 sm:px-6 ${getSectionPaddingClasses(block.props)}`}
+            >
               <PublicBlockRenderer block={block} disableSectionStyleWrap />
             </div>
           </section>

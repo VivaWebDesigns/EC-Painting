@@ -6,7 +6,11 @@ import { useBranding } from "@/components/shared/branding-provider";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
 const defaultPlatformLinks = [
-  { href: "/directory", label: "Find a Mental Health Professional", testId: "link-footer-directory" },
+  {
+    href: "/directory",
+    label: "Find a Mental Health Professional",
+    testId: "link-footer-directory",
+  },
   { href: "/events", label: "Events & Workshops", testId: "link-footer-events" },
   { href: "/about", label: "How It Works", testId: "link-footer-how-it-works" },
 ];
@@ -35,6 +39,11 @@ const defaultLegalLinks = [
   { href: "/disclaimer", label: "Disclaimer", testId: "link-footer-disclaimer" },
 ];
 
+const footerLinkClass =
+  "text-slate-300/75 transition-colors hover:text-white focus-visible:text-white active:text-white";
+const legalFooterLinkClass =
+  "text-slate-300/75 transition-colors hover:text-white focus-visible:text-white active:text-white";
+
 type FooterLegalLink = {
   href: string;
   label: string;
@@ -42,18 +51,20 @@ type FooterLegalLink = {
   openInNewTab?: boolean;
 };
 
-function FooterColumn({ title, links }: { title: string; links: { href: string; label: string; testId: string }[] }) {
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { href: string; label: string; testId: string }[];
+}) {
   return (
     <div>
-      <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">{title}</h4>
+      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{title}</h4>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {links.map((link) => (
           <li key={link.testId}>
-            <Link
-              href={link.href}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              data-testid={link.testId}
-            >
+            <Link href={link.href} className={footerLinkClass} data-testid={link.testId}>
               {link.label}
             </Link>
           </li>
@@ -78,7 +89,7 @@ function DynamicFooterColumn({ item }: { item: MenuItem }) {
   const allLinks = flattenFooterItems(item.children || []);
   return (
     <div>
-      <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">{item.label}</h4>
+      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{item.label}</h4>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {allLinks.map(({ item: child, depth }) => (
           <li key={child.id} style={depth > 0 ? { paddingLeft: `${depth * 12}px` } : undefined}>
@@ -87,7 +98,7 @@ function DynamicFooterColumn({ item }: { item: MenuItem }) {
                 href={child.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className={footerLinkClass}
                 data-testid={`link-footer-${child.id}`}
               >
                 {child.label}
@@ -95,7 +106,7 @@ function DynamicFooterColumn({ item }: { item: MenuItem }) {
             ) : (
               <Link
                 href={child.url}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className={footerLinkClass}
                 data-testid={`link-footer-${child.id}`}
               >
                 {child.label}
@@ -118,7 +129,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
 
   return (
     <div>
-      <h4 className="font-semibold text-sm mb-3 sm:mb-4 text-foreground">{menu.name}</h4>
+      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{menu.name}</h4>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {links.map((item) => (
           <li key={item.id}>
@@ -127,7 +138,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className={footerLinkClass}
                 data-testid={`link-footer-${item.id}`}
               >
                 {item.label}
@@ -135,7 +146,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
             ) : (
               <Link
                 href={item.url}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className={footerLinkClass}
                 data-testid={`link-footer-${item.id}`}
               >
                 {item.label}
@@ -168,13 +179,16 @@ export function Footer() {
   }, [publicMenus]);
 
   const standardFooterMenus = useMemo(
-    () => [
-      publicMenus?.footer_platform,
-      publicMenus?.footer_professionals,
-      publicMenus?.footer_resources,
-      publicMenus?.footer_company,
-    ].filter((menu): menu is CmsMenu => Boolean(menu && Array.isArray(menu.items) && menu.items.length > 0)),
-    [publicMenus]
+    () =>
+      [
+        publicMenus?.footer_platform,
+        publicMenus?.footer_professionals,
+        publicMenus?.footer_resources,
+        publicMenus?.footer_company,
+      ].filter((menu): menu is CmsMenu =>
+        Boolean(menu && Array.isArray(menu.items) && menu.items.length > 0),
+      ),
+    [publicMenus],
   );
 
   const legalLinks = useMemo(() => {
@@ -196,17 +210,24 @@ export function Footer() {
   const brandLogo = frontendLogoUrl || logoImg;
 
   return (
-    <footer className="border-t bg-muted/30" data-testid="footer">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-16">
-        <div className={`grid grid-cols-2 sm:grid-cols-2 ${useStandardFooterMenus ? "lg:grid-cols-6" : "lg:grid-cols-5"} gap-8 sm:gap-10 lg:gap-12`}>
+    <footer
+      className="relative overflow-hidden border-t border-slate-800 bg-[#021824] text-white"
+      data-testid="footer"
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-primary/60" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-14">
+        <div
+          className={`grid grid-cols-2 sm:grid-cols-2 ${useStandardFooterMenus ? "lg:grid-cols-6" : "lg:grid-cols-5"} gap-8 sm:gap-10 lg:gap-12`}
+        >
           <div className="col-span-2">
             <img
               src={brandLogo}
               alt="Core Platform"
-              className="h-8 sm:h-9 w-auto mb-3 sm:mb-4"
+              className="h-8 sm:h-10 w-auto mb-4 object-contain"
             />
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Connecting Third Culture Kids with culturally informed mental health professionals worldwide. Find support that understands your unique journey.
+            <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
+              Connecting Third Culture Kids with culturally informed mental health professionals
+              worldwide. Find support that understands your unique journey.
             </p>
           </div>
 
@@ -225,7 +246,7 @@ export function Footer() {
                           href={item.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground transition-colors font-semibold"
+                          className={`${footerLinkClass} font-semibold`}
                           data-testid={`link-footer-${item.id}`}
                         >
                           {item.label}
@@ -233,7 +254,7 @@ export function Footer() {
                       ) : (
                         <Link
                           href={item.url}
-                          className="text-muted-foreground hover:text-foreground transition-colors font-semibold"
+                          className={`${footerLinkClass} font-semibold`}
                           data-testid={`link-footer-${item.id}`}
                         >
                           {item.label}
@@ -242,7 +263,7 @@ export function Footer() {
                     </li>
                   </ul>
                 </div>
-              )
+              ),
             )
           ) : (
             <>
@@ -258,8 +279,13 @@ export function Footer() {
           )}
         </div>
 
-        <div className="mt-8 sm:mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-sm text-muted-foreground" data-testid="text-copyright">
-          <span className="text-center sm:text-left">&copy; {new Date().getFullYear()} Interaction International. All rights reserved.</span>
+        <div
+          className="mt-8 sm:mt-10 pt-6 border-t border-slate-700/70 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-sm text-slate-300/75"
+          data-testid="text-copyright"
+        >
+          <span className="text-center sm:text-left">
+            &copy; {new Date().getFullYear()} Interaction International. All rights reserved.
+          </span>
           <div className="flex items-center gap-4 sm:gap-6">
             {legalLinks.map((link) =>
               link.openInNewTab ? (
@@ -268,7 +294,7 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
+                  className={legalFooterLinkClass}
                   data-testid={link.testId}
                 >
                   {link.label}
@@ -277,17 +303,16 @@ export function Footer() {
                 <Link
                   key={link.testId}
                   href={link.href}
-                  className="hover:text-foreground transition-colors"
+                  className={legalFooterLinkClass}
                   data-testid={link.testId}
                 >
                   {link.label}
                 </Link>
-              )
+              ),
             )}
           </div>
         </div>
       </div>
-
     </footer>
   );
 }

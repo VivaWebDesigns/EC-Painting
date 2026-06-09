@@ -1,6 +1,15 @@
 import { useState, useMemo } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, User, LogOut, LayoutDashboard, Shield, UserCog, ChevronDown, Bell } from "lucide-react";
+import {
+  Menu,
+  User,
+  LogOut,
+  LayoutDashboard,
+  Shield,
+  UserCog,
+  ChevronDown,
+  Bell,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useUnreadNotificationCount } from "@/hooks/use-unread-notification-count";
 import logoImg from "@assets/IMG_0002_1772999718659.png";
@@ -32,6 +41,11 @@ const allResourceLinks = [
   { label: "Insights & Articles", href: "/insights" },
 ];
 
+const navButtonClass =
+  "h-auto rounded-none bg-transparent px-0 py-1 text-sm font-semibold text-foreground/65 shadow-none hover:bg-transparent hover:text-foreground";
+const activeNavLinkClass = "text-primary hover:text-primary";
+const activeNavButtonClass = `${navButtonClass} ${activeNavLinkClass}`;
+
 function flattenItems(items: MenuItem[], depth = 0): { item: MenuItem; depth: number }[] {
   const result: { item: MenuItem; depth: number }[] = [];
   for (const item of items) {
@@ -59,16 +73,23 @@ function DynamicDropdown({ item, location: currentPath }: { item: MenuItem; loca
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={isActive ? "toggle-elevate toggle-elevated" : ""}
+          className={isActive ? activeNavButtonClass : navButtonClass}
           data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
         >
           {item.label}
           <ChevronDown className="ml-1 h-3.5 w-3.5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="z-[1000]">
+      <DropdownMenuContent
+        align="start"
+        className="z-[1000] w-64 rounded-md border-border bg-white p-2 shadow-lg"
+      >
         {flatChildren.map(({ item: child, depth }) => (
-          <DropdownMenuItem key={child.id} asChild className={depth > 0 ? `pl-${4 + depth * 4}` : ""}>
+          <DropdownMenuItem
+            key={child.id}
+            asChild
+            className={depth > 0 ? `pl-${4 + depth * 4}` : ""}
+          >
             {child.openInNewTab ? (
               <a
                 href={child.url}
@@ -121,21 +142,22 @@ export function Navbar() {
   }, [publicMenus]);
 
   const isClient = user && user.role === "client";
-  const resourceLinks = allResourceLinks.filter(
-    (link) => !(link.hideFromClients && isClient)
-  );
+  const resourceLinks = allResourceLinks.filter((link) => !(link.hideFromClients && isClient));
 
   const unreadNotifCount = useUnreadNotificationCount();
   const brandLogo = frontendLogoUrl || logoImg;
 
   return (
-    <nav className="sticky top-0 z-[999] bg-background/95 backdrop-blur-sm border-b" data-testid="navbar">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-6 px-4 sm:px-6 py-3 sm:py-4">
+    <nav
+      className="sticky top-0 z-[999] border-b border-border bg-white shadow-sm"
+      data-testid="navbar"
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link href="/" data-testid="link-brand">
-          <img src={brandLogo} alt="Core Platform" className="h-8 sm:h-10 w-auto" />
+          <img src={brandLogo} alt="Core Platform" className="h-10 w-auto md:h-12" />
         </Link>
 
-        <div className="hidden md:flex items-center gap-2 flex-wrap">
+        <div className="hidden items-center gap-8 md:flex">
           {dynamicItems ? (
             dynamicItems.map((item) =>
               item.children && item.children.length > 0 ? (
@@ -144,6 +166,7 @@ export function Navbar() {
                 <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">
                   <Button
                     variant="ghost"
+                    className={navButtonClass}
                     data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     {item.label}
@@ -153,14 +176,14 @@ export function Navbar() {
                 <Link key={item.id} href={item.url}>
                   <Button
                     variant="ghost"
-                    className={location === item.url ? "toggle-elevate toggle-elevated" : ""}
+                    className={location === item.url ? activeNavButtonClass : navButtonClass}
                     data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                     aria-current={location === item.url ? "page" : undefined}
                   >
                     {item.label}
                   </Button>
                 </Link>
-              )
+              ),
             )
           ) : (
             <>
@@ -168,7 +191,7 @@ export function Navbar() {
                 <Link key={link.href} href={link.href}>
                   <Button
                     variant="ghost"
-                    className={location === link.href ? "toggle-elevate toggle-elevated" : ""}
+                    className={location === link.href ? activeNavButtonClass : navButtonClass}
                     data-testid={`link-nav-${link.label.toLowerCase()}`}
                     aria-current={location === link.href ? "page" : undefined}
                   >
@@ -180,17 +203,27 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className={resourceLinks.some((r) => location === r.href) ? "toggle-elevate toggle-elevated" : ""}
+                    className={
+                      resourceLinks.some((r) => location === r.href)
+                        ? activeNavButtonClass
+                        : navButtonClass
+                    }
                     data-testid="link-nav-resources"
                   >
                     Resources
                     <ChevronDown className="ml-1 h-3.5 w-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="z-[1000]">
+                <DropdownMenuContent
+                  align="start"
+                  className="z-[1000] w-64 rounded-md border-border bg-white p-2 shadow-lg"
+                >
                   {resourceLinks.map((link) => (
                     <DropdownMenuItem key={link.href} asChild>
-                      <Link href={link.href} data-testid={`link-nav-resource-${link.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+                      <Link
+                        href={link.href}
+                        data-testid={`link-nav-resource-${link.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                      >
                         {link.label}
                       </Link>
                     </DropdownMenuItem>
@@ -200,7 +233,7 @@ export function Navbar() {
               <Link href="/contact">
                 <Button
                   variant="ghost"
-                  className={location === "/contact" ? "toggle-elevate toggle-elevated" : ""}
+                  className={location === "/contact" ? activeNavButtonClass : navButtonClass}
                   data-testid="link-nav-contact"
                   aria-current={location === "/contact" ? "page" : undefined}
                 >
@@ -211,7 +244,7 @@ export function Navbar() {
           )}
         </div>
 
-        <div className="hidden md:flex items-center gap-3 flex-wrap">
+        <div className="hidden items-center gap-3 md:flex">
           <NavbarSearchPopover />
           {isLoading ? null : user ? (
             <>
@@ -223,7 +256,11 @@ export function Navbar() {
                     data-testid="button-user-menu"
                   >
                     {user.profileImageUrl ? (
-                      <img src={user.profileImageUrl} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={user.profileImageUrl}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       <User className="h-4 w-4 text-muted-foreground" />
                     )}
@@ -273,10 +310,7 @@ export function Navbar() {
                     My Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => logout.mutate()}
-                    data-testid="button-logout"
-                  >
+                  <DropdownMenuItem onClick={() => logout.mutate()} data-testid="button-logout">
                     <LogOut className="mr-2 h-4 w-4" />
                     Logout
                   </DropdownMenuItem>
@@ -286,7 +320,11 @@ export function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <Button variant="ghost" data-testid="link-login">
+                <Button
+                  variant="ghost"
+                  className="font-semibold text-foreground/70 hover:text-foreground"
+                  data-testid="link-login"
+                >
                   Login
                 </Button>
               </Link>
@@ -301,7 +339,7 @@ export function Navbar() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
+            <SheetContent side="right" className="w-72 bg-white">
               <SheetHeader>
                 <SheetTitle>
                   <img src={brandLogo} alt="Core Platform" className="h-8 w-auto" />
@@ -309,7 +347,7 @@ export function Navbar() {
               </SheetHeader>
               <div className="flex flex-col gap-1 mt-6">
                 {dynamicItems ? (
-                  flattenItems(dynamicItems).map(({ item, depth }) => (
+                  flattenItems(dynamicItems).map(({ item, depth }) =>
                     item.children && item.children.length > 0 ? (
                       <p
                         key={item.id}
@@ -320,7 +358,13 @@ export function Navbar() {
                         {item.label}
                       </p>
                     ) : item.openInNewTab ? (
-                      <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
+                      <a
+                        key={item.id}
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMobileOpen(false)}
+                      >
                         <Button
                           variant="ghost"
                           className="w-full justify-start"
@@ -342,8 +386,8 @@ export function Navbar() {
                           {item.label}
                         </Button>
                       </Link>
-                    )
-                  ))
+                    ),
+                  )
                 ) : (
                   <>
                     {defaultNavLinks.map((link) => (
@@ -358,7 +402,9 @@ export function Navbar() {
                         </Button>
                       </Link>
                     ))}
-                    <p className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resources</p>
+                    <p className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Resources
+                    </p>
                     {resourceLinks.map((link) => (
                       <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
                         <Button
@@ -393,7 +439,11 @@ export function Navbar() {
                     </p>
                     {isTherapist && (
                       <Link href="/therapist" onClick={() => setMobileOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start" data-testid="link-mobile-therapist">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          data-testid="link-mobile-therapist"
+                        >
                           <LayoutDashboard className="mr-2 h-4 w-4" />
                           Mental Health Professional Dashboard
                         </Button>
@@ -401,7 +451,11 @@ export function Navbar() {
                     )}
                     {isAdmin && (
                       <Link href="/admin" onClick={() => setMobileOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start" data-testid="link-mobile-admin">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          data-testid="link-mobile-admin"
+                        >
                           <Shield className="mr-2 h-4 w-4" />
                           Admin Dashboard
                         </Button>
@@ -453,7 +507,11 @@ export function Navbar() {
                 ) : (
                   <>
                     <Link href="/auth/login" onClick={() => setMobileOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start" data-testid="link-mobile-login">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        data-testid="link-mobile-login"
+                      >
                         Login
                       </Button>
                     </Link>
@@ -465,7 +523,9 @@ export function Navbar() {
         </div>
       </div>
 
-      {user && <NotificationBell open={notifOpen} onOpenChange={setNotifOpen} showTrigger={false} />}
+      {user && (
+        <NotificationBell open={notifOpen} onOpenChange={setNotifOpen} showTrigger={false} />
+      )}
       <UserProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
     </nav>
   );

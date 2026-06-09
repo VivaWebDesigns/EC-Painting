@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -51,62 +53,62 @@
 }
 
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(0, 0, 0, 0.1);
+  --badge-outline: rgba(0, 0, 0, 0.05);
 
   --opaque-button-border-intensity: -8;
 
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(8, 145, 178, 0.06);
+  --elevate-2: rgba(8, 145, 178, 0.12);
 
-  --background: 40 20% 98%;
-  --foreground: 222 38% 19%;
+  --background: 0 0% 100%;
+  --foreground: 215 50% 23%;
 
-  --border: 153 12% 85%;
+  --border: 210 20% 90%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 38% 19%;
-  --card-border: 153 12% 88%;
+  --card-foreground: 215 50% 23%;
+  --card-border: 210 20% 90%;
 
-  --sidebar: 222 25% 15%;
-  --sidebar-foreground: 40 20% 95%;
-  --sidebar-border: 222 20% 22%;
-  --sidebar-primary: 153 20% 71%;
-  --sidebar-primary-foreground: 222 38% 12%;
-  --sidebar-accent: 175 37% 36%;
+  --sidebar: 215 50% 15%;
+  --sidebar-foreground: 0 0% 96%;
+  --sidebar-border: 215 35% 24%;
+  --sidebar-primary: 195 75% 38%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 195 75% 38%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 175 37% 36%;
+  --sidebar-ring: 195 75% 38%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222 38% 19%;
-  --popover-border: 153 12% 88%;
+  --popover-foreground: 215 50% 23%;
+  --popover-border: 210 20% 90%;
 
-  --primary: 222 38% 19%;
-  --primary-foreground: 40 20% 98%;
+  --primary: 195 75% 38%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 153 20% 71%;
-  --secondary-foreground: 222 38% 15%;
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 215 50% 23%;
 
-  --muted: 153 12% 93%;
-  --muted-foreground: 222 15% 46%;
+  --muted: 210 15% 95%;
+  --muted-foreground: 215 20% 50%;
 
-  --accent: 175 37% 36%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 195 60% 92%;
+  --accent-foreground: 195 75% 30%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 153 12% 82%;
-  --ring: 175 37% 36%;
-  --chart-1: 222 38% 19%;
-  --chart-2: 175 37% 36%;
-  --chart-3: 22 48% 44%;
-  --chart-4: 153 20% 71%;
-  --chart-5: 222 25% 35%;
+  --input: 210 20% 90%;
+  --ring: 195 75% 38%;
+  --chart-1: 195 75% 38%;
+  --chart-2: 215 50% 23%;
+  --chart-3: 42 90% 55%;
+  --chart-4: 160 65% 40%;
+  --chart-5: 12 78% 58%;
 
-  --font-sans: 'Nunito Sans', sans-serif;
-  --font-serif: 'EB Garamond', serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: "Open Sans", sans-serif;
+  --font-serif: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --public-text-h1: var(--foreground);
   --public-text-h2: var(--foreground);
   --public-text-h3: var(--foreground);
@@ -115,41 +117,57 @@
   --public-text-supporting-copy: var(--muted-foreground);
   --public-text-helper: var(--muted-foreground);
   --public-text-meta: var(--muted-foreground);
-  --public-text-link: var(--accent);
+  --public-text-link: var(--primary);
   --public-text-link-hover: var(--primary);
-  --public-text-inverse: 40 20% 98%;
-  --radius: .5rem;
-  --shadow-2xs: 0px 1px 2px 0px rgba(31,42,68, 0.04);
-  --shadow-xs: 0px 1px 3px 0px rgba(31,42,68, 0.06);
-  --shadow-sm: 0px 1px 3px 0px rgba(31,42,68, 0.06), 0px 1px 2px -1px rgba(31,42,68, 0.06);
-  --shadow: 0px 2px 4px 0px rgba(31,42,68, 0.06), 0px 1px 2px -1px rgba(31,42,68, 0.06);
-  --shadow-md: 0px 4px 6px -1px rgba(31,42,68, 0.08), 0px 2px 4px -1px rgba(31,42,68, 0.06);
-  --shadow-lg: 0px 10px 15px -3px rgba(31,42,68, 0.08), 0px 4px 6px -1px rgba(31,42,68, 0.06);
-  --shadow-xl: 0px 20px 25px -5px rgba(31,42,68, 0.10), 0px 8px 10px -1px rgba(31,42,68, 0.06);
-  --shadow-2xl: 0px 25px 50px -12px rgba(31,42,68, 0.20);
+  --public-text-inverse: 0 0% 100%;
+  --radius: 0.5rem;
+  --shadow-2xs: 0px 1px 2px 0px hsl(215 50% 23% / 0.04);
+  --shadow-xs: 0px 1px 3px 0px hsl(215 50% 23% / 0.06);
+  --shadow-sm: 0px 1px 3px 0px hsl(215 50% 23% / 0.06), 0px 1px 2px -1px hsl(215 50% 23% / 0.06);
+  --shadow: 0px 2px 4px 0px hsl(215 50% 23% / 0.06), 0px 1px 2px -1px hsl(215 50% 23% / 0.06);
+  --shadow-md: 0px 8px 18px -8px hsl(215 50% 23% / 0.16), 0px 3px 8px -4px hsl(215 50% 23% / 0.1);
+  --shadow-lg:
+    0px 18px 32px -16px hsl(215 50% 23% / 0.22), 0px 8px 16px -12px hsl(215 50% 23% / 0.14);
+  --shadow-xl:
+    0px 24px 48px -20px hsl(215 50% 23% / 0.28), 0px 10px 20px -14px hsl(215 50% 23% / 0.16);
+  --shadow-2xl: 0px 32px 64px -24px hsl(215 50% 23% / 0.34);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
   --sidebar-primary-border: hsl(var(--sidebar-primary));
-  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-primary-border: hsl(
+    from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --sidebar-accent-border: hsl(var(--sidebar-accent));
-  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --sidebar-accent-border: hsl(
+    from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --primary-border: hsl(var(--primary));
-  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --primary-border: hsl(
+    from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --secondary-border: hsl(var(--secondary));
-  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --secondary-border: hsl(
+    from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --muted-border: hsl(var(--muted));
-  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --muted-border: hsl(
+    from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --accent-border: hsl(var(--accent));
-  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --accent-border: hsl(
+    from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 
   --destructive-border: hsl(var(--destructive));
-  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+  --destructive-border: hsl(
+    from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
 }
 
 :root.admin-mode {
@@ -197,13 +215,13 @@
   --chart-4: 215 20% 65%;
   --chart-5: 222 47% 25%;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Inter', sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Inter", sans-serif;
   --shadow-2xs: 0px 1px 2px 0px rgba(15, 23, 42, 0.03);
   --shadow-xs: 0px 1px 3px 0px rgba(15, 23, 42, 0.05);
   --shadow-sm: 0px 1px 3px 0px rgba(15, 23, 42, 0.06), 0px 1px 2px -1px rgba(15, 23, 42, 0.05);
   --shadow: 0px 2px 4px 0px rgba(15, 23, 42, 0.06), 0px 1px 2px -1px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0px 8px 16px -6px rgba(15, 23, 42, 0.10), 0px 4px 8px -4px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0px 8px 16px -6px rgba(15, 23, 42, 0.1), 0px 4px 8px -4px rgba(15, 23, 42, 0.06);
   --shadow-lg: 0px 16px 24px -8px rgba(15, 23, 42, 0.12), 0px 8px 16px -8px rgba(15, 23, 42, 0.08);
 }
 
@@ -252,20 +270,20 @@
   --chart-4: 215 20% 65%;
   --chart-5: 210 40% 80%;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Inter', sans-serif;
-  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.20);
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Inter", sans-serif;
+  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
   --shadow-xs: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
   --shadow-sm: 0px 1px 3px 0px rgba(0, 0, 0, 0.28), 0px 1px 2px -1px rgba(0, 0, 0, 0.22);
   --shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28), 0px 1px 2px -1px rgba(0, 0, 0, 0.22);
   --shadow-md: 0px 8px 16px -6px rgba(0, 0, 0, 0.38), 0px 4px 8px -4px rgba(0, 0, 0, 0.28);
-  --shadow-lg: 0px 16px 24px -8px rgba(0, 0, 0, 0.44), 0px 8px 16px -8px rgba(0, 0, 0, 0.30);
+  --shadow-lg: 0px 16px 24px -8px rgba(0, 0, 0, 0.44), 0px 8px 16px -8px rgba(0, 0, 0, 0.3);
 }
 
 @layer base {
   .admin-shell {
-    --font-sans: 'Inter', sans-serif;
-    --font-serif: 'Inter', sans-serif;
+    --font-sans: "Inter", sans-serif;
+    --font-serif: "Inter", sans-serif;
   }
 
   * {
@@ -386,8 +404,10 @@
     pointer-events: none;
   }
 
-  .no-default-hover-elevate {}
-  .no-default-active-elevate {}
+  .no-default-hover-elevate {
+  }
+  .no-default-active-elevate {
+  }
 
   .toggle-elevate::before,
   .toggle-elevate-2::before {
