@@ -326,7 +326,7 @@ const services = [
       },
       {
         title: "Daily photo updates",
-        description: "Know what is happening even when you are at work.",
+        description: "Know what's happening even when you're at work.",
       },
       { title: "3-year warranty", description: "Written into your contract." },
       {
@@ -342,7 +342,7 @@ const services = [
     faq: [
       [
         "How long does interior painting take?",
-        "It depends on the size of the home and the scope of work, but most single rooms take 1-2 days and most full-house interiors take 4-7 days. We'll give you a clear timeline in your written quote.",
+        "It depends on the size of the home and the scope of work, but most single rooms take 1–2 days and most full-house interiors take 4–7 days. We'll give you a clear timeline in your written quote.",
       ],
       [
         "Do I need to move my furniture?",
@@ -411,7 +411,7 @@ const services = [
       {
         title: "Hardie Plank & Fiber Cement Siding",
         description:
-          "The most common siding on newer Charlotte homes. It needs repainting every 7-15 years depending on exposure and coating quality.",
+          "The most common siding on newer Charlotte homes. Needs repainting every 7–15 years.",
       },
       {
         title: "Vinyl Siding",
@@ -487,7 +487,7 @@ const services = [
         "Built for Carolina Weather",
         [
           "Painting in the Charlotte area is different from painting in other parts of the country, and a painter who doesn't account for that ends up with a paint job that fails early.",
-          "Heat and humidity affect how paint cures. UV exposure fades cheap paints faster than the warranty claims. Pollen season makes timing matter. Sudden afternoon thunderstorms can ruin a fresh coat if the painter is not watching the radar.",
+          "Heat and humidity affect how paint cures. UV exposure fades cheap paints faster than the warranty claims. Pollen season makes timing matter. Sudden afternoon thunderstorms can ruin a fresh coat if the painter didn't watch the radar.",
           "We've been painting Carolina homes for 5 years and we know the rhythms — when to paint and when to wait, which paints hold up to the UV here, and how to prep siding so the paint doesn't peel in year three. Hire someone who knows the local weather, and your exterior paint job will last as long as it's supposed to.",
         ],
       ],
@@ -678,8 +678,8 @@ const services = [
           ) +
             ul([
               "Day 1: Remove doors, drawers, and hardware. Begin cleaning and prep.",
-              "Days 2-3: Sand, fill, prep all surfaces. Set up controlled spray area.",
-              "Days 3-5: Prime and spray topcoats on doors, drawers, and cabinet boxes.",
+              "Days 2–3: Sand, fill, prep all surfaces. Set up controlled spray area.",
+              "Days 3–5: Prime and spray topcoats on doors, drawers, and cabinet boxes.",
               "Day 6: Cure time and final touch-ups.",
               "Day 7: Reinstall doors, drawers, and hardware. Walkthrough with you.",
             ]),
@@ -800,7 +800,7 @@ const services = [
       {
         title: "Painting",
         description:
-          "When stain is not the right answer, we use deck paints designed for foot-traffic durability.",
+          "When stain isn't the right answer, we paint decks with products designed for foot-traffic durability.",
       },
     ],
     processTitle: "Our Deck Staining Process",
@@ -1566,7 +1566,7 @@ function serviceDetailContent(service: (typeof services)[number]) {
           },
           {
             title: "Daily photo updates",
-            description: "Know what is happening even when you are at work.",
+            description: "Know what's happening even when you're at work.",
           },
           { title: "3-year warranty", description: "Written into your contract." },
           { title: "Clean job site", description: "Your home and landscaping are protected." },
