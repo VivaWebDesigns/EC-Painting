@@ -309,6 +309,7 @@ const services = [
         ],
       ],
     ],
+    whyTitle: "Why Choose 593 EC Painting for Your Interior",
     whyItems: [
       {
         title: "You talk to the owner",
@@ -333,6 +334,11 @@ const services = [
         description: "Months or years later. That is how we keep customers for life.",
       },
     ],
+    galleryTitle: "Recent Interior Projects",
+    gallerySubtitle: "A look at recent interior painting work across Charlotte.",
+    ctaHeading: "Ready to Refresh Your Interior?",
+    ctaBody:
+      "Get a free quote for your interior painting project. Most quotes scheduled within 48 hours.",
     faq: [
       [
         "How long does interior painting take?",
@@ -486,6 +492,7 @@ const services = [
         ],
       ],
     ],
+    whyTitle: "Why Choose 593 EC Painting for Your Exterior",
     whyItems: [
       {
         title: "Family-owned, local",
@@ -510,6 +517,11 @@ const services = [
       },
       { title: "3-year warranty", description: "Written into your contract." },
     ],
+    galleryTitle: "Recent Exterior Projects",
+    gallerySubtitle: "A look at recent exterior painting projects across the Carolinas.",
+    ctaHeading: "Ready to Refresh Your Exterior?",
+    ctaBody:
+      "Get a free on-site quote for your exterior painting project. We will measure, inspect, and write you a clear estimate.",
     faq: [
       [
         "How often should I repaint my home's exterior in Charlotte?",
@@ -661,6 +673,8 @@ const services = [
         ],
       ],
     ],
+    whyTitle: "Why Choose 593 EC Painting for Your Cabinets",
+    whySubtitle: "",
     whyItems: [
       {
         title: "Family-owned attention",
@@ -684,6 +698,11 @@ const services = [
         description: "Doors are sprayed off-site or in a sealed area. No overspray on appliances.",
       },
     ],
+    galleryTitle: "Recent Cabinet Projects",
+    gallerySubtitle: "Before-and-after photos from Charlotte-area kitchens we have refinished.",
+    ctaHeading: "Ready to Transform Your Kitchen?",
+    ctaBody:
+      "Get a free in-home quote and find out what cabinet painting could do for your kitchen.",
     faq: [
       [
         "How long does cabinet painting take?",
@@ -815,6 +834,8 @@ const services = [
         ],
       ],
     ],
+    whyTitle: "Why Choose 593 EC Painting for Your Deck",
+    whySubtitle: "",
     whyItems: [
       {
         title: "Family-owned, local",
@@ -832,6 +853,11 @@ const services = [
       { title: "3-year warranty", description: "On workmanship." },
       { title: "Clean job site", description: "Plants and patio furniture protected." },
     ],
+    galleryTitle: "Recent Deck Projects",
+    gallerySubtitle: "Before and after photos from Charlotte-area decks we have restored.",
+    ctaHeading: "Ready to Restore Your Deck?",
+    ctaBody:
+      "Get a free on-site quote for your deck staining or painting project. We will inspect the wood, talk through options, and write you a clear estimate.",
     faq: [
       [
         "How often should I restain my deck in Charlotte?",
@@ -945,6 +971,8 @@ const services = [
         ],
       ],
     ],
+    whyTitle: "Why Choose 593 EC Painting for Your Fence",
+    whySubtitle: "",
     whyItems: [
       {
         title: "Family-owned, local",
@@ -959,6 +987,10 @@ const services = [
       { title: "3-year warranty", description: "On workmanship." },
       { title: "Clean job site", description: "Landscaping protected and debris cleaned up." },
     ],
+    galleryTitle: "Recent Fence Projects",
+    gallerySubtitle: "Charlotte-area fences we have restored.",
+    ctaHeading: "Ready to Restore Your Fence?",
+    ctaBody: "Get a free on-site quote for your fence staining or painting project.",
     faq: [
       [
         "How often should I restain my fence?",
@@ -1408,7 +1440,13 @@ function serviceDetailContent(service: (typeof services)[number]) {
     featureDetails?: Array<{ title: string; description: string; icon?: string }>;
     featuresSubtitle?: string;
     processSubtitle?: string;
+    whyTitle?: string;
+    whySubtitle?: string;
     whyItems?: Array<{ title: string; description: string; icon?: string }>;
+    galleryTitle?: string;
+    gallerySubtitle?: string;
+    ctaHeading?: string;
+    ctaBody?: string;
   };
   return {
     blocks: [
@@ -1439,8 +1477,8 @@ function serviceDetailContent(service: (typeof services)[number]) {
         return rich(title, Array.isArray(body) ? body : [String(body)]);
       }),
       featureList(
-        `Why Choose 593 EC Painting for Your ${service.navTitle.replace(" Painting", "")}`,
-        "A family-owned painting business with a different approach.",
+        serviceData.whyTitle ?? `Why Choose 593 EC Painting for Your ${service.navTitle}`,
+        serviceData.whySubtitle ?? "A family-owned painting business with a different approach.",
         serviceData.whyItems ?? [
           {
             title: "You talk to the owner",
@@ -1460,12 +1498,14 @@ function serviceDetailContent(service: (typeof services)[number]) {
         ],
       ),
       galleryBlock(
-        `Recent ${service.navTitle} Projects`,
-        "A look at recent work across Charlotte and the surrounding Carolinas.",
+        serviceData.galleryTitle ?? `Recent ${service.navTitle} Projects`,
+        serviceData.gallerySubtitle ??
+          "A look at recent work across Charlotte and the surrounding Carolinas.",
       ),
       cta(
-        `Ready for ${service.navTitle}?`,
-        "Get a free quote for your project. Most quotes scheduled within 48 hours.",
+        serviceData.ctaHeading ?? `Ready for ${service.navTitle}?`,
+        serviceData.ctaBody ??
+          "Get a free quote for your project. Most quotes scheduled within 48 hours.",
       ),
       faq(service.faq.map(([question, answer]) => ({ question, answer }))),
     ],
