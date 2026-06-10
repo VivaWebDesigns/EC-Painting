@@ -52,6 +52,8 @@ export function serveStatic(app: Express) {
       !publicUrl.pathname.startsWith("/uploads") &&
       !publicUrl.pathname.startsWith("/api");
     const customHeadHtml = shouldInjectPublicHead ? await getPublicHeadAdditions() : null;
+    const shouldReturnNotFound =
+      shouldInjectPublicHead && (publicUrl.pathname === "/404" || !snapshot);
 
     res.setHeader(
       "Cache-Control",
@@ -59,6 +61,7 @@ export function serveStatic(app: Express) {
         ? "private, no-store, max-age=0"
         : "no-cache",
     );
+    res.status(shouldReturnNotFound ? 404 : 200);
     res.type("html").send(injectPublicHtmlSnapshot(template, snapshot, customHeadHtml));
   });
 }
