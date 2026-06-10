@@ -18,7 +18,7 @@ const LOGO_URL = "/img/593-ec-painting-logo-full-color.png";
 const OG_IMAGE_URL = "/img/593-ec-painting-og.jpg";
 const FAVICON_URL = "/favicon.ico";
 const SERVICE_AREA =
-  "Charlotte, Matthews, Mint Hill, Monroe, Pineville, Huntersville, Cornelius, Davidson, Concord, Tega Cay, Waxhaw, Indian Trail, Stallings, Fort Mill, Indian Land, Rock Hill, and surrounding areas";
+  "Charlotte • Matthews • Mint Hill • Monroe • Pineville • Huntersville • Cornelius • Davidson • Concord • Tega Cay • Waxhaw • Indian Trail • Stallings • Fort Mill • Indian Land • Rock Hill — and surrounding areas";
 
 function id() {
   return randomUUID();
@@ -44,6 +44,10 @@ function p(text: string) {
 
 function ul(items: string[]) {
   return `<ul>${items.map((text) => `<li>${text}</li>`).join("")}</ul>`;
+}
+
+function strong(label: string, body: string) {
+  return `<strong>${label}</strong> ${body}`;
 }
 
 function rich(title: string, paragraphs: string[] | string, extra: Record<string, unknown> = {}) {
@@ -102,17 +106,21 @@ function cta(
   subheading: string,
   primaryText = "Get a Free Quote",
   secondary = true,
+  primaryLink?: string,
+  secondaryText?: string,
+  secondaryLink?: string,
 ) {
   const isCall = primaryText.toLowerCase().includes("call");
+  const resolvedSecondaryLink = secondaryLink ?? PHONE_TEL;
   return block("cta", {
     heading,
     subheading,
     primaryText,
     primaryAction: isCall ? "external-link" : "internal-link",
-    primaryLink: isCall ? PHONE_TEL : "/contact",
-    secondaryText: secondary ? `Call ${PHONE_DISPLAY}` : "",
-    secondaryAction: "external-link",
-    secondaryLink: PHONE_TEL,
+    primaryLink: primaryLink ?? (isCall ? PHONE_TEL : "/contact/"),
+    secondaryText: secondary ? (secondaryText ?? `Call ${PHONE_DISPLAY}`) : "",
+    secondaryAction: resolvedSecondaryLink.startsWith("/") ? "internal-link" : "external-link",
+    secondaryLink: resolvedSecondaryLink,
     variant: "dark",
   });
 }
@@ -122,18 +130,22 @@ function hero({
   subheadline,
   image,
   secondary = true,
+  primaryText = "Get a Free Quote",
+  primaryLink = "/contact/",
 }: {
   headline: string;
   subheadline: string;
   image?: string;
   secondary?: boolean;
+  primaryText?: string;
+  primaryLink?: string;
 }) {
   return block("hero", {
     heading: headline,
     subheading: `<p>${subheadline}</p>`,
-    ctaText: "Get a Free Quote",
+    ctaText: primaryText,
     ctaAction: "internal-link",
-    ctaLink: "/contact",
+    ctaLink: primaryLink,
     ctaSecondaryText: secondary ? `Call ${PHONE_DISPLAY}` : "",
     ctaSecondaryAction: "external-link",
     ctaSecondaryLink: PHONE_TEL,
@@ -162,38 +174,33 @@ function galleryBlock(title: string, subtitle: string, limit = 6) {
 const serviceCards = [
   {
     title: "Interior Painting",
-    description:
-      "Walls, ceilings, trim, doors, and full home repaints, plus popcorn ceiling removal, wallpaper removal, and drywall repair.",
+    description: "Walls, ceilings, trim, doors, and full home repaints.",
     icon: "PaintBucket",
-    link: "/interior-painting",
+    link: "/interior-painting/",
   },
   {
     title: "Exterior Painting",
-    description:
-      "Siding, brick, stucco, trim, shutters, garage doors, and full exterior repaints built for Carolina weather.",
+    description: "Siding, brick, stucco, trim, and full exterior repaints.",
     icon: "Home",
-    link: "/exterior-painting",
+    link: "/exterior-painting/",
   },
   {
     title: "Cabinet Painting",
-    description:
-      "Kitchen and bathroom cabinet refinishing with a smooth cabinet-grade finish without the cost of replacement.",
+    description: "Kitchen and bathroom cabinet refinishing without the cost of replacement.",
     icon: "Layers",
-    link: "/cabinet-painting",
+    link: "/cabinet-painting/",
   },
   {
     title: "Deck Staining & Painting",
-    description:
-      "Cleaning, sanding, staining, sealing, painting, and restoring outdoor wood so your deck looks better and lasts longer.",
+    description: "Cleaning, staining, sealing, and restoring outdoor wood.",
     icon: "Sun",
-    link: "/deck-staining",
+    link: "/deck-staining/",
   },
   {
     title: "Fence Staining & Painting",
-    description:
-      "Protect and refresh wood fences with cleaning, repairs, even stain or paint coverage, and a finish suited for exposed wood.",
+    description: "Protect and refresh wood fences for years of curb appeal.",
     icon: "Fence",
-    link: "/fence-staining",
+    link: "/fence-staining/",
   },
 ];
 
@@ -202,7 +209,7 @@ const services = [
     title: "Interior Painting",
     navTitle: "Interior Painting",
     slug: "interior-painting",
-    path: "/interior-painting",
+    path: "/interior-painting/",
     icon: "PaintBucket",
     image: "/img/services/interior.webp",
     metaTitle: "Interior House Painters in Charlotte, NC | 593 EC Painting",
@@ -371,7 +378,7 @@ const services = [
     title: "Exterior Painting",
     navTitle: "Exterior Painting",
     slug: "exterior-painting",
-    path: "/exterior-painting",
+    path: "/exterior-painting/",
     icon: "Home",
     image: "/img/services/exterior.webp",
     metaTitle: "Exterior House Painters in Charlotte, NC | 593 EC Painting",
@@ -379,12 +386,12 @@ const services = [
       "Family-owned exterior painters serving Charlotte, NC. Siding, brick, stucco, trim, and pressure washing. Built for Carolina weather. Free quotes, 3-year warranty.",
     heroTitle: "Exterior House Painters in Charlotte, NC",
     heroSubtitle:
-      "Siding, brick, stucco, and trim, painted to stand up to Carolina sun, humidity, and storms. Backed by a 3-year warranty.",
+      "Siding, brick, stucco, and trim — painted to stand up to Carolina sun, humidity, and storms. Backed by a 3-year warranty.",
     introTitle: "Exterior Painting Built for the Carolinas",
     intro: [
-      "Charlotte weather is hard on a paint job. Long humid summers, intense UV, sudden thunderstorms, and the occasional freeze cycle in winter all attack exterior paint, and they are the reason most homes around here need to be repainted every 7-10 years.",
+      "Charlotte weather is hard on a paint job. Long humid summers, intense UV, sudden thunderstorms, and the occasional freeze cycle in winter — they all attack exterior paint, and they're the reason most homes around here need to be repainted every 7–10 years.",
       "The difference between a good exterior paint job and a bad one shows up in years 3, 4, and 5. Cheap paint, skipped prep, or rushed work will start peeling, fading, or chalking long before it should.",
-      "We do exterior painting the way it is supposed to be done: careful prep, premium paint, weather-smart scheduling, and a written warranty that backs it up.",
+      "We do exterior painting the way it's supposed to be done — careful prep, premium paint, and a warranty that backs it up.",
     ],
     featuresTitle: "Exterior Surfaces We Paint",
     featuresSubtitle:
@@ -419,7 +426,7 @@ const services = [
       {
         title: "Brick & Masonry",
         description:
-          "Full brick paint or limewash-style finishes for a permanent color change on masonry surfaces.",
+          "Full brick paint or limewash-style finishes. Permanent color change for your brick home.",
       },
       {
         title: "Stucco",
@@ -471,17 +478,17 @@ const services = [
       [
         "Pressure Washing",
         [
-          "Pressure washing is included with every exterior paint job, but we also offer it as a standalone service. Charlotte's humidity grows mildew on north-facing walls, dirt builds up on siding over time, and oxidation leaves chalky residue that prevents paint from sticking properly.",
-          "We pressure wash siding, brick, stucco, concrete driveways, sidewalks, porches, and patios. For exterior painting projects, the pressure wash is the foundation of a paint job that lasts. Skipping it is one of the most common reasons paint fails early.",
-          "If you just want your home cleaned up for a listing photo, a family event, or because it is starting to look dingy, we are happy to handle pressure washing on its own.",
+          "Pressure washing is included with every exterior paint job — but we also do it as a standalone service. Charlotte's humidity grows mildew on north-facing walls, dirt builds up on siding over time, and oxidation leaves chalky residue that prevents paint from sticking properly.",
+          "We pressure wash siding, brick, stucco, concrete driveways, sidewalks, porches, and patios. For exterior painting projects, the pressure wash is the foundation of a paint job that lasts — skipping it is one of the most common reasons paint fails early.",
+          "If you just want your home cleaned up for a listing photo, for a family event, or because it's starting to look dingy, we're happy to handle pressure washing on its own.",
         ],
       ],
       [
         "Built for Carolina Weather",
         [
-          "Painting in the Charlotte area is different from painting in other parts of the country, and a painter who does not account for that ends up with a paint job that fails early.",
+          "Painting in the Charlotte area is different from painting in other parts of the country, and a painter who doesn't account for that ends up with a paint job that fails early.",
           "Heat and humidity affect how paint cures. UV exposure fades cheap paints faster than the warranty claims. Pollen season makes timing matter. Sudden afternoon thunderstorms can ruin a fresh coat if the painter is not watching the radar.",
-          "We have been painting Carolina homes for 5 years and we know the rhythms: when to paint and when to wait, which paints hold up to the UV here, and how to prep siding so the paint does not peel in year three. Hire someone who knows the local weather, and your exterior paint job will last as long as it is supposed to.",
+          "We've been painting Carolina homes for 5 years and we know the rhythms — when to paint and when to wait, which paints hold up to the UV here, and how to prep siding so the paint doesn't peel in year three. Hire someone who knows the local weather, and your exterior paint job will last as long as it's supposed to.",
         ],
       ],
     ],
@@ -494,7 +501,7 @@ const services = [
       {
         title: "Premium paints",
         description:
-          "Sherwin-Williams Duration, Emerald, and Benjamin Moore Aura exteriors are standard choices.",
+          "Sherwin-Williams Duration, Emerald, and Benjamin Moore Aura exteriors as standard.",
       },
       {
         title: "Real prep, every time",
@@ -514,7 +521,7 @@ const services = [
     gallerySubtitle: "A look at recent exterior painting projects across the Carolinas.",
     ctaHeading: "Ready to Refresh Your Exterior?",
     ctaBody:
-      "Get a free on-site quote for your exterior painting project. We will measure, inspect, and write you a clear estimate.",
+      "Get a free on-site quote for your exterior painting project. We'll measure, inspect, and write you a clear estimate.",
     faq: [
       [
         "How often should I repaint my home's exterior in Charlotte?",
@@ -522,7 +529,7 @@ const services = [
       ],
       [
         "What is the best time of year to paint a house exterior in Charlotte?",
-        "Spring through fall is ideal. We look for stretches of dry weather with daytime highs between 50 degrees and 90 degrees and overnight lows that stay above 50 degrees. April-June and September-October are the sweet spots in the Carolinas. We can paint year-round when conditions allow.",
+        "Spring through fall is ideal — we look for stretches of dry weather with daytime highs between 50°F and 90°F and overnight lows that stay above 50°F. April–June and September–October are the sweet spots in the Carolinas. We can paint year-round when conditions allow.",
       ],
       [
         "Do I need to be home while you paint the exterior?",
@@ -538,7 +545,7 @@ const services = [
       ],
       [
         "What paint brands do you use for exteriors?",
-        "Sherwin-Williams Duration and Emerald exterior, and Benjamin Moore Aura exterior. Both are top-tier exterior paints designed for southern climates. Premium paint is not an upcharge. It is the standard on every exterior job we do.",
+        "Sherwin-Williams Duration and Emerald exterior, and Benjamin Moore Aura exterior. Both are top-tier exterior paints designed for southern climates. Premium paint isn't an upcharge — it's the standard on every exterior job we do.",
       ],
       [
         "Is pressure washing included?",
@@ -546,7 +553,7 @@ const services = [
       ],
       [
         "What does the 3-year warranty cover?",
-        "Our written 3-year workmanship warranty covers peeling, blistering, and adhesion failures caused by our application or prep. We come back and fix it at no charge. The warranty does not cover damage from things outside our control like storms, impact, or settling.",
+        "Our written 3-year workmanship warranty covers peeling, blistering, and adhesion failures caused by our application or prep. We come back and fix it at no charge. The warranty doesn't cover damage from things outside our control like storms, impact, or settling.",
       ],
     ],
   },
@@ -554,7 +561,7 @@ const services = [
     title: "Cabinet Painting",
     navTitle: "Cabinet Painting",
     slug: "cabinet-painting",
-    path: "/cabinet-painting",
+    path: "/cabinet-painting/",
     icon: "Layers",
     image: "/img/services/cabinets.webp",
     metaTitle: "Cabinet Painters in Charlotte, NC | 593 EC Painting",
@@ -565,8 +572,8 @@ const services = [
       "Get the look of a new kitchen for a fraction of the cost. Family-owned cabinet refinishing with a factory-quality finish.",
     introTitle: "A New Kitchen Without the Cost of a New Kitchen",
     intro: [
-      "Kitchen cabinets are the single biggest visual element in your kitchen, and replacing them is one of the most expensive projects in any home renovation. New cabinets can run $15,000 to $40,000 for a Charlotte-area kitchen, plus weeks of disruption while your kitchen is unusable.",
-      "Cabinet painting gives you 90% of the visual impact for 20-30% of the cost. Done right, painted cabinets look factory-finished: smooth, durable, and modern. Done wrong, they look like a weekend project that did not work out.",
+      "Kitchen cabinets are the single biggest visual element in your kitchen — and replacing them is one of the most expensive projects in any home renovation. New cabinets typically run $15,000 to $40,000 for a Charlotte-area kitchen, plus weeks of disruption while your kitchen is unusable.",
+      "Cabinet painting gives you 90% of the visual impact for 20–30% of the cost. Done right, painted cabinets look factory-finished — smooth, durable, and modern. Done wrong, they look like a DIY weekend that didn't work out.",
       "We do it right. Spray-applied finishes, professional prep, premium cabinet-grade products, and a 3-year warranty. Most kitchens are finished in about a week.",
     ],
     featuresTitle: "Cabinet Painting vs Cabinet Replacement",
@@ -576,22 +583,22 @@ const services = [
       {
         title: "Cost",
         description:
-          "Cabinet painting is roughly 20-30% of the cost of replacement. Big savings without giving up the visual upgrade.",
+          "Cabinet painting: roughly 20–30% of the cost of replacement. Big savings without giving up the visual upgrade.",
       },
       {
         title: "Timeline",
         description:
-          "Cabinet painting usually takes about a week. Replacement can take 6-12 weeks including demo, custom builds, and install.",
+          "Cabinet painting: about a week. Replacement: 6–12 weeks including demo, custom builds, and install.",
       },
       {
         title: "Kitchen downtime",
         description:
-          "Cabinet painting limits cabinet access for a few days. Replacement can leave you without a functioning kitchen for weeks.",
+          "Cabinet painting: a few days you can't access cabinets. Replacement: weeks without a functioning kitchen.",
       },
       {
         title: "Mess & disruption",
         description:
-          "Cabinet painting is contained, with doors sprayed off-site or in a controlled area. Replacement brings demo dust and other trades.",
+          "Cabinet painting: contained, sprayed off-site or in a controlled area. Replacement: demo dust, drywall work, electrical, plumbing.",
       },
       {
         title: "Result",
@@ -629,23 +636,37 @@ const services = [
       ],
       [
         "Reinstall",
-        "Doors and drawers come back, hardware goes back on, or new hardware if you have upgraded, and we walk through the finished kitchen with you.",
+        "Doors and drawers come back, hardware goes back on (or new hardware if you've upgraded), and we walk through the finished kitchen with you.",
       ],
     ],
     extras: [
       [
         "Finish Options",
         [
-          "Cabinet painting opens up color and style choices you would not get from a stained finish. Choose classic whites, soft greens, navy blues, charcoals, or anything from the Sherwin-Williams or Benjamin Moore palette.",
-          "Two-tone kitchens are also popular: different colors on uppers and lowers, or a contrasting color on the island. We can also match cabinets to trim for a clean, intentional look.",
-          "While the doors are off, swapping dated hardware for modern pulls or knobs is one of the easiest upgrades you can make. We can include hardware replacement in the project.",
+          "Cabinet painting opens up color and style choices you wouldn't get from a stained finish.",
+          strong(
+            "Solid Color",
+            "Classic whites, soft greens, navy blues, charcoals — anything from the Sherwin-Williams or Benjamin Moore palette.",
+          ),
+          strong(
+            "Two-Tone",
+            "Different colors on uppers and lowers, or a contrasting color on the island. Designer-favorite look.",
+          ),
+          strong(
+            "Cabinet + Trim Match",
+            "Match your cabinets to your trim color for a clean, intentional look.",
+          ),
+          strong(
+            "Hardware Upgrade",
+            "While the doors are off, swapping out dated hardware for modern pulls is the easiest upgrade you'll ever make. We can do it as part of the project.",
+          ),
         ],
       ],
       [
         "Built to Hold Up to Daily Life",
         [
-          "Kitchen cabinets take more abuse than almost any other painted surface in your home. They get bumped, opened thousands of times, splashed with grease, wiped with cleaners, and exposed to heat and steam.",
-          "The wrong paint will chip, peel, and look worn within a year. We use cabinet-grade enamels designed for this kind of use, including products like Sherwin-Williams Emerald Urethane Trim Enamel and Benjamin Moore Advance.",
+          "Kitchen cabinets take more abuse than any other painted surface in your home. They get bumped, opened thousands of times, splashed with grease, wiped down with cleaners, and exposed to heat and steam. The wrong paint on cabinets will chip, peel, and look worn within a year.",
+          "We use cabinet-grade enamels designed specifically for this kind of use — products like Sherwin-Williams Emerald Urethane Trim Enamel and Benjamin Moore Advance. They cure to a hard, factory-like finish that resists chips, scratches, and the daily wear of a working kitchen.",
           "Cure time matters too. We let the finish properly cure before reinstalling doors and recommend gentle use for the first two weeks while the paint fully hardens.",
         ],
       ],
@@ -653,7 +674,7 @@ const services = [
         "What to Expect During Your Cabinet Project",
         [
           p(
-            "A typical kitchen cabinet project takes 5-7 working days from start to finish. Here is roughly what each day looks like:",
+            "A typical kitchen cabinet project takes 5–7 working days from start to finish. Here's roughly what each day looks like:",
           ) +
             ul([
               "Day 1: Remove doors, drawers, and hardware. Begin cleaning and prep.",
@@ -662,7 +683,7 @@ const services = [
               "Day 6: Cure time and final touch-ups.",
               "Day 7: Reinstall doors, drawers, and hardware. Walkthrough with you.",
             ]),
-          "You will have limited cabinet access for most of the week, but the kitchen itself remains usable. You can still cook, use the sink, and access the inside of cabinets when needed.",
+          "You'll have limited use of the cabinets for most of the week, but the kitchen itself remains usable — you can still cook, use the sink, and access the inside of cabinets when needed.",
         ],
       ],
     ],
@@ -699,11 +720,11 @@ const services = [
     faq: [
       [
         "How long does cabinet painting take?",
-        "Most kitchen cabinet projects take 5-7 working days from start to finish. Bathroom vanities are usually 2-3 days. We will give you a specific timeline in your written quote.",
+        "Most kitchen cabinet projects take 5–7 working days from start to finish. Bathroom vanities are usually 2–3 days. We'll give you a specific timeline in your written quote.",
       ],
       [
         "Can I still use my kitchen during the project?",
-        "Yes, mostly. The cabinets themselves will be inaccessible for parts of the week, but the kitchen stays functional. Sink, appliances, and counter space are all usable. We work in stages so you are never completely cut off.",
+        "Yes, mostly. The cabinets themselves will be inaccessible for parts of the week, but the kitchen stays functional — sink, appliances, and counter space are all usable. We work in stages so you're never completely cut off.",
       ],
       [
         "Will painted cabinets really hold up to daily use?",
@@ -711,11 +732,11 @@ const services = [
       ],
       [
         "What if my cabinets are damaged or have wood rot?",
-        "We will spot any damage during the quote and tell you honestly. Small dings and scratches we can fill and paint. Significant damage or structural issues might mean replacement makes more sense than refinishing, and we will tell you that if it is the case.",
+        "We'll spot any damage during the quote and tell you honestly. Small dings and scratches we can fill and paint. Significant damage or structural issues might mean replacement makes more sense than refinishing — and we'll tell you that if it's the case.",
       ],
       [
         "Can you change the cabinet color completely?",
-        "Absolutely. Going from dark oak to bright white, from natural wood to navy blue, from honey maple to charcoal: we do dramatic color changes every week. Two-tone kitchens, with different uppers and lowers, are also popular right now.",
+        "Absolutely. Going from dark oak to bright white, from natural wood to navy blue, from honey maple to charcoal — we do dramatic color changes every week. Two-tone kitchens (different uppers and lowers) are also popular right now.",
       ],
       [
         "Do you remove the doors and spray them, or paint them in place?",
@@ -727,7 +748,7 @@ const services = [
       ],
       [
         "How much does cabinet painting cost in Charlotte?",
-        "Cabinet painting is heavily project-specific. Kitchen size, number of doors and drawers, current finish, and color choice all affect price. We do free in-home quotes so you get an accurate number, not a wild guess. Expect cabinet painting to cost 20-30% of the price of new cabinets.",
+        "Cabinet painting is heavily project-specific — kitchen size, number of doors and drawers, current finish, and color choice all affect price. We do free in-home quotes so you get an accurate number, not a wild guess. Expect cabinet painting to cost 20–30% of the price of new cabinets.",
       ],
       [
         "Is there a warranty?",
@@ -739,7 +760,7 @@ const services = [
     title: "Deck Staining & Painting",
     navTitle: "Deck Staining & Painting",
     slug: "deck-staining",
-    path: "/deck-staining",
+    path: "/deck-staining/",
     icon: "Sun",
     image: "/img/services/deck.webp",
     metaTitle: "Deck Staining & Painting in Charlotte, NC | 593 EC Painting",
@@ -750,9 +771,8 @@ const services = [
       "Clean, stain, seal, and restore your outdoor wood. Built to protect against Carolina sun, humidity, and rain.",
     introTitle: "Bring Your Deck Back to Life",
     intro: [
-      "A deck is one of the most-used spaces in any Charlotte home, and one of the most weather-beaten. Carolina sun, summer humidity, pollen season, and winter freeze-thaw cycles all take their toll on outdoor wood.",
-      "Without regular staining and sealing, even a beautifully built deck will gray, warp, splinter, and rot within a few years.",
-      "We restore decks across the Charlotte area by cleaning, repairing, staining, and sealing them so they look better and hold up to the weather. Whether your deck needs a refresh or has been neglected for years, we can bring it back.",
+      "A deck is one of the most-used spaces in any Charlotte home — and one of the most weather-beaten. Carolina sun, summer humidity, pollen season, and winter freeze-thaw cycles all take their toll on outdoor wood. Without regular staining and sealing, even a beautifully built deck will gray, warp, splinter, and rot within a few years.",
+      "We restore decks across the Charlotte area — cleaning, repairing, staining, and sealing them to look great and hold up to the weather. Whether your deck just needs a refresh or it's been neglected for years, we can bring it back.",
     ],
     featuresTitle: "What's Included in a Deck Project",
     featuresSubtitle: "A full deck restoration covers everything your wood needs.",
@@ -806,10 +826,22 @@ const services = [
       [
         "Stain Options",
         [
-          "Transparent stain shows off the natural wood grain and works best for decks in great shape with beautiful wood. It offers less UV protection and usually needs reapplication every 1-2 years.",
-          "Semi-transparent stain adds color while still letting the grain show through. It is the most popular choice and typically lasts 2-3 years in Carolina weather.",
-          "Solid stain acts more like paint: full color, more hiding power, and stronger UV protection. It is best for older decks where you want to hide imperfections and can last 3-5 years.",
-          "Deck paint makes sense for decks that have already been painted or where you want a specific color match to the house.",
+          strong(
+            "Transparent Stain",
+            "Shows off the natural wood grain. Best for decks in great shape with beautiful wood. Less UV protection, needs reapplication every 1–2 years.",
+          ),
+          strong(
+            "Semi-Transparent Stain",
+            "Adds color while still letting the grain show through. The most popular choice. Lasts 2–3 years in Carolina weather.",
+          ),
+          strong(
+            "Solid Stain",
+            "Acts like paint — full color, hides the grain, maximum UV protection. Best for older decks where you want to hide imperfections. Lasts 3–5 years.",
+          ),
+          strong(
+            "Deck Paint",
+            "For decks that have already been painted, or where you want a specific color match to the house. Built for foot traffic.",
+          ),
         ],
       ],
       [
@@ -823,7 +855,7 @@ const services = [
               "Color is fading or peeling. The old stain or paint is failing.",
               "Mildew or dark spots. The wood is staying damp and needs cleaning and resealing.",
             ]),
-          "In Charlotte's climate, most decks need restaining every 2-4 years depending on the previous product, sun exposure, and foot traffic. South- and west-facing decks fade faster than shaded ones.",
+          "In Charlotte's climate, most decks need restaining every 2–4 years depending on the previous product, sun exposure, and how much foot traffic they get. South- and west-facing decks fade faster than shaded ones.",
         ],
       ],
     ],
@@ -832,16 +864,16 @@ const services = [
     whyItems: [
       {
         title: "Family-owned, local",
-        description: "We have been staining Carolina decks for 5 years.",
+        description: "We've been staining Carolina decks for 5 years.",
       },
       {
         title: "Real prep work",
-        description: "Cleaning, sanding, and repairs happen before stain goes on.",
+        description: "Cleaning, sanding, and repairs done before stain goes on.",
       },
       { title: "Premium stains and sealers", description: "Products chosen for southern weather." },
       {
         title: "Honest assessments",
-        description: "If your deck needs replacement instead of restaining, we will tell you.",
+        description: "If your deck needs replacement instead of restaining, we'll tell you.",
       },
       { title: "3-year warranty", description: "On workmanship." },
       { title: "Clean job site", description: "Plants and patio furniture protected." },
@@ -850,19 +882,19 @@ const services = [
     gallerySubtitle: "Before and after photos from Charlotte-area decks we have restored.",
     ctaHeading: "Ready to Restore Your Deck?",
     ctaBody:
-      "Get a free on-site quote for your deck staining or painting project. We will inspect the wood, talk through options, and write you a clear estimate.",
+      "Get a free on-site quote for your deck staining or painting project. We'll inspect the wood, talk through options, and write you a clear estimate.",
     faq: [
       [
         "How often should I restain my deck in Charlotte?",
-        "Every 2-4 years for most decks in the Carolinas, depending on sun exposure, foot traffic, and the previous stain. Transparent stains need reapplication every 1-2 years; solid stains can last 4-5 years.",
+        "Every 2–4 years for most decks in the Carolinas, depending on sun exposure, foot traffic, and the previous stain. Transparent stains need reapplication every 1–2 years; solid stains can last 4–5 years.",
       ],
       [
         "What is the best time of year to stain a deck?",
-        "Spring and fall are ideal: moderate temperatures, low humidity, and dry weather. We need 2-3 dry days for a deck project, including 24 hours before and 24 hours after staining.",
+        "Spring and fall are ideal — moderate temperatures, low humidity, and dry weather. We need 2–3 dry days for a deck project, including 24 hours before and 24 hours after staining.",
       ],
       [
         "Should I stain my deck or paint it?",
-        "Stain is usually the better choice for natural wood. It penetrates instead of sitting on top, and it does not peel. Paint makes sense for older decks that need to hide imperfections or decks that have been previously painted.",
+        "Stain is usually the better choice for natural wood — it penetrates instead of sitting on top, and it doesn't peel. Paint makes sense for older decks that need to hide imperfections or decks that have been previously painted.",
       ],
       [
         "Can you repair loose boards or railings before staining?",
@@ -870,16 +902,16 @@ const services = [
       ],
       [
         "How long until I can walk on my deck after staining?",
-        "Usually 24 hours for foot traffic, 48 hours before putting furniture back. We will give you specific timing based on the stain we use.",
+        "Usually 24 hours for foot traffic, 48 hours before putting furniture back. We'll give you specific timing based on the stain we use.",
       ],
-      ["Do you stain fences too?", "Yes. See our fence staining page for details."],
+      ["Do you stain fences too?", "Yes — see our fence staining page for details."],
     ],
   },
   {
     title: "Fence Staining & Painting",
     navTitle: "Fence Staining & Painting",
     slug: "fence-staining",
-    path: "/fence-staining",
+    path: "/fence-staining/",
     icon: "Fence",
     image: "/img/services/fence.webp",
     metaTitle: "Fence Staining & Painting in Charlotte, NC | 593 EC Painting",
@@ -887,12 +919,11 @@ const services = [
       "Professional fence staining and painting in Charlotte, NC. Wood fence restoration, sealing, and color refresh. Family-owned, free quotes, 3-year warranty.",
     heroTitle: "Fence Staining & Painting in Charlotte, NC",
     heroSubtitle:
-      "Restore your wood fence and protect it from Carolina weather for years to come. Cleaning, repair, staining, and sealing, done right.",
+      "Restore your wood fence and protect it from Carolina weather for years to come. Cleaning, repair, staining, and sealing — done right.",
     introTitle: "Wood Fences That Look Like New Again",
     intro: [
-      "A wood fence is one of those things you do not notice until it starts looking bad, and then you cannot stop noticing it. Gray, splintered, leaning fences age a whole property.",
-      "The good news is that most fences do not need replacing. They need cleaning, repairing, and proper staining.",
-      "We restore wood fences across the Charlotte area by pressure washing or chemical-cleaning the wood, replacing damaged boards, and staining or painting in a color that complements your home. Done right, fence restoration adds curb appeal and protects your investment for years.",
+      "A wood fence is one of those things you don't notice until it starts looking bad — and then you can't stop noticing it. Gray, splintered, leaning fences age a whole property. The good news is that most fences don't need replacing; they need cleaning, repairing, and properly staining.",
+      "We restore wood fences across the Charlotte area — pressure washing or chemical-cleaning the wood, replacing damaged boards, and staining or painting in a color that complements your home. Done right, a fence restoration adds curb appeal and protects your investment for years.",
     ],
     featuresTitle: "What's Included in a Fence Project",
     featuresSubtitle: "",
@@ -944,15 +975,24 @@ const services = [
       [
         "Stain or Paint Your Fence?",
         [
-          "Stain is recommended for most fences because it penetrates the wood instead of sitting on top. It does not peel, it shows or enhances the wood grain, and it is easier to refresh when the time comes.",
-          "Solid stain provides full color coverage like paint but still penetrates the wood, making it a strong option for older fences where you want to hide weathering.",
-          "Paint is best for fences that have already been painted or where you want a very specific color, like a white picket fence or bold accent. It usually requires more maintenance than stain.",
+          strong(
+            "Stain (Recommended for Most Fences)",
+            "Penetrates the wood instead of sitting on top. Doesn't peel. Shows or enhances the wood grain. Easier to refresh when the time comes.",
+          ),
+          strong(
+            "Solid Stain",
+            "Provides full color coverage like paint, but still penetrates the wood. Best for older fences where you want to hide weathering.",
+          ),
+          strong(
+            "Paint",
+            "Best for fences that have already been painted, or where you want a specific color (white picket, bold accent color). Requires more maintenance than stain.",
+          ),
         ],
       ],
       [
         "Signs Your Fence Needs Attention",
         [
-          p("Most Charlotte-area fences need restaining every 3-5 years. Look for these signs:") +
+          p("Most Charlotte-area fences need restaining every 3–5 years. Look for these signs:") +
             ul([
               "Boards turning gray or silver",
               "Stain looking faded or patchy",
@@ -960,7 +1000,7 @@ const services = [
               "Loose, warped, or rotted boards",
               "Visible splintering or rough spots",
             ]),
-          "If your fence is more than 10 years old and many boards are rotting or breaking, we will be honest. Sometimes replacement makes more sense than restoration, and we will tell you straight during the quote.",
+          "If your fence is more than 10 years old and many boards are rotting or breaking, we'll be honest — sometimes replacement makes more sense than restoration. We'll tell you straight during the quote.",
         ],
       ],
     ],
@@ -969,11 +1009,11 @@ const services = [
     whyItems: [
       {
         title: "Family-owned, local",
-        description: "We have stained miles of Carolina fence line.",
+        description: "We've stained miles of Carolina fence line.",
       },
       {
         title: "Honest assessments",
-        description: "We will tell you if your fence is worth restoring or not.",
+        description: "We'll tell you if your fence is worth restoring or not.",
       },
       { title: "Real prep work", description: "Cleaning, sanding, and repairs done right." },
       { title: "Premium stains", description: "Products selected for Carolina weather." },
@@ -987,27 +1027,27 @@ const services = [
     faq: [
       [
         "How often should I restain my fence?",
-        "Every 3-5 years for most fences in the Charlotte area, depending on sun exposure, the previous stain, and the wood type.",
+        "Every 3–5 years for most fences in the Charlotte area, depending on sun exposure, the previous stain, and the wood type.",
       ],
       [
         "Can you stain a brand-new fence?",
-        "Yes, but we usually recommend waiting 30-60 days after installation so the wood has time to dry out and weather slightly. Fresh-cut wood does not absorb stain evenly.",
+        "Yes — but we usually recommend waiting 30–60 days after installation so the wood has time to dry out and weather slightly. Fresh-cut wood doesn't absorb stain evenly.",
       ],
       [
         "What if some of my fence boards are rotted?",
-        "We replace damaged boards as part of the project. We will spot what needs replacing during the quote and include it in the estimate.",
+        "We replace damaged boards as part of the project. We'll spot what needs replacing during the quote and include it in the estimate.",
       ],
       [
         "Stain or paint: which is better for a fence?",
-        "Stain, for most fences. It penetrates the wood instead of sitting on top, does not peel, and looks better as it ages. Paint makes sense if the fence has already been painted or if you want a very specific color.",
+        "Stain, for most fences. It penetrates the wood instead of sitting on top, doesn't peel, and looks better as it ages. Paint makes sense if the fence has already been painted or if you want a very specific color.",
       ],
       [
         "Do you do both sides of the fence?",
-        "Yes, both sides, assuming both sides are accessible. If a neighbor's fence is on the other side, we will discuss what is reasonable during the quote.",
+        "Yes, both sides — assuming both sides are accessible. If a neighbor's fence is on the other side, we'll discuss what's reasonable during the quote.",
       ],
       [
         "How long does a fence project take?",
-        "Most residential fences take 1-3 days depending on size and condition. We will give you a specific timeline in your quote.",
+        "Most residential fences take 1–3 days depending on size and condition. We'll give you a specific timeline in your quote.",
       ],
     ],
   },
@@ -1077,8 +1117,8 @@ const reviews = [
 
 function serviceAreaBlock() {
   return rich("Proudly Serving Charlotte and the Surrounding Carolinas", [
-    "We work throughout the greater Charlotte metro and into the South Carolina border communities. If you are within about 30 miles of Charlotte, we can paint your home.",
-    `Cities we serve: ${SERVICE_AREA}.`,
+    "We work throughout the greater Charlotte metro and into the South Carolina border communities. If you're within about 30 miles of Charlotte, we can paint your home.",
+    `<strong>Cities we serve:</strong> ${SERVICE_AREA}.`,
   ]);
 }
 
@@ -1102,18 +1142,17 @@ function homeContent() {
         ],
       }),
       rich("Painting Done Right by People Who Care", [
-        "593 EC Painting is run by Esau and Sandra, a husband-and-wife team that has been painting homes across Charlotte and the surrounding Carolinas for 5 years. We started this business because we believed homeowners deserved better: a painter who shows up when they say they will, communicates throughout the project, treats your home with respect, and stands behind every job long after the last brushstroke.",
-        "That is still how we work today. When you call 593 EC Painting, you reach Esau or Sandra directly. When we paint your home, we treat it the way we would treat our own. And if something is not right, we come back and make it right.",
-        "That is the difference between hiring a painting crew and hiring a family who paints.",
+        "593 EC Painting is run by Esau and Sandra, a husband-and-wife team that has been painting homes across Charlotte and the surrounding Carolinas for 5 years. We started this business because we believed homeowners deserved better — a painter who shows up when they say they will, communicates throughout the project, treats your home with respect, and stands behind every job long after the last brushstroke.",
+        "That's still how we work today. When you call 593 EC Painting, you reach Esau or Sandra directly. When we paint your home, we treat it the way we'd treat our own. And if something isn't right, we come back and make it right. That's the difference between hiring a painting crew and hiring a family who paints.",
       ]),
       cards(
         "What We Paint",
-        "From a single accent wall to your entire home inside and out, we handle prep, repair, paint, and cleanup.",
+        "From a single accent wall to your entire home inside and out, we handle every part of the project — prep, repair, paint, and cleanup.",
         serviceCards,
       ),
       featureList(
         "Why Charlotte Homeowners Choose 593 EC Painting",
-        "We are a local family-owned painting business, and that changes everything about how we work with you.",
+        "We're not a national franchise or a faceless crew. We're a local family-owned painting business — and that changes everything about how we work with you.",
         [
           {
             title: "You Talk to the Owner",
@@ -1128,7 +1167,7 @@ function homeContent() {
           {
             title: "Daily Communication",
             description:
-              "Text or email updates and photos throughout your project so you always know what is happening.",
+              "Text or email updates and photos throughout your project so you always know what's happening.",
           },
           {
             title: "Real Prep Work",
@@ -1143,7 +1182,7 @@ function homeContent() {
           {
             title: "Clean Job Site",
             description:
-              "Furniture protected, floors covered, daily cleanup. You should not have to clean up after your painter.",
+              "Furniture protected, floors covered, daily cleanup. You shouldn't have to clean up after your painter.",
           },
         ],
       ),
@@ -1159,7 +1198,7 @@ function homeContent() {
           {
             title: "Schedule & Prep",
             description:
-              "We agree on a start date and walk through the prep work together: colors, surfaces, repairs, and timing.",
+              "We agree on a start date and walk through the prep work together — colors, surfaces, repairs, and timing.",
           },
           {
             title: "Paint Day",
@@ -1175,7 +1214,7 @@ function homeContent() {
       ),
       galleryBlock(
         "Recent Work in the Charlotte Area",
-        "A look at homes we have painted recently across Charlotte and surrounding communities.",
+        "A look at some of the homes we've painted recently across Charlotte and the surrounding communities.",
       ),
       block("testimonials", {
         title: "What Our Customers Say",
@@ -1202,13 +1241,13 @@ function aboutContent() {
         image: "/img/gallery/living-room.webp",
       }),
       rich("Built on Honesty, Care, and Reliability", [
-        "593 EC Painting started the way a lot of small businesses start: with one person, a few brushes, and a belief that there was a better way to do things. Esau had spent years learning the craft of painting, and over time he kept hearing the same complaints from homeowners about other painters: crews that did not show up, quotes that mysteriously grew, work that looked good on day one and started peeling by year two.",
-        "So Esau and Sandra decided to build a painting business that solved those problems. One where homeowners could call the owner directly. One where the prep work got done before the paint went on. One where the family who painted your home actually cared whether you would recommend them to your neighbor.",
-        "Five years later, that is still how we run 593 EC Painting. We have painted hundreds of homes across Charlotte and the surrounding Carolinas, and we have built a business almost entirely on referrals and repeat customers because the work speaks for itself.",
+        "593 EC Painting started the way a lot of small businesses start — with one person, a few brushes, and a belief that there was a better way to do things. Esau had spent years learning the craft of painting, and over time he kept hearing the same complaints from homeowners about other painters: crews that didn't show up, quotes that mysteriously grew, work that looked good on day one and started peeling by year two.",
+        "So Esau and Sandra decided to build a painting business that solved those problems. One where homeowners could call the owner directly. One where the prep work got done before the paint went on. One where the family who painted your home actually cared whether you'd recommend them to your neighbor.",
+        "Five years later, that's still how we run 593 EC Painting. We've painted hundreds of homes across Charlotte and the surrounding Carolinas, and we've built a business almost entirely on referrals and repeat customers — because the work speaks for itself.",
       ]),
       featureList(
         "What You Get When You Hire 593 EC Painting",
-        "The small differences add up to a completely different experience.",
+        "The differences are small but they add up to a completely different experience than hiring a faceless crew.",
         [
           {
             title: "A real owner-operator relationship",
@@ -1223,7 +1262,7 @@ function aboutContent() {
           {
             title: "Daily updates",
             description:
-              "We text photos as we go so you always know what is happening, even if you are at work.",
+              "We text photos as we go so you always know what's happening, even if you're at work.",
           },
           {
             title: "Real prep work",
@@ -1238,25 +1277,25 @@ function aboutContent() {
           {
             title: "We come back for touch-ups",
             description:
-              "Months later, even years later. Several customers hire us for second and third projects because of this.",
+              "Months later, even years later. Several of our customers have hired us for second and third projects because of this.",
           },
         ],
       ),
-      block("stats-bar", {
-        items: [
-          { icon: "Calendar", value: "5 Years", label: "Painting Charlotte homes" },
-          { icon: "Home", value: "Hundreds", label: "Of homes painted" },
-          { icon: "Star", value: "5-Star", label: "Google rating" },
-          { icon: "ShieldCheck", value: "3-Year", label: "Workmanship warranty" },
-        ],
-      }),
+      featureList("593 EC Painting by the Numbers", "", [
+        { title: "5 Years", description: "painting Charlotte homes" },
+        { title: "Hundreds", description: "of homes painted across the Carolinas" },
+        { title: "5-Star", description: "Google rating" },
+        { title: "3-Year", description: "workmanship warranty on every job" },
+        { title: "100%", description: "family-owned, no franchise, no investors" },
+      ]),
       rich("Where We Work", [
-        "We serve homeowners across the greater Charlotte metro and into the South Carolina border communities, anywhere within about 30 miles of Charlotte. Whether you are in a 1920s bungalow in Dilworth, a brick colonial in Myers Park, or a new build in Waxhaw, we have painted homes like yours and we would love to paint yours next.",
-        `Cities we serve: ${SERVICE_AREA}.`,
+        "We serve homeowners across the greater Charlotte metro and into the South Carolina border communities — anywhere within about 30 miles of Charlotte. Whether you're in a 1920s bungalow in Dilworth, a brick colonial in Myers Park, or a new build in Waxhaw, we've painted homes like yours and we'd love to paint yours next.",
+        `<strong>Cities we serve:</strong> ${SERVICE_AREA}.`,
       ]),
       cta(
         "Let's Talk About Your Project",
-        "Give us a call or request a free quote online. We will listen, inspect, and write a clear estimate.",
+        "Give us a call or request a free quote online. We'll come out, listen to what you have in mind, and write you a clear, honest estimate.",
+        "Request a Free Quote",
       ),
     ],
   };
@@ -1268,13 +1307,14 @@ function contactContent() {
       hero({
         headline: "Get a Free Painting Quote",
         subheadline:
-          "Tell us about your project and we will get back to you within 24 hours, usually faster.",
+          "Tell us about your project and we'll get back to you within 24 hours — usually faster.",
         image: "/img/gallery/front-door.webp",
         secondary: false,
+        primaryText: "",
+        primaryLink: "",
       }),
       rich("Request Your Free Quote", [
         "No pressure, no obligation. Most quotes are scheduled within 48 hours.",
-        "Tell us your name, phone number, email address, service address or ZIP code, the service you are interested in, and any project details you want us to know. Uploading a photo is optional, but it can help us understand the scope before we visit.",
       ]),
       block("contact-form", {}),
       block("contact-info", {
@@ -1283,13 +1323,13 @@ function contactContent() {
           { icon: "Phone", label: "Phone / Text", value: PHONE_DISPLAY },
           { icon: "Mail", label: "Email", value: EMAIL },
           { icon: "MapPin", label: "Address", value: ADDRESS },
-          { icon: "Clock", label: "Hours", value: "Monday-Saturday, 8:00 AM - 6:00 PM" },
+          { icon: "Clock", label: "Hours", value: "Monday–Saturday, 8:00 AM – 6:00 PM" },
         ],
       }),
       rich("Where We Work", [
-        "We serve Charlotte and the surrounding Carolinas within about a 30-mile radius. If you are in or near any of these communities, we would love to quote your project.",
-        `${SERVICE_AREA}.`,
-        "Not sure if we cover your area? Just call. If we cannot help, we will point you toward someone who can.",
+        "We serve Charlotte and the surrounding Carolinas within about a 30-mile radius. If you're in or near any of these communities, we'd love to quote your project:",
+        SERVICE_AREA + ".",
+        "Not sure if we cover your area? Just call — if we can't help, we'll point you toward someone who can.",
       ]),
       processBlock(
         "What to Expect After You Reach Out",
@@ -1301,12 +1341,15 @@ function contactContent() {
           },
           {
             title: "We schedule a free on-site visit",
-            description: "We come out, measure, look at surfaces, and answer questions.",
+            description: "We come out, measure, look at the surfaces, and answer your questions.",
           },
-          { title: "You get a written quote", description: "Itemized, clear, and no surprises." },
+          {
+            title: "You get a written quote",
+            description: "Itemized, clear, no surprises. The price we quote is the price you pay.",
+          },
           {
             title: "You decide on your own timeline",
-            description: "No high-pressure sales tactics.",
+            description: "No high-pressure sales tactics. Take the time you need.",
           },
         ],
       ),
@@ -1323,12 +1366,11 @@ function galleryContent() {
         image: "/img/gallery/kitchen-cabinets.webp",
       }),
       rich("", [
-        "Every photo on this page is intended to represent real 593 EC Painting work. During this rebuild, some current Domina/project assets are being used as placeholders until the final project photo library is uploaded.",
-        "Browse by category or scroll through to see the full range of what we do: interiors, exteriors, cabinets, decks, and fences. As more completed jobs are photographed, this gallery should be updated with real before-and-after pairs from the Charlotte area.",
+        "Every photo on this page is a real 593 EC Painting project — no stock images, no Pinterest screenshots. We update this gallery regularly as we complete new work across Charlotte and the surrounding Carolinas. Browse by category or scroll through to see the full range of what we do.",
       ]),
       galleryBlock(
         "Browse Our Work",
-        "Interior, exterior, cabinets, decks, and fences. Filter controls and before-after sliders can be layered in when the final gallery asset set is available.",
+        "Filter categories: All • Interior • Exterior • Cabinets • Decks & Fences",
         7,
       ),
       cta(
@@ -1345,13 +1387,13 @@ function reviewsContent() {
       hero({
         headline: "What Charlotte Homeowners Say About 593 EC Painting",
         subheadline:
-          "Real reviews from real customers. We have built this business on word of mouth.",
+          "Real reviews from real customers. We've built this business on word of mouth — here's the word.",
         image: "/img/gallery/living-room.webp",
       }),
       block("stats-bar", {
         items: [
           { icon: "Star", value: "5.0", label: "Google Rating" },
-          { icon: "MessageSquare", value: "Live", label: "Google reviews widget pending" },
+          { icon: "MessageSquare", value: "[REVIEW PLACEHOLDER]", label: "Total Google Reviews" },
           { icon: "ThumbsUp", value: "100%", label: "Would Recommend" },
           { icon: "Calendar", value: "5 Years", label: "Serving Charlotte" },
         ],
@@ -1359,14 +1401,17 @@ function reviewsContent() {
       block("testimonials", {
         title: "Reviews from Our Customers",
         subtitle:
-          "The live Google reviews widget should be embedded here once the widget provider is connected. It should display reviewer name, star rating, review text, date, and Google profile photo where available.",
+          "Below are real reviews from homeowners across Charlotte and the surrounding Carolinas, pulled directly from our Google Business Profile. We don't curate or filter them — they're the unedited word from people we've painted for.",
         items: reviews,
       }),
       rich("Word of Mouth Built This Business", [
-        "We do not spend much on advertising. We have never had to. From the day we started 593 EC Painting, our customers have referred us to their friends, their family, and their neighbors, and that is how we have grown.",
-        "If you have worked with us, leaving a Google review is one of the most helpful things you can do to support our family business. It helps us keep our prices fair, our team employed, and our doors open to more Charlotte homeowners who need an honest painter.",
+        "We don't spend much on advertising. We've never had to. From the day we started 593 EC Painting, our customers have referred us to their friends, their family, and their neighbors — and that's how we've grown.",
+        "If you've worked with us, leaving a Google review is the single most helpful thing you can do to support our family business. It helps us keep our prices fair, our team employed, and our doors open to more Charlotte homeowners who need an honest painter.",
       ]),
-      cta("Ready to Join Them?", "Get a free quote from Charlotte's family-owned painters."),
+      cta(
+        "Ready to Join Them?",
+        "Get a free quote from Charlotte's most-reviewed family-owned painters.",
+      ),
     ],
   };
 }
@@ -1381,12 +1426,46 @@ function servicesContent() {
         image: "/img/gallery/exterior-home.webp",
       }),
       cards("", "", [
-        ...serviceCards,
+        {
+          title: "Interior Painting",
+          description:
+            "Flawless finishes for walls, ceilings, trim, and lived-in rooms that need a clean refresh.",
+          icon: "PaintBucket",
+          link: "/interior-painting/",
+        },
+        {
+          title: "Exterior Painting",
+          description:
+            "Weather-ready exterior painting that improves curb appeal and protects your home.",
+          icon: "Home",
+          link: "/exterior-painting/",
+        },
+        {
+          title: "Cabinet Painting",
+          description:
+            "A smooth cabinet finish that modernizes your kitchen without the cost of replacement.",
+          icon: "Layers",
+          link: "/cabinet-painting/",
+        },
+        {
+          title: "Deck Staining & Painting",
+          description:
+            "Restore your deck with stain or paint that helps defend outdoor wood from weather.",
+          icon: "Sun",
+          link: "/deck-staining/",
+        },
+        {
+          title: "Fence Staining & Painting",
+          description:
+            "Protect and refresh fences with even stain or paint coverage on exposed wood.",
+          icon: "Fence",
+          link: "/fence-staining/",
+        },
         {
           title: "Get a Quote",
           description:
             "Not sure which service fits? Tell us what you need painted and we will point you in the right direction.",
-          link: "/contact",
+          link: "/contact/",
           icon: "ClipboardCheck",
         },
       ]),
@@ -1402,7 +1481,7 @@ function servicesContent() {
           {
             title: "Real Prep Work",
             description:
-              "Patching, sanding, caulking, priming. The steps that make paint actually last.",
+              "Patching, sanding, caulking, priming. The boring steps that make paint actually last.",
           },
           {
             title: "Premium Paints Included",
@@ -1411,15 +1490,18 @@ function servicesContent() {
           { title: "3-Year Warranty", description: "Written into your contract on every project." },
           {
             title: "Daily Photo Updates",
-            description: "Know what is happening even when you are at work.",
+            description: "Know what's happening even when you're at work.",
           },
           {
             title: "We Come Back for Touch-Ups",
-            description: "Months or years later. That is how we keep customers for life.",
+            description: "Months or years later. That's how we keep customers for life.",
           },
         ],
       ),
-      serviceAreaBlock(),
+      rich("Where We Work", [
+        "We serve homeowners across the greater Charlotte metro and into the South Carolina border communities within about 30 miles of Charlotte.",
+        `<strong>Cities we serve:</strong> ${SERVICE_AREA}.`,
+      ]),
       cta(
         "Ready to Get Started?",
         "Get a free, no-pressure quote from Charlotte's family-owned painters. Most quotes scheduled within 48 hours.",
@@ -1509,7 +1591,7 @@ function legalContent(title: string, sections: Array<[string, string | string[]]
   return {
     blocks: [
       block("section-header", {
-        eyebrow: "Legal",
+        eyebrow: "",
         title,
         subtitle: `Last updated: ${LAUNCH_DATE}`,
         alignment: "center",
@@ -1524,39 +1606,64 @@ function privacyContent() {
   return legalContent("Privacy Policy", [
     [
       "Introduction",
-      `${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us. This Privacy Policy explains what information we collect when you visit ${SITE_URL} or request a painting quote, how we use it, who we share it with, and the choices you have. By using this website or submitting a quote request, you agree to the practices described in this policy.`,
+      [
+        `${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us. This Privacy Policy explains what information we collect when you visit 593ecpaintingllc.com or request a painting quote, how we use it, who we share it with, and the choices you have.`,
+        "By using this website or submitting a quote request, you agree to the practices described in this policy. If you do not agree, please do not use the website or submit information through it.",
+      ],
     ],
     [
       "Information We Collect",
       [
-        "We collect information you provide directly, including your name, phone number, email address, service address or ZIP code, details about your painting project, photos you choose to upload, and consent preferences such as whether we may text you.",
-        "We and our service providers may also collect information automatically when you visit the website, including IP address and approximate location, browser type and version, device type and operating system, pages visited, time spent on the site, referring URL, cookies, and similar tracking technologies.",
+        "We collect two general types of information: information you provide to us directly, and information collected automatically when you visit our website.",
+        `<strong>Information you provide:</strong><br />When you fill out a quote request form, contact form, or otherwise reach out to us, you may provide:${ul(["Your name", "Phone number", "Email address", "Service address or ZIP code", "Details about your painting project", "Photos you choose to upload", "Consent preferences (for example, whether we may text you)"])}`,
+        `<strong>Information collected automatically:</strong><br />When you visit our website, we and our service providers may automatically collect:${ul(["IP address and approximate location", "Browser type and version", "Device type and operating system", "Pages you visit, time spent on the site, and how you arrived (referring URL)", "Cookies and similar tracking technologies (see Cookies section below)"])}`,
         "We do not knowingly collect information from children under 13. If you believe a child has submitted information through our website, please contact us and we will delete it.",
       ],
     ],
     [
       "How We Use Your Information",
-      "We use information to respond to your quote request or inquiry, schedule on-site estimates and project work, communicate with you about your project by phone, text, or email, send follow-up information with your consent, improve our website and services, and comply with legal obligations. We do not sell your personal information to third parties or share it with marketers for their own promotional use.",
+      [
+        `We use the information we collect to:${ul(["Respond to your quote request or inquiry", "Schedule on-site estimates and project work", "Communicate with you about your project (calls, texts, emails)", "Send you follow-up information or, with your consent, occasional updates", "Improve our website and the services we offer", "Comply with our legal obligations"])}`,
+        "We do not sell your personal information to third parties. We do not share your information with marketers for their own promotional use.",
+      ],
     ],
     [
       "Who We Share Information With",
-      "We share information only as necessary to operate our business and serve you, including service providers who help run the website and business, legal or regulatory authorities when required by law or to protect our rights, and successors in the event of a business sale, merger, or transfer of assets.",
+      [
+        "We share information only as necessary to operate our business and serve you:",
+        ul([
+          "<strong>Service providers</strong> who help us run the website and business (for example, web hosting providers, form processors, analytics services, scheduling tools, and review platforms)",
+          "<strong>Legal and regulatory authorities</strong> when required by law, court order, or to protect our rights",
+          "<strong>Successors</strong> in the event of a business sale, merger, or transfer of assets",
+        ]),
+        "Any third party we share information with is required to protect that information consistent with this policy.",
+      ],
     ],
     [
       "Cookies and Tracking Technologies",
-      "Our website may use essential cookies required for functionality, analytics cookies such as Google Analytics to understand site usage, and review-widget cookies to display live reviews. You can control or disable cookies through your browser settings, though disabling certain cookies may affect how parts of the website work.",
+      [
+        "Our website uses cookies and similar technologies to remember your preferences, understand how visitors use the site, and improve performance.",
+        `We use:${ul(["<strong>Essential cookies</strong> — required for the website to function properly", "<strong>Analytics cookies</strong> — Google Analytics, which helps us understand how visitors use the site (this data is anonymized and aggregated)", "<strong>Reviews widget cookies</strong> — our Google Reviews widget may set cookies to display live reviews"])}`,
+        "You can control or disable cookies through your browser settings. Disabling certain cookies may affect how parts of the website work for you.",
+      ],
     ],
     [
       "SMS / Text Messaging",
-      "If you opt in to receive text messages from us by checking a consent box or texting us directly, we may send texts related to your project, including quote follow-ups, scheduling updates, and project updates. Message and data rates may apply. Message frequency varies. You can opt out at any time by replying STOP. We will never share your phone number with third parties for marketing purposes.",
+      "If you opt in to receive text messages from us (by checking the consent box on a form or by texting us directly), we may send you texts related to your project — quote follow-ups, scheduling updates, and photo updates during the work. Message and data rates may apply. Message frequency varies based on your project. You can opt out of text messages at any time by replying STOP. For help, reply HELP. We will never share your phone number with third parties for marketing purposes.",
     ],
     [
       "Data Security",
-      "We take reasonable steps to protect submitted information, including secure form submission, encrypted website connections, and limiting access to personal information to people who need it to run the business. No method of transmitting or storing information online is 100% secure, so we cannot guarantee absolute security.",
+      [
+        "We take reasonable steps to protect the information you share with us, including secure form submission, encrypted website connections (HTTPS), and limiting access to personal information to the people who need it to run our business.",
+        "No method of transmitting or storing information over the internet is 100% secure. While we work to protect your information, we cannot guarantee absolute security.",
+      ],
     ],
     [
       "Your Choices and Rights",
-      "You may request a copy of the personal information we hold about you, ask us to correct inaccurate information, ask us to delete your information subject to legal requirements, opt out of marketing communications, or opt out of text messages by replying STOP. To exercise rights, contact us using the information below.",
+      [
+        `You have the right to:${ul(["Request a copy of the personal information we hold about you", "Ask us to correct inaccurate information", "Ask us to delete your information (subject to any legal requirements we must follow)", "Opt out of marketing communications at any time", "Opt out of text messages by replying STOP"])}`,
+        "To exercise any of these rights, contact us at the information below. We will respond within a reasonable time, typically within 30 days.",
+      ],
     ],
     [
       "Third-Party Links",
@@ -1564,7 +1671,7 @@ function privacyContent() {
     ],
     [
       "Changes to This Policy",
-      "We may update this Privacy Policy from time to time. When we do, we will update the last updated date at the top of the page. For significant changes, we may also notify you on the website or by email.",
+      'We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of the page. For significant changes, we may also notify you on the website or by email. We encourage you to review this policy occasionally.',
     ],
     [
       "Contact Us",
@@ -1577,27 +1684,48 @@ function termsContent() {
   return legalContent("Terms of Service", [
     [
       "Agreement to Terms",
-      `These Terms govern your use of the ${SITE_URL} website operated by ${LEGAL_NAME}, and any quotes, estimates, or painting services you request through this website or directly from us. By using this website or requesting a quote, you agree to be bound by these Terms.`,
+      [
+        `These Terms of Service ("Terms") govern your use of the 593ecpaintingllc.com website (the "Website") operated by ${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our"), and any quotes, estimates, or painting services you request through this Website or directly from us.`,
+        "By using this Website or requesting a quote, you agree to be bound by these Terms. If you do not agree, please do not use the Website.",
+      ],
     ],
     [
       "Painting Services",
-      "593 EC Painting provides residential painting and related services in Charlotte, NC and the surrounding Carolinas. Services include interior painting, exterior painting, cabinet painting, deck and fence staining and painting, pressure washing, popcorn ceiling removal, wallpaper removal, and drywall repair. All painting services are subject to a separate written estimate and service agreement signed before work begins. If anything on the website conflicts with your signed agreement, your signed agreement controls.",
+      [
+        "593 EC Painting provides residential painting and related services in Charlotte, NC and the surrounding Carolinas. Specific services include interior painting, exterior painting, cabinet painting, deck and fence staining and painting, pressure washing, popcorn ceiling removal, wallpaper removal, and drywall repair.",
+        "All painting services are subject to a separate written estimate and service agreement signed between you and 593 EC Painting before work begins. The terms of that signed agreement — not this Website's content — govern the actual scope, price, timeline, and warranty of your project. If anything on the Website conflicts with your signed agreement, your signed agreement controls.",
+      ],
     ],
     [
       "Quotes and Estimates",
-      "Quote requests submitted through the website do not create a contract. A quote is binding only after we conduct an on-site visit, provide a written estimate, and both parties sign an agreement. Estimates are valid for 30 days unless otherwise stated and may change if scope, hidden conditions, or material costs change.",
+      [
+        "Quote requests submitted through our Website do not create a contract. A quote is only binding after we have conducted an on-site visit, provided you with a written estimate, and both parties have signed an agreement.",
+        "All estimates are valid for 30 days from the date issued unless otherwise stated. Prices may change if the scope of work changes, if hidden conditions are discovered (such as wood rot or extensive prep work), or if material costs change significantly.",
+      ],
     ],
     [
       "Workmanship Warranty",
-      "593 EC Painting provides a 3-year workmanship warranty subject to your signed service agreement. The warranty covers peeling, blistering, or adhesion failures caused by our application or prep work and workmanship defects in our painting. It does not cover storm damage, impact, settling, structural movement, normal wear and tear, underlying substrate failures, UV fading, homeowner work, or work by other contractors after completion.",
+      [
+        "593 EC Painting provides a 3-year workmanship warranty on our painting services, subject to the terms of your signed service agreement.",
+        `The warranty covers:${ul(["Peeling, blistering, or adhesion failures caused by our application or prep work", "Workmanship defects in our painting"])}`,
+        `The warranty does not cover:${ul(["Damage from storms, impact, settling, structural movement, or other causes outside our control", "Normal wear and tear", "Surfaces or substrates that fail due to underlying conditions we identified and disclosed at the time of the estimate", "Color fading from UV exposure (a normal characteristic of paint, not a defect)", "Work performed by other contractors or by the homeowner after our project is complete"])}`,
+        "To make a warranty claim, contact us at (774) 329-7109 or via the contact form. We will inspect the issue and, if covered, repair it at no charge.",
+      ],
     ],
     [
       "Payment",
-      "Payment terms are set in your signed service agreement. We typically require a deposit before work begins and final payment on completion. Past-due balances may be subject to reasonable late fees and collection costs as permitted by North Carolina law.",
+      [
+        "Payment terms for painting services are set in your signed service agreement. We typically require a deposit before work begins and final payment on completion. We accept cash, check, and standard electronic payment methods.",
+        "Past-due balances may be subject to reasonable late fees and collection costs as permitted by North Carolina law.",
+      ],
     ],
     [
       "Website Use",
-      "You may use this website for personal, non-commercial purposes related to learning about or hiring 593 EC Painting. You agree not to use the website unlawfully, attempt unauthorized access, submit false or fraudulent information, scrape or copy content for commercial use, or upload content that infringes anyone else's rights.",
+      [
+        "You may use the Website for personal, non-commercial purposes related to learning about or hiring 593 EC Painting.",
+        `You agree not to:${ul(["Use the Website for any unlawful purpose", "Attempt to gain unauthorized access to any part of the Website or its underlying systems", "Submit false, misleading, or fraudulent information through any form", "Scrape, copy, or reproduce Website content for commercial use without our written permission", "Upload content that infringes anyone else's rights or violates the law"])}`,
+        "We reserve the right to refuse service, terminate accounts, or remove content at our discretion.",
+      ],
     ],
     [
       "Intellectual Property",
@@ -1605,7 +1733,11 @@ function termsContent() {
     ],
     [
       "Limitation of Liability",
-      "The website is provided as is without warranties of any kind. We make reasonable efforts to keep content accurate and up to date but do not guarantee completeness, accuracy, or availability. To the maximum extent permitted by law, 593 EC Painting is not liable for indirect, incidental, consequential, or punitive damages arising from website use.",
+      [
+        'The Website is provided "as is" without warranties of any kind, express or implied. We make reasonable efforts to keep Website content accurate and up to date, but we do not guarantee accuracy, completeness, or availability.',
+        "To the maximum extent permitted by law, 593 EC Painting and its owners, employees, and contractors are not liable for any indirect, incidental, consequential, or punitive damages arising from your use of the Website or our services. Our total liability for any claim related to the Website is limited to $100.",
+        "This limitation does not apply to our painting services, which are governed by your signed service agreement and the workmanship warranty described above.",
+      ],
     ],
     [
       "Third-Party Links and Services",
@@ -1613,7 +1745,10 @@ function termsContent() {
     ],
     [
       "Governing Law and Disputes",
-      "These Terms are governed by the laws of the State of North Carolina. Any dispute arising from these Terms or website use will be resolved in the state or federal courts located in Mecklenburg County, North Carolina. We encourage you to contact us first so most concerns can be resolved with a phone call.",
+      [
+        "These Terms are governed by the laws of the State of North Carolina, without regard to its conflict-of-laws principles. Any dispute arising from these Terms or your use of the Website will be resolved in the state or federal courts located in Mecklenburg County, North Carolina, and you consent to the personal jurisdiction of those courts.",
+        "We encourage you to contact us first to try to resolve any concerns before filing a formal dispute. Most issues can be resolved with a phone call.",
+      ],
     ],
     [
       "Changes to These Terms",
@@ -1630,23 +1765,35 @@ function disclaimerContent() {
   return legalContent("Disclaimer", [
     [
       "General Disclaimer",
-      "The information provided on this website is for general informational purposes only. While we make every effort to keep information accurate and up to date, 593 EC Painting LLC makes no representations or warranties about completeness, accuracy, reliability, suitability, or availability of website content. Any reliance you place on website information is at your own risk.",
+      [
+        'The information provided on 593ecpaintingllc.com (the "Website") is for general informational purposes only. While we make every effort to keep information accurate and up to date, 593 EC Painting LLC makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the Website or its content.',
+        "Any reliance you place on Website information is strictly at your own risk.",
+      ],
     ],
     [
       "Not Professional Advice",
-      "Website content, including service descriptions, blog posts, FAQs, and process explanations, is not intended as professional advice for your specific project. Every home, surface, and project is different. For an accurate assessment, request a free on-site quote.",
+      [
+        "The content on this Website — including service descriptions, blog posts, FAQs, and process explanations — is not intended as professional advice for your specific project. Every home, every surface, and every project is different.",
+        "For an accurate assessment of your specific painting needs, please request a free on-site quote. Our on-site evaluation considers the actual condition of your surfaces, your project goals, and your timeline — none of which can be fully evaluated through general Website content.",
+      ],
     ],
     [
       "Pricing and Estimates",
-      "Any general pricing information or cost ranges referenced on the website are illustrative only and do not constitute a quote, estimate, or offer. Actual project costs depend on project size, surface condition, materials, prep work, accessibility, and other factors. A binding price is provided only after an on-site visit and written estimate.",
+      [
+        "Any general pricing information or cost ranges referenced on this Website are illustrative only and do not constitute a quote, estimate, or offer. Actual project costs depend on many factors including the size of the project, the condition of the surfaces, the paint and materials selected, prep work required, and accessibility.",
+        "A binding price for your project is provided only after we conduct an on-site visit and provide you with a written estimate.",
+      ],
     ],
     [
       "Photos and Project Examples",
-      "Photos shown on this website represent actual completed projects where available and may include temporary project placeholders during the rebuild. Results in your home may vary based on original surface condition, selected materials, lighting, and project-specific factors. Before-and-after photos are examples, not guarantees of identical results.",
+      [
+        "Photos shown on this Website represent actual completed projects by 593 EC Painting, used with the homeowner's permission. Results in your home may vary depending on the original condition of the surfaces, the materials selected, lighting conditions, and other factors specific to your project.",
+        "Before-and-after photos are intended to give you a sense of the type of work we do — not to guarantee identical results in every home.",
+      ],
     ],
     [
       "Reviews and Testimonials",
-      "Reviews displayed on this website should reflect genuine customer opinions when connected to the live Google reviews widget. Your experience may differ. Reviews are presented as written by the customer when pulled from verified third-party platforms.",
+      "Reviews displayed on this Website are pulled directly from our verified Google Business Profile and reflect the genuine opinions of past customers. Your experience may differ. Reviews are presented as written by the customer; we do not edit or filter their content.",
     ],
     [
       "Third-Party Content and Links",
@@ -1658,11 +1805,11 @@ function disclaimerContent() {
     ],
     [
       "Warranty and Service Information",
-      "General information about our 3-year workmanship warranty is informational. Specific terms, coverage, exclusions, and limitations are set in your signed service agreement and warranty document. If anything on the website conflicts with signed documents, the signed documents control.",
+      "General information about our 3-year workmanship warranty is provided on this Website for informational purposes. The specific terms, coverage, exclusions, and limitations of the warranty for your project are set in your signed service agreement and the warranty document provided to you at the start of your project. If anything on this Website conflicts with your signed agreement or warranty document, your signed documents control.",
     ],
     [
       "Service Area",
-      "593 EC Painting primarily serves Charlotte, NC and surrounding communities within approximately a 30-mile radius. Cities listed are typical service areas, but availability is not guaranteed for every project. Contact us if you are unsure whether we serve your area.",
+      "593 EC Painting primarily serves Charlotte, NC and surrounding communities within approximately a 30-mile radius. Cities listed on this Website as part of our service area are typical — we may decline projects outside this area or at our discretion, and inclusion of a city does not guarantee availability for every project. If you are unsure whether we serve your area, please contact us before requesting a quote.",
     ],
     [
       "Changes to This Disclaimer",
@@ -1679,66 +1826,75 @@ function thankYouContent() {
   return {
     blocks: [
       block("section-header", {
-        eyebrow: "Quote Request",
-        title: "Thanks - We Got Your Request",
+        eyebrow: "",
+        title: "Thanks — We Got Your Request",
         subtitle:
-          "A real human, probably Esau or Sandra, will be in touch within 24 hours, usually sooner.",
+          "A real human (probably Esau or Sandra) will be in touch within 24 hours — usually sooner.",
         alignment: "center",
         headingLevel: "h1",
       }),
       block("callout-box", {
         title: "Your quote request has been received.",
         content: p(
-          "We will review the details and reach out within 24 hours, most often the same business day.",
+          "We'll review the details and reach out within 24 hours — most often the same business day. If you submitted on a weekend or holiday, we'll be in touch first thing the next business day.",
         ),
         variant: "success",
       }),
       processBlock("What Happens Next", "Here is exactly what you can expect from here.", [
         {
           title: "We review your request",
-          description: "Esau and Sandra personally review every quote request.",
+          description:
+            "Esau and Sandra personally review every quote request that comes in. We look at the service you're interested in, the photos you uploaded (if any), and the details you shared.",
         },
         {
           title: "We reach out to schedule a visit",
-          description: "A quick call or text to confirm your information and choose a time.",
+          description:
+            "A quick call or text to confirm your information and pick a time that works for an on-site visit. Most quotes are scheduled within 48 hours.",
         },
         {
           title: "We visit and write your quote",
-          description: "We measure, inspect, discuss finishes, and write a clear estimate.",
+          description:
+            "We come out, measure, look at the surfaces, talk through colors and finishes, and write you a clear written estimate.",
         },
-        { title: "You decide on your timeline", description: "No high-pressure sales tactics." },
+        {
+          title: "You decide on your own timeline",
+          description: "No high-pressure sales tactics. Take the time you need to think it over.",
+        },
       ]),
-      cards("While You Wait", "A few ways to get to know us before we connect.", [
+      cards("While You Wait", "A few ways to get to know us a little better before we connect.", [
         {
           title: "See Our Recent Work",
-          description: "Browse before-and-after photos.",
-          link: "/gallery",
+          description: "Browse before-and-after photos from real Charlotte projects.",
+          link: "/gallery/",
           icon: "Image",
         },
         {
           title: "Read Our Reviews",
-          description: "Real reviews from Charlotte homeowners.",
-          link: "/reviews",
+          description: "Real reviews from Charlotte homeowners we've painted for.",
+          link: "/reviews/",
           icon: "Star",
         },
         {
           title: "Meet the Family",
-          description: "Learn about Esau, Sandra, and the way we work.",
-          link: "/about",
+          description: "Learn more about Esau, Sandra, and the way we run 593 EC Painting.",
+          link: "/about/",
           icon: "Users",
         },
         {
           title: "Explore Our Services",
-          description: "Interior, exterior, cabinets, decks, and fences.",
-          link: "/services",
+          description: "See everything we do — interior, exterior, cabinets, decks, and fences.",
+          link: "/services/",
           icon: "PaintBucket",
         },
       ]),
       cta(
         "Need to Reach Us Sooner?",
-        "If your project is time-sensitive or you would rather talk, we are happy to pick up the phone.",
+        "If your project is time-sensitive or you'd rather just talk, we're happy to pick up the phone.",
         `Call ${PHONE_DISPLAY}`,
-        false,
+        true,
+        PHONE_TEL,
+        "Text Us",
+        "sms:7743297109",
       ),
     ],
   };
@@ -1748,54 +1904,54 @@ function notFoundContent() {
   return {
     blocks: [
       block("section-header", {
-        eyebrow: "404",
+        eyebrow: "",
         title: "This Page Took a Coffee Break",
         subtitle:
-          "The page you are looking for cannot be found, but we would love to help you find what you need.",
+          "The page you're looking for can't be found — but we're still here, and we'd love to help you find what you need.",
         alignment: "center",
         headingLevel: "h1",
       }),
-      cards(
-        "Maybe You Were Looking For...",
-        "A quick list of the most-visited pages on our site.",
-        [
-          {
-            title: "Our Painting Services",
-            description: "See everything we paint.",
-            link: "/services",
-            icon: "PaintBucket",
-          },
-          {
-            title: "Recent Project Gallery",
-            description: "Real before-and-after photos.",
-            link: "/gallery",
-            icon: "Image",
-          },
-          {
-            title: "Customer Reviews",
-            description: "What Charlotte homeowners say.",
-            link: "/reviews",
-            icon: "Star",
-          },
-          {
-            title: "About 593 EC Painting",
-            description: "Meet the family behind the business.",
-            link: "/about",
-            icon: "Users",
-          },
-          {
-            title: "Get a Free Quote",
-            description: "Tell us about your project.",
-            link: "/contact",
-            icon: "ClipboardCheck",
-          },
-          { title: "Call or Text Us", description: PHONE_DISPLAY, link: PHONE_TEL, icon: "Phone" },
-        ],
-      ),
+      cards("Maybe You Were Looking For…", "A quick list of the most-visited pages on our site.", [
+        {
+          title: "Our Painting Services",
+          description: "See everything we paint.",
+          link: "/services/",
+          icon: "PaintBucket",
+        },
+        {
+          title: "Recent Project Gallery",
+          description: "Real before-and-after photos.",
+          link: "/gallery/",
+          icon: "Image",
+        },
+        {
+          title: "Customer Reviews",
+          description: "What Charlotte homeowners say about us.",
+          link: "/reviews/",
+          icon: "Star",
+        },
+        {
+          title: "About 593 EC Painting",
+          description: "Meet the family behind the business.",
+          link: "/about/",
+          icon: "Users",
+        },
+        {
+          title: "Get a Free Quote",
+          description: "Tell us about your project.",
+          link: "/contact/",
+          icon: "ClipboardCheck",
+        },
+        { title: "Call or Text Us", description: PHONE_DISPLAY, link: PHONE_TEL, icon: "Phone" },
+      ]),
       cta(
         "Still Can't Find What You're Looking For?",
-        "Just give us a call. We answer most calls the same day and are happy to point you in the right direction.",
+        "Just give us a call. We answer most calls the same day, and we're happy to point you in the right direction.",
         `Call ${PHONE_DISPLAY}`,
+        true,
+        PHONE_TEL,
+        "Get a Free Quote",
+        "/contact/",
       ),
     ],
   };
@@ -1805,39 +1961,39 @@ function sitemapContent() {
   return {
     blocks: [
       block("section-header", {
-        eyebrow: "Sitemap",
+        eyebrow: "",
         title: "Sitemap",
-        subtitle: "A complete index of every page on ecpaintingcharlotte.com.",
+        subtitle: "A complete index of every page on 593ecpaintingllc.com.",
         alignment: "center",
         headingLevel: "h1",
       }),
       rich("", [
-        "This sitemap is a complete list of every page on our website, organized by section.",
+        "This sitemap is a complete list of every page on our website, organized by section. If you're looking for something specific or just want to browse, this is the fastest way to find it.",
       ]),
       cards("Main Pages", "", [
         { title: "Home", description: "Welcome to 593 EC Painting.", link: "/", icon: "Home" },
         {
           title: "About",
           description: "Meet Esau, Sandra, and the family behind the business.",
-          link: "/about",
+          link: "/about/",
           icon: "Users",
         },
         {
           title: "Contact",
           description: "Request a free quote or get in touch.",
-          link: "/contact",
+          link: "/contact/",
           icon: "Phone",
         },
         {
           title: "Gallery",
           description: "Before-and-after photos of recent projects.",
-          link: "/gallery",
+          link: "/gallery/",
           icon: "Image",
         },
         {
           title: "Reviews",
           description: "Real reviews from Charlotte homeowners.",
-          link: "/reviews",
+          link: "/reviews/",
           icon: "Star",
         },
       ]),
@@ -1845,35 +2001,67 @@ function sitemapContent() {
         {
           title: "All Services",
           description: "Overview of every painting service we offer.",
-          link: "/services",
+          link: "/services/",
           icon: "PaintBucket",
         },
-        ...serviceCards,
+        {
+          title: "Interior Painting",
+          description: "Walls, ceilings, trim, popcorn removal, wallpaper, drywall repair.",
+          link: "/interior-painting/",
+          icon: "PaintBucket",
+        },
+        {
+          title: "Exterior Painting",
+          description: "Siding, brick, stucco, trim, pressure washing.",
+          link: "/exterior-painting/",
+          icon: "Home",
+        },
+        {
+          title: "Cabinet Painting",
+          description: "Kitchen and bathroom cabinet refinishing.",
+          link: "/cabinet-painting/",
+          icon: "Layers",
+        },
+        {
+          title: "Deck Staining & Painting",
+          description: "Deck restoration, cleaning, staining, sealing.",
+          link: "/deck-staining/",
+          icon: "Sun",
+        },
+        {
+          title: "Fence Staining & Painting",
+          description: "Wood fence cleaning, staining, and painting.",
+          link: "/fence-staining/",
+          icon: "Fence",
+        },
       ]),
       cards("Legal", "", [
         {
           title: "Privacy Policy",
           description: "How we handle your information.",
-          link: "/privacy-policy",
+          link: "/privacy-policy/",
           icon: "ShieldCheck",
         },
         {
           title: "Terms of Service",
           description: "Terms governing use of our website and services.",
-          link: "/terms-of-service",
+          link: "/terms-of-service/",
           icon: "FileText",
         },
         {
           title: "Disclaimer",
           description: "Important disclaimers about website content.",
-          link: "/disclaimer",
+          link: "/disclaimer/",
           icon: "AlertCircle",
         },
       ]),
       rich("Contact Information", [
-        `${LEGAL_NAME}<br />${ADDRESS}<br />Phone: ${PHONE_DISPLAY}<br />Hours: Monday-Saturday, 8:00 AM - 6:00 PM`,
+        `${LEGAL_NAME}<br />${ADDRESS}<br />Phone: ${PHONE_DISPLAY}<br />Hours: Monday–Saturday, 8:00 AM – 6:00 PM`,
       ]),
-      serviceAreaBlock(),
+      rich("Service Area", [
+        "We serve homeowners within approximately a 30-mile radius of Charlotte. Cities we serve include:",
+        SERVICE_AREA + ".",
+      ]),
       cta(
         "Ready to Get Started?",
         "Get a free, no-pressure quote from Charlotte's family-owned painters.",
@@ -1906,7 +2094,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "About",
       slug: "about",
-      path: "/about",
+      path: "/about/",
       metaTitle: "About 593 EC Painting | Family-Owned Charlotte Painters",
       metaDescription:
         "Meet Esau and Sandra, the husband-and-wife team behind 593 EC Painting. 5 years of painting homes across Charlotte, NC and the surrounding Carolinas.",
@@ -1915,7 +2103,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Contact",
       slug: "contact",
-      path: "/contact",
+      path: "/contact/",
       metaTitle: "Contact 593 EC Painting | Free Quotes in Charlotte, NC",
       metaDescription:
         "Request a free painting quote from 593 EC Painting. Family-owned house painters serving Charlotte, NC and surrounding areas. Call (774) 329-7109 or request online.",
@@ -1924,7 +2112,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Gallery",
       slug: "gallery",
-      path: "/gallery",
+      path: "/gallery/",
       metaTitle: "Painting Gallery | 593 EC Painting Charlotte, NC",
       metaDescription:
         "Before and after photos of recent painting projects across Charlotte, NC. Interior, exterior, cabinets, decks, and fences by 593 EC Painting.",
@@ -1933,7 +2121,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Reviews",
       slug: "reviews",
-      path: "/reviews",
+      path: "/reviews/",
       metaTitle: "Reviews | 593 EC Painting Charlotte, NC",
       metaDescription:
         "See what Charlotte homeowners say about 593 EC Painting. Read real Google reviews from interior, exterior, and cabinet painting customers across the Carolinas.",
@@ -1942,7 +2130,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Services",
       slug: "services",
-      path: "/services",
+      path: "/services/",
       metaTitle: "Painting Services in Charlotte, NC | 593 EC Painting",
       metaDescription:
         "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and the surrounding Carolinas. Family-owned, free quotes, 3-year warranty.",
@@ -1959,7 +2147,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Privacy Policy",
       slug: "privacy-policy",
-      path: "/privacy-policy",
+      path: "/privacy-policy/",
       metaTitle: "Privacy Policy | 593 EC Painting",
       metaDescription:
         "How 593 EC Painting collects, uses, and protects your information when you visit our website or request a painting quote.",
@@ -1968,7 +2156,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Terms of Service",
       slug: "terms-of-service",
-      path: "/terms-of-service",
+      path: "/terms-of-service/",
       metaTitle: "Terms of Service | 593 EC Painting",
       metaDescription:
         "Terms of service for 593 EC Painting LLC, governing use of our website and painting services in Charlotte, NC and the surrounding Carolinas.",
@@ -1977,7 +2165,7 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Disclaimer",
       slug: "disclaimer",
-      path: "/disclaimer",
+      path: "/disclaimer/",
       metaTitle: "Disclaimer | 593 EC Painting",
       metaDescription:
         "Important disclaimers regarding the information, photos, pricing guidance, and content on the 593 EC Painting website.",
@@ -1986,27 +2174,27 @@ function allPageSpecs(): PageSpec[] {
     {
       title: "Thank You",
       slug: "thank-you",
-      path: "/thank-you",
+      path: "/thank-you/",
       metaTitle: "Thank You | 593 EC Painting",
       metaDescription:
-        "Thank you for requesting a painting quote from 593 EC Painting. We will be in touch within 24 hours.",
+        "Thank you for requesting a painting quote from 593 EC Painting. We'll be in touch within 24 hours.",
       content: thankYouContent(),
       noindex: true,
     },
     {
       title: "404 Page Not Found",
       slug: "404",
-      path: "/404",
+      path: "/404/",
       metaTitle: "Page Not Found | 593 EC Painting",
       metaDescription:
-        "The page you are looking for cannot be found. Explore our painting services or get a free quote.",
+        "The page you're looking for can't be found. Let's get you back on track — explore our painting services or get a free quote.",
       content: notFoundContent(),
       noindex: true,
     },
     {
       title: "Sitemap",
       slug: "sitemap",
-      path: "/sitemap",
+      path: "/sitemap/",
       metaTitle: "Sitemap | 593 EC Painting",
       metaDescription:
         "Complete sitemap of the 593 EC Painting website. Browse every page including services, gallery, reviews, and contact information.",
