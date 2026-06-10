@@ -15,7 +15,7 @@ interface PublicHtmlSnapshot {
 
 const DEFAULT_TITLE = "EC Painting - Professional Painting Services";
 const DEFAULT_DESCRIPTION =
-  "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.";
+  "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, and fence staining.";
 
 const FALLBACK_STATIC_PAGES: Record<
   string,
@@ -24,9 +24,9 @@ const FALLBACK_STATIC_PAGES: Record<
   "/": {
     title: "Home",
     description:
-      "Explore professional residential and commercial painting services from EC Painting.",
+      "Explore professional residential painting services from EC Painting.",
     body:
-      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.",
+      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, and fence staining.",
   },
   "/about": {
     title: "About",
@@ -40,7 +40,7 @@ const FALLBACK_STATIC_PAGES: Record<
     description:
       "Contact EC Painting to request a free painting estimate.",
     body:
-      "Contact EC Painting to request a free painting estimate for your next interior, exterior, cabinet, deck, fence, or commercial painting project.",
+      "Contact EC Painting to request a free painting estimate for your next interior, exterior, cabinet, deck, or fence project.",
   },
   "/join": {
     title: "Join the Network",

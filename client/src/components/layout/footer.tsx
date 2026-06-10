@@ -19,7 +19,6 @@ const defaultTherapistLinks = [
 const defaultResourceLinks = [
   { href: "/services/deck-staining", label: "Deck Staining", testId: "link-footer-deck" },
   { href: "/services/fence-staining", label: "Fence Staining", testId: "link-footer-fence" },
-  { href: "/services/commercial-painting", label: "Commercial Painting", testId: "link-footer-commercial" },
 ];
 
 const defaultCompanyLinks = [
@@ -222,8 +221,7 @@ export function Footer() {
               className="h-10 sm:h-12 w-auto mb-4 object-contain"
             />
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
-              Professional painting for interiors, exteriors, cabinets, decks, fences, and
-              commercial spaces.
+              Professional painting for interiors, exteriors, cabinets, decks, and fences.
             </p>
           </div>
 

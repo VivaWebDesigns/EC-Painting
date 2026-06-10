@@ -108,22 +108,6 @@ const services = [
     process:
       "We clean the fence, repair loose pickets or problem spots where needed, then apply stain or paint evenly for a finished look that holds up.",
   },
-  {
-    title: "Commercial Painting",
-    slug: "commercial-painting",
-    icon: "Building2",
-    heroImage: "/img/services/commercial.webp",
-    heroTitle: "Commercial Painting in Charlotte, NC",
-    heroSubtitle:
-      "Professional painting for offices, retail spaces, restaurants, and commercial properties - delivered on your schedule with minimal disruption.",
-    short:
-      "Clean, professional painting for offices, retail spaces, restaurants, and commercial properties.",
-    bullets: ["Interior and exterior commercial painting", "Flexible scheduling", "Low-odor paint options"],
-    body:
-      "First impressions matter for your business. EC Painting works around your schedule to deliver clean, professional commercial painting with minimal disruption.",
-    process:
-      "We begin with a walkthrough to understand scope, budget, timeline, and access needs, then phase the work so your business can keep moving.",
-  },
 ];
 
 const reviews = [
@@ -209,7 +193,7 @@ function homeContent() {
       block("hero", {
         heading: "We've got your painting needs covered.",
         subheading:
-          "<p>Transforming homes and commercial spaces with careful prep, clean lines, and durable finishes.</p>",
+          "<p>Transforming homes with careful prep, clean lines, and durable finishes.</p>",
         ctaText: "Get a Free Estimate",
         ctaAction: "form-modal",
         ctaFormSlug: "contact-form",
@@ -293,7 +277,7 @@ function servicesContent() {
         eyebrow: "What We Do",
         title: "Professional Painting Services",
         subtitle:
-          "Interior, exterior, cabinet, deck, fence, and commercial painting services built around careful prep and clean results.",
+          "Interior, exterior, cabinet, deck, and fence painting services built around careful prep and clean results.",
         alignment: "center",
         headingLevel: "h1",
       }),
@@ -512,7 +496,7 @@ function contactContent() {
         eyebrow: "Get In Touch",
         title: "Let us know how we can help.",
         subtitle:
-          "Request a free estimate for interior painting, exterior painting, cabinets, decks, fences, or commercial painting.",
+          "Request a free estimate for interior painting, exterior painting, cabinets, decks, or fences.",
         alignment: "center",
         headingLevel: "h1",
       }),
@@ -589,7 +573,7 @@ async function seedPages() {
       slug: "home",
       content: homeContent(),
       description:
-        "EC Painting provides interior, exterior, cabinet, deck, fence, and commercial painting services.",
+        "EC Painting provides interior, exterior, cabinet, deck, and fence painting services.",
     }),
   );
   await upsertPage(
@@ -598,7 +582,7 @@ async function seedPages() {
       slug: "services",
       content: servicesContent(),
       description:
-        "Explore EC Painting services for homes and commercial spaces.",
+        "Explore EC Painting services for homes in Charlotte and surrounding communities.",
     }),
   );
   await upsertPage(
@@ -644,6 +628,11 @@ async function seedPages() {
         description: `${service.title} services from EC Painting. Request a free estimate.`,
       }),
     );
+  }
+
+  const obsoleteCommercialPage = await storage.cmsPages.getPageBySlug("commercial-painting");
+  if (obsoleteCommercialPage) {
+    await storage.cmsPages.deletePage(obsoleteCommercialPage.id);
   }
 }
 
@@ -697,7 +686,7 @@ async function seedSettings() {
     siteName: BRAND_NAME,
     titleSuffix: ` | ${BRAND_NAME}`,
     defaultMetaDescription:
-      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, fence staining, and commercial painting.",
+      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, and fence staining.",
     siteUrl: SITE_URL,
     defaultOgImageUrl: OG_IMAGE_URL,
     organizationName: BRAND_NAME,
