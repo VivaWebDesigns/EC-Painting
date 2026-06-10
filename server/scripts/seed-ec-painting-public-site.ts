@@ -265,7 +265,7 @@ const services = [
       },
     ],
     processTitle: "Our Interior Painting Process",
-    processSubtitle: "Here is exactly what to expect from quote to walkthrough.",
+    processSubtitle: "Here's exactly what to expect from quote to walkthrough.",
     steps: [
       [
         "Free On-Site Quote",
@@ -331,7 +331,7 @@ const services = [
       { title: "3-year warranty", description: "Written into your contract." },
       {
         title: "We come back for touch-ups",
-        description: "Months or years later. That is how we keep customers for life.",
+        description: "Months or years later. That's how we keep customers for life.",
       },
     ],
     galleryTitle: "Recent Interior Projects",
