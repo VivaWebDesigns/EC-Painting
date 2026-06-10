@@ -293,7 +293,7 @@ function servicesContent() {
           {
             step: "1",
             title: "Request an Estimate",
-            description: "Tell us about the rooms, exterior surfaces, cabinets, deck, fence, or commercial space.",
+            description: "Tell us about the rooms, exterior surfaces, cabinets, deck, or fence.",
           },
           {
             step: "2",
