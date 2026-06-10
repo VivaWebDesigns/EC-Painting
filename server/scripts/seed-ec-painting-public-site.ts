@@ -213,8 +213,8 @@ const services = [
       "Walls, ceilings, trim, and everything in between. Backed by a 3-year warranty and painted by people who actually care about the result.",
     introTitle: "Interior Painting Done Right",
     intro: [
-      "A great interior paint job is not just about the color you pick. It is about clean lines, even coverage, properly prepped walls, smooth ceilings, and trim that looks crisp instead of sloppy.",
-      "593 EC Painting has been painting interiors across Charlotte for 5 years, and we treat every home we walk into the way we would want a painter to treat ours: with care, communication, and craftsmanship from the first wall to the final touch-up.",
+      "A great interior paint job isn't just about the color you pick. It's about clean lines, even coverage, properly prepped walls, smooth ceilings, and trim that looks crisp instead of sloppy. It's about a crew that protects your floors, covers your furniture, and cleans up at the end of every day.",
+      "That's what we do. 593 EC Painting has been painting interiors across Charlotte for 5 years, and we treat every home we walk into the way we'd want a painter to treat ours — with care, communication, and craftsmanship from the first wall to the final touch-up.",
     ],
     featuresTitle: "What We Paint Inside Your Home",
     featuresSubtitle:
@@ -232,36 +232,29 @@ const services = [
       {
         title: "Walls",
         description:
-          "Single rooms, whole-house repaints, accent walls, color changes, and clean refreshes for lived-in spaces.",
+          "Single rooms, whole-house repaints, accent walls, color changes, and refreshes.",
       },
       {
         title: "Ceilings",
         description:
-          "Standard flat ceilings, vaulted ceilings, textured ceilings, and smooth finishes after popcorn ceiling removal.",
+          "Standard flat ceilings, vaulted ceilings, popcorn-textured ceilings (and removal).",
       },
       {
         title: "Trim & Baseboards",
-        description:
-          "Crown molding, baseboards, chair rails, wainscoting, and decorative trim painted with crisp lines.",
+        description: "Crown molding, baseboards, chair rails, wainscoting, and decorative trim.",
       },
       {
         title: "Doors & Door Frames",
-        description:
-          "Interior doors, closet doors, frames, and casings painted to match your style.",
+        description: "Interior doors, closet doors, and frames painted to match your style.",
       },
-      {
-        title: "Window Trim",
-        description:
-          "Interior window casings and sills finished cleanly around glass and wall surfaces.",
-      },
+      { title: "Window Trim", description: "Interior window casings and sills." },
       {
         title: "Staircases & Railings",
-        description: "Painted balusters, handrails, risers, stringers, and staircase detail work.",
+        description: "Painted balusters, handrails, and stringer work.",
       },
       {
         title: "Built-Ins & Bookshelves",
-        description:
-          "Custom built-in cabinetry and shelving painted to look intentional, smooth, and new.",
+        description: "Custom built-in cabinetry and shelving painted to look new.",
       },
     ],
     processTitle: "Our Interior Painting Process",
@@ -279,33 +272,33 @@ const services = [
         "Prime & Repair",
         "We prime stains, water marks, and patches so the finish coat lays evenly.",
       ],
-      ["Paint", "Two coats of premium paint applied with care. We do not cut corners on coverage."],
+      ["Paint", "Two coats of premium paint applied with care. We don't cut corners on coverage."],
       [
         "Walkthrough",
-        "We walk every room with you, touch up anything you spot, and do not leave until you are happy.",
+        "We walk every room with you, touch up anything you spot, and don't leave until you're happy.",
       ],
     ],
     extras: [
       [
         "Popcorn Ceiling Removal",
         [
-          "Popcorn ceilings make a house feel dated faster than almost anything else. They collect dust, they are hard to clean, and they instantly age a room. Removing them is one of the highest-impact upgrades you can make, and we handle the whole process: containment, scraping, skim coating, sanding, priming, and painting the smooth ceiling underneath.",
-          "If your home was built before 1980, we recommend asbestos testing before any work begins, because that is the safe and responsible thing to do. From there, we contain the work area, remove the texture, fix the drywall underneath, and leave you with a smooth, modern ceiling that makes the whole room feel taller and brighter.",
-          "Most popcorn removal projects are bundled with a full interior repaint. It is the perfect time to do both at once.",
+          "Popcorn ceilings make a house feel dated faster than almost anything else. They collect dust, they're hard to clean, and they instantly age a room. Removing them is one of the highest-impact upgrades you can make — and we handle the whole process: containment, scraping, skim coating, sanding, priming, and painting the smooth ceiling underneath.",
+          "If your home was built before 1980, we'll test for asbestos before any work begins, because that's the safe and responsible thing to do. From there, we contain the work area, remove the texture, fix the drywall underneath, and leave you with a smooth, modern ceiling that makes the whole room feel taller and brighter.",
+          "Most popcorn removal projects are bundled with a full interior repaint — it's the perfect time to do both at once.",
         ],
       ],
       [
         "Wallpaper Removal",
         [
-          "Old wallpaper is one of those projects every homeowner wants done and almost nobody wants to do themselves. It is messy, tedious, and if it is not done right, you can end up with a worse wall than you started with.",
-          "We remove wallpaper the right way: steam, scrape, clean the adhesive residue, repair any damage to the drywall underneath, prime, and paint. By the time we are done, you would never know wallpaper was ever there. Whether it is one accent wall or every wall in the house, we handle it cleanly.",
+          "Old wallpaper is one of those projects every homeowner wants done and nobody wants to do themselves. We get it — it's messy, it's tedious, and if it's not done right, you end up with a worse wall than you started with.",
+          "We remove wallpaper the right way: steam, scrape, and clean the adhesive residue, then repair any damage to the drywall underneath, prime, and paint. By the time we're done, you'd never know wallpaper was ever there. Whether it's one accent wall or every wall in the house, we handle it cleanly.",
         ],
       ],
       [
         "Drywall Repair",
         [
-          "Cracks, holes, water stains, dents, doorknob damage, settling cracks at the corners of windows and doors: we fix all of it before we paint. Some painters skip repairs and paint over them. We will not. A fresh coat of paint over unrepaired drywall is just a fresh coat of paint over a problem.",
-          "We patch, tape, mud, sand, prime, and texture-match so repairs blend invisibly into the surrounding wall. For larger damage, we can replace full pieces of drywall and finish them to match the rest of the room. Whatever shape your walls are in, we leave them smooth before paint goes on.",
+          "Cracks, holes, water stains, dents, doorknob damage, settling cracks at the corners of windows and doors — we fix all of it before we paint. Some painters skip the repairs and just paint over them. We won't. A fresh coat of paint over unrepaired drywall is just a fresh coat of paint over a problem.",
+          "We patch, tape, mud, sand, prime, and texture-match so repairs blend invisibly into the surrounding wall. For larger sections of damage, we can replace full pieces of drywall and finish them to match the rest of the room. Whatever shape your walls are in, we leave them smooth before paint goes on.",
         ],
       ],
     ],
@@ -317,12 +310,12 @@ const services = [
       },
       {
         title: "Real prep, every time",
-        description: "We do not skip steps to save time. Prep is what makes the paint job last.",
+        description: "We don't skip steps to save time.",
       },
       {
         title: "Premium paint, included",
         description:
-          "Sherwin-Williams and Benjamin Moore are standard on every project, not an upcharge.",
+          "Sherwin-Williams and Benjamin Moore on every project as a standard, not an upcharge.",
       },
       {
         title: "Daily photo updates",
@@ -342,11 +335,11 @@ const services = [
     faq: [
       [
         "How long does interior painting take?",
-        "It depends on the size of the home and the scope of work, but most single rooms take 1-2 days and most full-house interiors take 4-7 days. We will give you a clear timeline in your written quote.",
+        "It depends on the size of the home and the scope of work, but most single rooms take 1-2 days and most full-house interiors take 4-7 days. We'll give you a clear timeline in your written quote.",
       ],
       [
         "Do I need to move my furniture?",
-        "No. We move and cover all furniture for you as part of the job. You do not need to lift a thing.",
+        "No. We move and cover all furniture for you as part of the job. You don't need to lift a thing.",
       ],
       [
         "What paint brands do you use?",
@@ -354,7 +347,7 @@ const services = [
       ],
       [
         "Can you help me pick colors?",
-        "Absolutely. We will walk through your home with you, look at lighting and existing finishes, and help you choose colors that work. If you want a deeper color consultation, we can also recommend trusted local designers.",
+        "Absolutely. We'll walk through your home with you, look at lighting and existing finishes, and help you choose colors that work. If you want a deeper color consultation, we can also recommend trusted local designers.",
       ],
       [
         "Do you paint ceilings and trim, or just walls?",
@@ -362,15 +355,15 @@ const services = [
       ],
       [
         "What if I notice a missed spot after you leave?",
-        "Call or text us and we will come back and fix it. Our 3-year warranty covers workmanship issues, and we genuinely want you to be happy with the result.",
+        "Call or text us and we'll come back and fix it. Our 3-year warranty covers workmanship issues, and we genuinely want you to be happy with the result.",
       ],
       [
         "Is the paint smell strong?",
-        "Modern interior paints are very low-VOC, so the smell is minimal and usually gone within a few hours of finishing. We can also use zero-VOC paints on request. Just let us know.",
+        "Modern interior paints are very low-VOC, so the smell is minimal and usually gone within a few hours of finishing. We can also use zero-VOC paints on request — just let us know.",
       ],
       [
         "Can you remove popcorn ceilings and paint in the same project?",
-        "Yes, and it is actually the most efficient way to do it. We handle the popcorn removal, repair, smooth the ceiling, and then paint everything as part of one project.",
+        "Yes — and it's actually the most efficient way to do it. We handle the popcorn removal, repair, smooth the ceiling, and then paint everything as part of one project.",
       ],
     ],
   },
