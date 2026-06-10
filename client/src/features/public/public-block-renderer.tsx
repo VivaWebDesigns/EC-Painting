@@ -559,7 +559,39 @@ function CardsGridBlock({ props }: { props: Record<string, unknown> }) {
   const cols = str(props.columns) || "3";
   const colsClass =
     cols === "2" ? "md:grid-cols-2" : cols === "4" ? "md:grid-cols-4" : "md:grid-cols-3";
-  const cards = arr<{ title: string; description: string; icon: string }>(props.cards);
+  const cards = arr<{ title: string; description: string; icon: string; link?: string }>(props.cards);
+  const renderCard = (card: { title: string; description: string; icon: string; link?: string }, i: number) => {
+    const cardContent = (
+      <Card
+        className="h-full overflow-hidden rounded-md border-border bg-white text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+      >
+        <CardContent className="px-4 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-8">
+          <div className="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
+            <LucideIcon name={card.icon || "Globe"} className="h-6 w-6 text-primary" />
+          </div>
+          <h3 className="mb-2 text-xl font-heading font-bold leading-snug break-words">
+            {card.title}
+          </h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
+        </CardContent>
+      </Card>
+    );
+
+    if (!card.link) return <div key={i}>{cardContent}</div>;
+    if (/^(https?:|tel:|sms:|mailto:)/i.test(card.link)) {
+      return (
+        <a key={i} href={card.link} className="block h-full" target={card.link.startsWith("http") ? "_blank" : undefined} rel={card.link.startsWith("http") ? "noopener noreferrer" : undefined}>
+          {cardContent}
+        </a>
+      );
+    }
+    return (
+      <Link key={i} href={card.link} className="block h-full">
+        {cardContent}
+      </Link>
+    );
+  };
+
   return (
     <div className="py-4">
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
@@ -569,22 +601,7 @@ function CardsGridBlock({ props }: { props: Record<string, unknown> }) {
             Add cards to display here
           </div>
         ) : (
-          cards.map((card, i) => (
-            <Card
-              key={i}
-              className="h-full overflow-hidden rounded-md border-border bg-white text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <CardContent className="px-4 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-8">
-                <div className="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center mb-4">
-                  <LucideIcon name={card.icon || "Globe"} className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="mb-2 text-xl font-heading font-bold leading-snug break-words">
-                  {card.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{card.description}</p>
-              </CardContent>
-            </Card>
-          ))
+          cards.map((card, i) => renderCard(card, i))
         )}
       </div>
     </div>
