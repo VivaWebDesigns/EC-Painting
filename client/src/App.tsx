@@ -127,11 +127,19 @@ function Router() {
         <Route path="/reviews" component={() => <CmsHybridPage slug="reviews" fallback={<NotFound />} />} />
         <Route path="/contact" component={() => <CmsHybridPage slug="contact" fallback={<ContactPage />} />} />
         <Route path="/services" component={() => <CmsHybridPage slug="services" fallback={<NotFound />} />} />
-        <Route path="/services/interior-painting" component={() => <CmsHybridPage slug="interior-painting" fallback={<NotFound />} />} />
-        <Route path="/services/exterior-painting" component={() => <CmsHybridPage slug="exterior-painting" fallback={<NotFound />} />} />
-        <Route path="/services/kitchen-cabinet-painting" component={() => <CmsHybridPage slug="kitchen-cabinet-painting" fallback={<NotFound />} />} />
-        <Route path="/services/deck-staining" component={() => <CmsHybridPage slug="deck-staining" fallback={<NotFound />} />} />
-        <Route path="/services/fence-staining" component={() => <CmsHybridPage slug="fence-staining" fallback={<NotFound />} />} />
+        <Route path="/interior-painting" component={() => <CmsHybridPage slug="interior-painting" fallback={<NotFound />} />} />
+        <Route path="/exterior-painting" component={() => <CmsHybridPage slug="exterior-painting" fallback={<NotFound />} />} />
+        <Route path="/cabinet-painting" component={() => <CmsHybridPage slug="cabinet-painting" fallback={<NotFound />} />} />
+        <Route path="/deck-staining" component={() => <CmsHybridPage slug="deck-staining" fallback={<NotFound />} />} />
+        <Route path="/fence-staining" component={() => <CmsHybridPage slug="fence-staining" fallback={<NotFound />} />} />
+        <Route path="/services/interior-painting"><Redirect to="/interior-painting" replace /></Route>
+        <Route path="/services/exterior-painting"><Redirect to="/exterior-painting" replace /></Route>
+        <Route path="/services/kitchen-cabinet-painting"><Redirect to="/cabinet-painting" replace /></Route>
+        <Route path="/services/deck-staining"><Redirect to="/deck-staining" replace /></Route>
+        <Route path="/services/fence-staining"><Redirect to="/fence-staining" replace /></Route>
+        <Route path="/thank-you" component={() => <CmsHybridPage slug="thank-you" fallback={<NotFound />} />} />
+        <Route path="/sitemap" component={() => <CmsHybridPage slug="sitemap" fallback={<NotFound />} />} />
+        <Route path="/404" component={() => <CmsHybridPage slug="404" fallback={<NotFound />} />} />
         <Route path="/preview/cms/:id" component={CmsPreviewPage} />
         <Route path="/join" component={() => <CmsHybridPage slug="join" fallback={<JoinNetworkPage />} />} />
         <Route path="/events" component={() => siteFeatures.eventsEnabled ? <CmsHybridPage slug="events" fallback={<EventsPage />} /> : <NotFound />} />

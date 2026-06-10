@@ -135,7 +135,7 @@ export function Navbar() {
   }, [publicMenus]);
 
   const unreadNotifCount = useUnreadNotificationCount();
-  const brandName = companyName?.trim() || "EC Painting";
+  const brandName = companyName?.trim() || "593 EC Painting";
   const brandLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
 
   return (
@@ -302,7 +302,7 @@ export function Navbar() {
             <SheetContent side="right" className="w-72 bg-white">
               <SheetHeader>
                 <SheetTitle>
-                  <img src={brandLogo} alt="Core Platform" className="h-8 w-auto" />
+                  <img src={brandLogo} alt={brandName} className="h-8 w-auto" />
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-1 mt-6">

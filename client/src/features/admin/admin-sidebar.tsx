@@ -297,7 +297,7 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const { frontendLogoUrl, companyName } = useBranding();
   const adminLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
-  const adminBrandName = companyName?.trim() || "EC Painting";
+  const adminBrandName = companyName?.trim() || "593 EC Painting";
   const { data: siteFeaturesData } = useQuery<SiteFeatures>({
     queryKey: ["/api/site-config"],
     staleTime: 60_000,

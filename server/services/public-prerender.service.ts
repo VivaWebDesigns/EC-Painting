@@ -13,90 +13,126 @@ interface PublicHtmlSnapshot {
   jsonLd?: Array<Record<string, unknown>>;
 }
 
-const DEFAULT_TITLE = "EC Painting - Professional Painting Services";
+const DEFAULT_TITLE = "593 EC Painting - Charlotte House Painters";
 const DEFAULT_DESCRIPTION =
-  "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, and fence staining.";
+  "593 EC Painting provides residential interior painting, exterior painting, cabinet painting, deck staining, and fence staining in Charlotte, NC.";
 
 const FALLBACK_STATIC_PAGES: Record<
   string,
   { title: string; description: string; body: string; noindex?: boolean }
 > = {
   "/": {
-    title: "Home",
+    title: "593 EC Painting | Charlotte's Family-Owned House Painters",
     description:
-      "Explore professional residential painting services from EC Painting.",
+      "Family-owned house painters serving Charlotte, NC and surrounding areas. Interior, exterior, cabinets, decks, and fences. Honest pricing, free quotes, work guaranteed.",
     body:
-      "EC Painting provides interior painting, exterior painting, cabinet painting, deck staining, and fence staining.",
+      "593 EC Painting is a family-owned residential painting business serving Charlotte and the surrounding Carolinas with interior, exterior, cabinet, deck, and fence painting.",
   },
   "/about": {
-    title: "About",
+    title: "About 593 EC Painting",
     description:
-      "Learn about EC Painting and our approach to clean, careful painting work.",
+      "Meet Esau and Sandra, the husband-and-wife team behind 593 EC Painting.",
     body:
-      "Learn about EC Painting and our approach to clean, careful painting work.",
+      "593 EC Painting is run by Esau and Sandra, a husband-and-wife team painting Charlotte homes with honest pricing, careful prep, and clear communication.",
   },
   "/contact": {
-    title: "Contact Us",
+    title: "Contact 593 EC Painting",
     description:
-      "Contact EC Painting to request a free painting estimate.",
+      "Request a free painting quote from 593 EC Painting in Charlotte, NC.",
     body:
-      "Contact EC Painting to request a free painting estimate for your next interior, exterior, cabinet, deck, or fence project.",
+      "Call or text (774) 329-7109, or request a free quote for your next interior, exterior, cabinet, deck, or fence project.",
   },
-  "/join": {
-    title: "Join the Network",
+  "/gallery": {
+    title: "Painting Gallery",
     description:
-      "Learn about membership, the application process, and how Core Platform-informed mental health professionals can join the network.",
+      "Before and after photos of recent painting projects across Charlotte, NC.",
     body:
-      "Join the network to learn about membership benefits and the application process, including submitting your application, credential verification, Core Platform competency review, profile setup, and going live in the directory.",
+      "Browse recent interior, exterior, cabinet, deck, and fence painting work from 593 EC Painting.",
   },
-  "/directory": {
-    title: "Find a Mental Health Professional",
+  "/reviews": {
+    title: "Reviews",
     description:
-      "Search for Core Platform-informed mental health professionals by specialty, location, language, or session format.",
+      "See what Charlotte homeowners say about 593 EC Painting.",
     body:
-      "Find a mental health professional by searching specialties, locations, languages, and session formats in the Core Platform directory.",
+      "Read reviews from Charlotte-area homeowners who hired 593 EC Painting for residential painting projects.",
   },
-  "/insights": {
-    title: "Insights & Articles",
+  "/services": {
+    title: "Painting Services in Charlotte, NC",
     description:
-      "Browse articles, guidance, and insights focused on Third Culture Kids and culturally informed care.",
+      "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and the surrounding Carolinas.",
     body:
-      "Browse insights and articles focused on Third Culture Kids, culturally informed care, and mental health support.",
+      "Explore residential painting services from 593 EC Painting, including interior painting, exterior painting, cabinet painting, deck staining, and fence staining.",
   },
-  "/events": {
-    title: "Events",
+  "/interior-painting": {
+    title: "Interior House Painters in Charlotte, NC",
     description:
-      "Explore public events, trainings, and community gatherings from Core Platform.",
+      "Family-owned interior painters serving Charlotte, NC. Walls, ceilings, trim, popcorn ceiling removal, wallpaper removal, and drywall repair.",
     body:
-      "Explore public events, trainings, and community gatherings from Core Platform.",
+      "593 EC Painting paints walls, ceilings, trim, doors, built-ins, and full home interiors with careful prep and clean daily communication.",
   },
-  "/recordings": {
-    title: "Recording Archives",
+  "/exterior-painting": {
+    title: "Exterior House Painters in Charlotte, NC",
     description:
-      "Watch archived event recordings and educational content from Core Platform.",
+      "Family-owned exterior painters serving Charlotte, NC. Siding, brick, stucco, trim, and pressure washing.",
     body:
-      "Watch archived event recordings and educational content from Core Platform.",
+      "593 EC Painting paints siding, brick, stucco, trim, doors, shutters, and full exteriors with prep built for Carolina weather.",
+  },
+  "/cabinet-painting": {
+    title: "Cabinet Painters in Charlotte, NC",
+    description:
+      "Kitchen and bathroom cabinet painting in Charlotte, NC with a smooth, durable finish.",
+    body:
+      "593 EC Painting refinishes kitchen and bathroom cabinets with cabinet-grade products, spray-applied finishes, and a 3-year workmanship warranty.",
+  },
+  "/deck-staining": {
+    title: "Deck Staining & Painting in Charlotte, NC",
+    description:
+      "Professional deck staining, sealing, and painting in Charlotte, NC.",
+    body:
+      "593 EC Painting cleans, repairs, stains, seals, and paints residential decks across the Charlotte area.",
+  },
+  "/fence-staining": {
+    title: "Fence Staining & Painting in Charlotte, NC",
+    description:
+      "Professional fence staining and painting in Charlotte, NC.",
+    body:
+      "593 EC Painting restores wood fences with cleaning, repairs, staining, painting, and sealing.",
   },
   "/privacy-policy": {
     title: "Privacy Policy",
     description:
-      "Review how Core Platform collects, uses, stores, and protects information across the website and related services.",
+      "How 593 EC Painting collects, uses, and protects your information when you visit our website or request a painting quote.",
     body:
-      "Review how Core Platform collects, uses, stores, and protects information across the website and related services.",
+      "Review how 593 EC Painting collects, uses, stores, and protects information across the website and related services.",
   },
   "/terms-of-service": {
     title: "Terms of Service",
     description:
-      "Review the terms governing use of the Core Platform website, directory, events, and related services.",
+      "Terms of service for 593 EC Painting LLC, governing use of our website and painting services.",
     body:
-      "Review the terms governing use of the Core Platform website, directory, events, and related services.",
+      "Review the terms governing use of the 593 EC Painting website and residential painting services.",
   },
   "/disclaimer": {
     title: "Disclaimer",
     description:
-      "Review emergency guidance, directory vetting limitations, and important information about using the Core Platform directory and related services.",
+      "Important disclaimers regarding information, photos, pricing guidance, and content on the 593 EC Painting website.",
     body:
-      "Review emergency guidance, directory vetting limitations, and important information about using the Core Platform directory and related services.",
+      "Review important disclaimers about project information, photos, pricing guidance, reviews, color accuracy, and warranty references.",
+  },
+  "/thank-you": {
+    title: "Thank You",
+    description:
+      "Thank you for requesting a painting quote from 593 EC Painting.",
+    body:
+      "Your quote request has been received. Esau or Sandra will be in touch within 24 hours, usually sooner.",
+    noindex: true,
+  },
+  "/sitemap": {
+    title: "Sitemap",
+    description:
+      "Complete sitemap of the 593 EC Painting website.",
+    body:
+      "Browse every page on the 593 EC Painting website, including services, gallery, reviews, contact information, and legal pages.",
   },
 };
 
@@ -201,7 +237,7 @@ function absoluteUrl(path: string | null | undefined, siteUrl: string) {
 }
 
 function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
-  const suffix = seo?.titleSuffix ?? " | Core Platform";
+  const suffix = seo?.titleSuffix ?? " | 593 EC Painting";
   const siteName = seo?.siteName || seo?.organizationName || "";
   return siteName && rawTitle.includes(siteName) ? rawTitle : `${rawTitle}${suffix}`;
 }
@@ -211,7 +247,7 @@ function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: seo?.organizationName || seo?.siteName || "Core Platform",
+    name: seo?.organizationName || seo?.siteName || "593 EC Painting",
     url: siteUrl,
     logo: seo?.organizationLogoUrl
       ? {
@@ -241,7 +277,7 @@ function buildWebsiteSchema(seo: SeoSettings | null, siteUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: seo?.siteName || "Core Platform",
+    name: seo?.siteName || "593 EC Painting",
     url: siteUrl,
   };
 }
@@ -431,9 +467,9 @@ async function buildTherapistSnapshot(
   const canonicalUrl = `${siteUrl}/directory/${profile.id}`;
   const description =
     truncate(
-      stripHtml(profile.bio || profile.title || "View this Core Platform-informed mental health professional profile."),
+      stripHtml(profile.bio || profile.title || "View this professional profile."),
       180,
-    ) || "View this Core Platform-informed mental health professional profile.";
+    ) || "View this professional profile.";
 
   return {
     title: buildHeadTitle(displayName, seo),
@@ -470,8 +506,8 @@ function buildSearchSnapshot(query: string, seo: SeoSettings | null, siteUrl: st
   const term = query.trim();
   const title = term ? `Search Results for "${term}"` : "Site Search";
   const description = term
-    ? `Search results for ${term} across pages, articles, and events on Core Platform.`
-    : "Search pages, articles, and events on Core Platform.";
+    ? `Search results for ${term} across pages on 593 EC Painting.`
+    : "Search pages on 593 EC Painting.";
 
   return {
     title: buildHeadTitle(title, seo),

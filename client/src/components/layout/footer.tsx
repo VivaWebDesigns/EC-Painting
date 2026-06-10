@@ -11,26 +11,28 @@ const defaultPlatformLinks = [
 ];
 
 const defaultTherapistLinks = [
-  { href: "/services/interior-painting", label: "Interior Painting", testId: "link-footer-interior" },
-  { href: "/services/exterior-painting", label: "Exterior Painting", testId: "link-footer-exterior" },
-  { href: "/services/kitchen-cabinet-painting", label: "Cabinet Painting", testId: "link-footer-cabinets" },
+  { href: "/interior-painting", label: "Interior Painting", testId: "link-footer-interior" },
+  { href: "/exterior-painting", label: "Exterior Painting", testId: "link-footer-exterior" },
+  { href: "/cabinet-painting", label: "Cabinet Painting", testId: "link-footer-cabinets" },
 ];
 
 const defaultResourceLinks = [
-  { href: "/services/deck-staining", label: "Deck Staining", testId: "link-footer-deck" },
-  { href: "/services/fence-staining", label: "Fence Staining", testId: "link-footer-fence" },
+  { href: "/deck-staining", label: "Deck Staining", testId: "link-footer-deck" },
+  { href: "/fence-staining", label: "Fence Staining", testId: "link-footer-fence" },
 ];
 
 const defaultCompanyLinks = [
   { href: "/about", label: "About Us", testId: "link-footer-about" },
+  { href: "/gallery", label: "Gallery", testId: "link-footer-gallery" },
+  { href: "/reviews", label: "Reviews", testId: "link-footer-reviews" },
   { href: "/contact", label: "Contact", testId: "link-footer-contact" },
-  { href: "/contact", label: "Support", testId: "link-footer-support" },
 ];
 
 const defaultLegalLinks = [
   { href: "/privacy-policy", label: "Privacy Policy", testId: "link-footer-privacy" },
   { href: "/terms-of-service", label: "Terms of Service", testId: "link-footer-terms" },
   { href: "/disclaimer", label: "Disclaimer", testId: "link-footer-disclaimer" },
+  { href: "/sitemap", label: "Sitemap", testId: "link-footer-sitemap" },
 ];
 
 const footerLinkClass =
@@ -201,7 +203,7 @@ export function Footer() {
   }, [publicMenus]) as FooterLegalLink[];
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
-  const brandName = companyName?.trim() || "EC Painting";
+  const brandName = companyName?.trim() || "593 EC Painting";
   const footerLogo = "/img/593-ec-painting-logo-footer.png";
 
   return (
