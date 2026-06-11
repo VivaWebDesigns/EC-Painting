@@ -11,8 +11,14 @@ Codex should never leave this repository with uncommitted work unless explicitly
 3. Stage intended changes.
 4. Commit with a clear message.
 5. Confirm `npm run git:ensure-clean` passes.
-6. Push the current branch.
+6. Push `main`.
 7. Confirm `git status --short` is empty.
+
+## Branch Policy
+
+Codex should work directly on `main` and push directly to `main` unless explicitly instructed otherwise.
+
+Do not create feature branches for normal Codex work. If Codex starts on another branch, finish or commit the work, fast-forward or merge it into `main`, push `main`, and leave the repository clean.
 
 ## Exceptions
 
@@ -29,3 +35,5 @@ npm run git:install-hooks
 ```
 
 The pre-push hook blocks pushes when the working tree has staged, unstaged, or untracked changes.
+
+It also blocks pushes to branches other than `main` unless intentionally bypassed.

@@ -12,3 +12,17 @@ if [ -n "$(git status --porcelain)" ]; then
   echo "Set ALLOW_DIRTY_PUSH=1 only for an intentional emergency bypass." >&2
   exit 1
 fi
+
+while read -r local_ref local_sha remote_ref remote_sha
+do
+  case "$remote_ref" in
+    refs/heads/main)
+      ;;
+    *)
+      echo "Push blocked: this repository should be pushed to main only." >&2
+      echo "Attempted remote ref: $remote_ref" >&2
+      echo "Set ALLOW_DIRTY_PUSH=1 only for an intentional emergency bypass." >&2
+      exit 1
+      ;;
+  esac
+done

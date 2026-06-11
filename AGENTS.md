@@ -14,9 +14,10 @@ These rules apply to every Codex session in this repository.
 ## Commit And Push Default
 
 - Any time Codex changes tracked files or adds files, commit the work before ending the turn.
-- Push the current branch after committing.
-- If no branch exists for the work, create a `codex/` branch before committing.
-- Only skip commit or push when the user explicitly instructs Codex not to do it.
+- Work directly on `main` unless the user explicitly says otherwise.
+- Push `main` after committing.
+- Do not create feature branches for normal Codex work in this repo.
+- Only skip commit, push, or direct-to-`main` work when the user explicitly instructs Codex not to do it.
 
 ## Verification
 
