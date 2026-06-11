@@ -3,7 +3,7 @@ import { pool } from "../db";
 import { storage } from "../storage";
 import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } from "@shared/schema";
 
-const SITE_URL = process.env.APP_URL || "https://ecpaintingcharlotte.com";
+const SITE_URL = process.env.APP_URL || "https://593ecpaintingllc.com";
 const BRAND_NAME = "593 EC Painting";
 const LEGAL_NAME = "593 EC Painting LLC";
 const PHONE_DISPLAY = "(774) 329-7109";
@@ -19,6 +19,24 @@ const OG_IMAGE_URL = "/img/593-ec-painting-og.jpg";
 const FAVICON_URL = "/favicon.ico";
 const SERVICE_AREA =
   "Charlotte • Matthews • Mint Hill • Monroe • Pineville • Huntersville • Cornelius • Davidson • Concord • Tega Cay • Waxhaw • Indian Trail • Stallings • Fort Mill • Indian Land • Rock Hill — and surrounding areas";
+const SERVICE_AREA_CITIES = [
+  "Charlotte, NC",
+  "Matthews, NC",
+  "Mint Hill, NC",
+  "Monroe, NC",
+  "Pineville, NC",
+  "Huntersville, NC",
+  "Cornelius, NC",
+  "Davidson, NC",
+  "Concord, NC",
+  "Tega Cay, SC",
+  "Waxhaw, NC",
+  "Indian Trail, NC",
+  "Stallings, NC",
+  "Fort Mill, SC",
+  "Indian Land, SC",
+  "Rock Hill, SC",
+];
 
 function id() {
   return randomUUID();
@@ -48,6 +66,16 @@ function ul(items: string[]) {
 
 function strong(label: string, body: string) {
   return `<strong>${label}</strong> ${body}`;
+}
+
+function breadcrumb(current: string) {
+  return block("breadcrumb", {
+    items: [
+      { name: "Home", url: "/" },
+      { name: "Services", url: "/services/" },
+      { name: current },
+    ],
+  });
 }
 
 function rich(title: string, paragraphs: string[] | string, extra: Record<string, unknown> = {}) {
@@ -161,13 +189,29 @@ function faq(items: Array<{ question: string; answer: string }>) {
   return block("faq", { title: "Frequently Asked Questions", items });
 }
 
-function galleryBlock(title: string, subtitle: string, limit = 6) {
+type GalleryImage = {
+  url: string;
+  alt: string;
+  caption: string;
+  category?: string;
+  location?: string;
+};
+
+function galleryBlock(
+  title: string,
+  subtitle: string,
+  imagesOrLimit: GalleryImage[] | number = galleryImages,
+  limit = 6,
+) {
+  const images = Array.isArray(imagesOrLimit) ? imagesOrLimit : galleryImages;
+  const imageLimit = typeof imagesOrLimit === "number" ? imagesOrLimit : limit;
+
   return block("image-grid", {
     title,
     subtitle,
     columns: "3",
     gap: "md",
-    images: galleryImages.slice(0, limit),
+    images: images.slice(0, imageLimit),
   });
 }
 
@@ -214,7 +258,7 @@ const services = [
     image: "/img/services/interior.webp",
     metaTitle: "Interior House Painters in Charlotte, NC | 593 EC Painting",
     metaDescription:
-      "Family-owned interior painters serving Charlotte, NC. Walls, ceilings, trim, popcorn ceiling removal, wallpaper removal, and drywall repair. Free quotes, 3-year warranty.",
+      "Family-owned interior painters serving Charlotte, NC. Walls, ceilings, trim, and full home repaints. Free quotes, 3-year warranty, premium paints included.",
     heroTitle: "Interior House Painters in Charlotte, NC",
     heroSubtitle:
       "Walls, ceilings, trim, and everything in between. Backed by a 3-year warranty and painted by people who actually care about the result.",
@@ -285,30 +329,27 @@ const services = [
         "We walk every room with you, touch up anything you spot, and don't leave until you're happy.",
       ],
     ],
-    extras: [
-      [
-        "Popcorn Ceiling Removal",
-        [
-          "Popcorn ceilings make a house feel dated faster than almost anything else. They collect dust, they're hard to clean, and they instantly age a room. Removing them is one of the highest-impact upgrades you can make — and we handle the whole process: containment, scraping, skim coating, sanding, priming, and painting the smooth ceiling underneath.",
-          "If your home was built before 1980, we'll test for asbestos before any work begins, because that's the safe and responsible thing to do. From there, we contain the work area, remove the texture, fix the drywall underneath, and leave you with a smooth, modern ceiling that makes the whole room feel taller and brighter.",
-          "Most popcorn removal projects are bundled with a full interior repaint — it's the perfect time to do both at once.",
-        ],
-      ],
-      [
-        "Wallpaper Removal",
-        [
-          "Old wallpaper is one of those projects every homeowner wants done and nobody wants to do themselves. We get it — it's messy, it's tedious, and if it's not done right, you end up with a worse wall than you started with.",
-          "We remove wallpaper the right way: steam, scrape, and clean the adhesive residue, then repair any damage to the drywall underneath, prime, and paint. By the time we're done, you'd never know wallpaper was ever there. Whether it's one accent wall or every wall in the house, we handle it cleanly.",
-        ],
-      ],
-      [
-        "Drywall Repair",
-        [
-          "Cracks, holes, water stains, dents, doorknob damage, settling cracks at the corners of windows and doors — we fix all of it before we paint. Some painters skip the repairs and just paint over them. We won't. A fresh coat of paint over unrepaired drywall is just a fresh coat of paint over a problem.",
-          "We patch, tape, mud, sand, prime, and texture-match so repairs blend invisibly into the surrounding wall. For larger sections of damage, we can replace full pieces of drywall and finish them to match the rest of the room. Whatever shape your walls are in, we leave them smooth before paint goes on.",
-        ],
-      ],
+    relatedServices: [
+      {
+        title: "Popcorn Ceiling Removal",
+        description: "Scrape, smooth, and finish dated popcorn ceilings into clean, modern ones.",
+        link: "/popcorn-ceiling-removal/",
+        icon: "Layers",
+      },
+      {
+        title: "Drywall Repair",
+        description: "Patch, repair, and finish drywall before painting — or as a standalone service.",
+        link: "/drywall-repair/",
+        icon: "Wrench",
+      },
+      {
+        title: "Wallpaper Removal",
+        description: "Clean removal of old wallpaper with drywall repair and a fresh coat of paint.",
+        link: "/wallpaper-removal/",
+        icon: "PaintBucket",
+      },
     ],
+    extras: [],
     whyTitle: "Why Choose 593 EC Painting for Your Interior",
     whyItems: [
       {
@@ -336,6 +377,7 @@ const services = [
     ],
     galleryTitle: "Recent Interior Projects",
     gallerySubtitle: "A look at recent interior painting work across Charlotte.",
+    galleryCategory: "interior",
     ctaHeading: "Ready to Refresh Your Interior?",
     ctaBody:
       "Get a free quote for your interior painting project. Most quotes scheduled within 48 hours.",
@@ -368,10 +410,6 @@ const services = [
         "Is the paint smell strong?",
         "Modern interior paints are very low-VOC, so the smell is minimal and usually gone within a few hours of finishing. We can also use zero-VOC paints on request — just let us know.",
       ],
-      [
-        "Can you remove popcorn ceilings and paint in the same project?",
-        "Yes — and it's actually the most efficient way to do it. We handle the popcorn removal, repair, smooth the ceiling, and then paint everything as part of one project.",
-      ],
     ],
   },
   {
@@ -383,7 +421,7 @@ const services = [
     image: "/img/services/exterior.webp",
     metaTitle: "Exterior House Painters in Charlotte, NC | 593 EC Painting",
     metaDescription:
-      "Family-owned exterior painters serving Charlotte, NC. Siding, brick, stucco, trim, and pressure washing. Built for Carolina weather. Free quotes, 3-year warranty.",
+      "Family-owned exterior painters serving Charlotte, NC. Siding, brick, stucco, and trim painted to stand up to Carolina sun, humidity, and storms. Free quotes, 3-year warranty.",
     heroTitle: "Exterior House Painters in Charlotte, NC",
     heroSubtitle:
       "Siding, brick, stucco, and trim — painted to stand up to Carolina sun, humidity, and storms. Backed by a 3-year warranty.",
@@ -474,15 +512,23 @@ const services = [
         "We walk the entire exterior with you, touch up anything that needs it, and leave the job site clean.",
       ],
     ],
+    relatedServices: [
+      {
+        title: "Pressure Washing",
+        description:
+          "Clean siding, brick, concrete, and decks. Included with every exterior paint job; also available standalone.",
+        link: "/pressure-washing/",
+        icon: "Droplets",
+      },
+      {
+        title: "Hardie Plank Painting",
+        description:
+          "Specialized exterior painting for fiber cement siding, the most common siding on newer Charlotte homes.",
+        link: "/hardie-plank-painting/",
+        icon: "Home",
+      },
+    ],
     extras: [
-      [
-        "Pressure Washing",
-        [
-          "Pressure washing is included with every exterior paint job — but we also do it as a standalone service. Charlotte's humidity grows mildew on north-facing walls, dirt builds up on siding over time, and oxidation leaves chalky residue that prevents paint from sticking properly.",
-          "We pressure wash siding, brick, stucco, concrete driveways, sidewalks, porches, and patios. For exterior painting projects, the pressure wash is the foundation of a paint job that lasts — skipping it is one of the most common reasons paint fails early.",
-          "If you just want your home cleaned up for a listing photo, for a family event, or because it's starting to look dingy, we're happy to handle pressure washing on its own.",
-        ],
-      ],
       [
         "Built for Carolina Weather",
         [
@@ -519,6 +565,7 @@ const services = [
     ],
     galleryTitle: "Recent Exterior Projects",
     gallerySubtitle: "A look at recent exterior painting projects across the Carolinas.",
+    galleryCategory: "exterior",
     ctaHeading: "Ready to Refresh Your Exterior?",
     ctaBody:
       "Get a free on-site quote for your exterior painting project. We'll measure, inspect, and write you a clear estimate.",
@@ -549,7 +596,7 @@ const services = [
       ],
       [
         "Is pressure washing included?",
-        "Yes, every exterior paint job includes a thorough pressure wash. It is the foundation of a paint job that lasts.",
+        'Yes — every exterior paint job includes a thorough pressure wash. It\'s the foundation of a paint job that lasts. If you want pressure washing as a standalone service (not paired with painting), see our dedicated <a href="/pressure-washing/">pressure washing page</a>.',
       ],
       [
         "What does the 3-year warranty cover?",
@@ -714,6 +761,7 @@ const services = [
     ],
     galleryTitle: "Recent Cabinet Projects",
     gallerySubtitle: "Before-and-after photos from Charlotte-area kitchens we have refinished.",
+    galleryCategory: "cabinets",
     ctaHeading: "Ready to Transform Your Kitchen?",
     ctaBody:
       "Get a free in-home quote and find out what cabinet painting could do for your kitchen.",
@@ -880,6 +928,7 @@ const services = [
     ],
     galleryTitle: "Recent Deck Projects",
     gallerySubtitle: "Before and after photos from Charlotte-area decks we have restored.",
+    galleryCategory: "decks",
     ctaHeading: "Ready to Restore Your Deck?",
     ctaBody:
       "Get a free on-site quote for your deck staining or painting project. We'll inspect the wood, talk through options, and write you a clear estimate.",
@@ -1022,6 +1071,7 @@ const services = [
     ],
     galleryTitle: "Recent Fence Projects",
     gallerySubtitle: "Charlotte-area fences we have restored.",
+    galleryCategory: "fences",
     ctaHeading: "Ready to Restore Your Fence?",
     ctaBody: "Get a free on-site quote for your fence staining or painting project.",
     faq: [
@@ -1053,41 +1103,1280 @@ const services = [
   },
 ];
 
-const galleryImages = [
+function galleryItem(
+  category: string,
+  file: string,
+  alt: string,
+  caption: string,
+  location: string,
+): GalleryImage {
+  return {
+    url: `/img/gallery/domina/${file}`,
+    alt,
+    caption: `${caption} — ${location}`,
+    category,
+    location,
+  };
+}
+
+const galleryImages: GalleryImage[] = [
   {
-    url: "/img/gallery/kitchen-cabinets.webp",
-    alt: "Cabinet painting in Charlotte NC kitchen",
-    caption: "Cabinet Painting",
+    ...galleryItem(
+      "Cabinets",
+      "AdobeStock_615565130_1771521960347-zBxA-fT_.webp",
+      "Kitchen with painted blue island and white cabinets",
+      "Kitchen Cabinet Refinish",
+      "Dilworth, Charlotte",
+    ),
   },
   {
-    url: "/img/gallery/exterior-home.webp",
-    alt: "Exterior house painting in Charlotte NC",
-    caption: "Exterior Painting",
+    ...galleryItem(
+      "Interior",
+      "AdobeStock_470165599_1771521960348-BD6l0iY-.webp",
+      "Elegant living room with fresh paint and modern decor",
+      "Living Room Repaint",
+      "Myers Park, Charlotte",
+    ),
   },
   {
-    url: "/img/gallery/living-room.webp",
-    alt: "Interior wall painting in Charlotte NC living room",
-    caption: "Interior Painting",
+    ...galleryItem(
+      "Exterior",
+      "image_1771599160031-DGhi3ZGx.webp",
+      "Beautifully painted home exterior with landscaping",
+      "Full Exterior Repaint",
+      "South Charlotte",
+    ),
   },
   {
-    url: "/img/gallery/front-door.webp",
-    alt: "Front door painting in Charlotte NC",
-    caption: "Door and Trim Painting",
+    ...galleryItem(
+      "Cabinets",
+      "ChatGPT_Image_Feb_19__2026__12_19_17_PM_1771521960349-DMy85ybp.webp",
+      "Modern kitchen with freshly painted white cabinets",
+      "Cabinet Painting",
+      "Matthews, NC",
+    ),
   },
   {
-    url: "/img/gallery/painted-kitchen.webp",
-    alt: "Painted kitchen cabinets in Charlotte NC",
-    caption: "Cabinet Refinish",
+    ...galleryItem(
+      "Fence",
+      "image_1771599272316--zNz6Ize.webp",
+      "Wooden fence with fresh stain finish",
+      "Privacy Fence Staining",
+      "Pineville, NC",
+    ),
   },
   {
-    url: "/img/gallery/covered-porch.webp",
-    alt: "Deck staining in Charlotte NC covered porch",
-    caption: "Deck Staining",
+    ...galleryItem(
+      "Fence",
+      "ChatGPT_Image_Feb_19__2026__05_36_54_PM_1771541172783-B-R8Zgqy.webp",
+      "White picket fence with fresh paint and garden landscaping",
+      "Picket Fence Painting",
+      "Matthews, NC",
+    ),
   },
   {
-    url: "/img/gallery/stained-fence.webp",
-    alt: "Fence staining in Charlotte NC backyard",
-    caption: "Fence Staining",
+    ...galleryItem(
+      "Fence",
+      "ChatGPT_Image_Feb_19__2026__05_35_34_PM_1771541172783-B7S-RYWC.webp",
+      "Modern dark-stained horizontal fence with patio area",
+      "Privacy Fence Staining",
+      "South Charlotte",
+    ),
+  },
+  galleryItem(
+    "Deck",
+    "ChatGPT_Image_Feb_19__2026__06_07_59_PM_1771542495142-Ik-D7AyL.webp",
+    "Front porch with blue-gray painted deck and white railings",
+    "Front Porch Deck Painting",
+    "Matthews, NC",
+  ),
+  galleryItem(
+    "Deck",
+    "ChatGPT_Image_Feb_19__2026__06_07_32_PM_1771542495142-Clbr5pR4.webp",
+    "Gray composite deck with black metal railings and outdoor seating",
+    "Backyard Deck Staining",
+    "Indian Trail, NC",
+  ),
+  galleryItem(
+    "Deck",
+    "image_1771599249175-vgJ75cMs.webp",
+    "Covered porch with natural wood stained deck and outdoor furniture",
+    "Covered Porch Staining",
+    "Waxhaw, NC",
+  ),
+  galleryItem(
+    "Deck",
+    "Feb_19__2026__06_02_24_PM_1771542495143-Cbg0z8ol.webp",
+    "Large backyard deck with rich wood stain finish",
+    "Deck Refinishing",
+    "Concord, NC",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_19__2026__05_45_31_PM_1771541281424-CVjdMIIj.webp",
+    "Freshly painted hallway with white trim and stair railing",
+    "Hallway & Trim Repaint",
+    "Huntersville, NC",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_19__2026__05_44_00_PM_1771541281424-DgVGcWgZ.webp",
+    "Warm neutral living room with fresh paint and crown molding",
+    "Living Room Refresh",
+    "Ballantyne, Charlotte",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_19__2026__05_42_48_PM_1771541281424-C1yejkmd.webp",
+    "Bedroom with navy accent wall and light gray walls",
+    "Accent Wall & Bedroom",
+    "Myers Park, Charlotte",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_20__2026__08_51_26_AM_1771595655138-B0kjSGn8.webp",
+    "Serene bedroom with soft blue-gray walls and white trim",
+    "Master Bedroom Painting",
+    "Mint Hill, NC",
+  ),
+  galleryItem(
+    "Interior",
+    "image_1771599128923-DHAFMf3X.webp",
+    "Foyer and staircase with warm neutral walls and white trim",
+    "Foyer & Staircase",
+    "Dilworth, Charlotte",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_20__2026__08_49_54_AM_1771595655139-EUdnvQPG.webp",
+    "Dining room with deep green walls and white wainscoting",
+    "Dining Room & Wainscoting",
+    "Plaza Midwood, Charlotte",
+  ),
+  galleryItem(
+    "Interior",
+    "ChatGPT_Image_Feb_20__2026__08_44_03_AM_1771595655139-BZ7K6keA.webp",
+    "Kitchen with white painted cabinets and teal accent wall",
+    "Kitchen Repaint",
+    "Fort Mill, SC",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_10_18_AM_1771596640067-Ci0tep-w.webp",
+    "Craftsman-style brick home with dark green trim and stone columns",
+    "Exterior Trim & Door",
+    "NoDa, Charlotte",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_09_43_AM_1771596640068-BybLmV-Z.webp",
+    "White painted brick farmhouse with black windows and metal roof",
+    "Full Brick Painting",
+    "Weddington, NC",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_09_39_AM_1771596640068-Dk8ZlXsf.webp",
+    "Sage green painted brick ranch with white trim and carport",
+    "Brick Ranch Repaint",
+    "Gastonia, NC",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_09_36_AM_1771596640068-BL0J5WAj.webp",
+    "Tan painted brick colonial with white trim and portico",
+    "Colonial Exterior",
+    "South Charlotte",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_02_27_AM_1771596640068-Dopmfdvt.webp",
+    "Light tan painted brick ranch home with white trim",
+    "Brick Ranch Painting",
+    "Matthews, NC",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_20__2026__09_02_19_AM_1771596640069-D8btR19W.webp",
+    "Blue-gray painted brick home with cedar shutters and white columns",
+    "Full Exterior Painting",
+    "Huntersville, NC",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_19__2026__12_18_07_PM_1771521960349-Ci8vY459.webp",
+    "Beautiful blue front door with glass panels",
+    "Front Door & Trim",
+    "Ballantyne, Charlotte",
+  ),
+  galleryItem(
+    "Exterior",
+    "ChatGPT_Image_Feb_19__2026__02_18_31_PM_1771528760345-DxnbFsz1.webp",
+    "Covered porch with freshly painted ceiling and trim",
+    "Porch Ceiling & Trim",
+    "Mint Hill, NC",
+  ),
+  galleryItem(
+    "Cabinets",
+    "ChatGPT_Image_Feb_20__2026__09_20_42_AM_1771597260881-Cdja4Olr.webp",
+    "Modern kitchen with sage green painted cabinets and open shelving",
+    "Sage Green Cabinets",
+    "Dilworth, Charlotte",
+  ),
+  galleryItem(
+    "Cabinets",
+    "ChatGPT_Image_Feb_20__2026__09_20_20_AM_1771597260882-Paae5YLY.webp",
+    "Kitchen with dark charcoal painted cabinets and farmhouse sink",
+    "Charcoal Cabinet Painting",
+    "Ballantyne, Charlotte",
+  ),
+  galleryItem(
+    "Cabinets",
+    "ChatGPT_Image_Feb_20__2026__09_20_15_AM_1771597260882-6LWAnkB9.webp",
+    "Kitchen with navy blue painted cabinets and white island countertop",
+    "Navy Cabinet Refinishing",
+    "Myers Park, Charlotte",
+  ),
+  galleryItem(
+    "Cabinets",
+    "ChatGPT_Image_Feb_20__2026__09_20_12_AM_1771597260882-BS2H0aC-.webp",
+    "Classic white painted kitchen cabinets with butcher block countertops",
+    "White Cabinet Painting",
+    "Indian Trail, NC",
+  ),
+  galleryItem(
+    "Fence",
+    "ChatGPT_Image_Feb_20__2026__09_34_38_AM_1771598093722-BasGMB_2.webp",
+    "Black stained privacy fence with landscaping and stone accents",
+    "Black Fence Staining",
+    "Waxhaw, NC",
+  ),
+  galleryItem(
+    "Fence",
+    "ChatGPT_Image_Feb_20__2026__09_34_08_AM_1771598093722-BcGV1Kfc.webp",
+    "Rich brown stained cedar privacy fence along driveway",
+    "Cedar Fence Staining",
+    "Concord, NC",
+  ),
+  galleryItem(
+    "Fence",
+    "ChatGPT_Image_Feb_20__2026__09_34_03_AM_1771598093723-BapXx-kN.webp",
+    "Red cedar stained privacy fence with fire pit area",
+    "Cedar Fence Refinishing",
+    "Fort Mill, SC",
+  ),
+  galleryItem(
+    "Fence",
+    "ChatGPT_Image_Feb_20__2026__09_41_12_AM_1771598503007-Cm7xCWyx.webp",
+    "Horizontal cedar fence with warm honey stain finish",
+    "Horizontal Fence Staining",
+    "Matthews, NC",
+  ),
+  galleryItem(
+    "Commercial",
+    "ChatGPT_Image_Feb_20__2026__10_09_51_AM_1771600212443-CzQiJfRF.webp",
+    "Freshly painted retail strip center with cream stucco and black trim",
+    "Retail Center Painting",
+    "South Charlotte",
+  ),
+  galleryItem(
+    "Commercial",
+    "ChatGPT_Image_Feb_20__2026__10_09_46_AM_1771600212444-CNgelwC2.webp",
+    "Green painted brick warehouse building with industrial windows",
+    "Warehouse Exterior",
+    "NoDa, Charlotte",
+  ),
+  galleryItem(
+    "Commercial",
+    "ChatGPT_Image_Feb_20__2026__10_09_31_AM_1771600212444-D4FXa8Ap.webp",
+    "Professional office building with tan exterior and white columns",
+    "Office Building",
+    "Ballantyne, Charlotte",
+  ),
+  galleryItem(
+    "Commercial",
+    "ChatGPT_Image_Feb_20__2026__10_09_28_AM_1771600212444-atarbJPv.webp",
+    "Restaurant exterior with warm orange stucco and outdoor patio",
+    "Restaurant Repaint",
+    "Huntersville, NC",
+  ),
+  galleryItem(
+    "Commercial",
+    "ChatGPT_Image_Feb_20__2026__10_09_24_AM_1771600212445-SfR0jfmA.webp",
+    "Modern commercial building with gray stucco and large windows",
+    "Commercial Office",
+    "South End, Charlotte",
+  ),
+];
+
+const galleryImageGroups: Record<string, GalleryImage[]> = {
+  all: galleryImages,
+  cabinets: galleryImages.filter((image) => image.category === "Cabinets"),
+  interior: galleryImages.filter((image) => image.category === "Interior"),
+  exterior: galleryImages.filter((image) => image.category === "Exterior"),
+  decks: galleryImages.filter((image) => image.category === "Deck"),
+  fences: galleryImages.filter((image) => image.category === "Fence"),
+};
+
+type SpokePage = {
+  title: string;
+  slug: string;
+  path: string;
+  serviceType: string;
+  parent: "Interior Painting" | "Exterior Painting";
+  metaTitle: string;
+  metaDescription: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroImage: string;
+  sections: Array<
+    | { type: "intro"; heading: string; body: string[] }
+    | {
+        type: "text-image";
+        heading: string;
+        body: string[];
+        imageUrl: string;
+        imageAlt: string;
+        imageCaption?: string;
+        imagePosition?: "left" | "right";
+      }
+    | {
+        type: "feature";
+        heading: string;
+        body?: string;
+        items: Array<{ title: string; description: string; icon?: string }>;
+      }
+    | {
+        type: "process";
+        heading: string;
+        body?: string;
+        items: Array<{ title: string; description: string }>;
+      }
+  >;
+  galleryTitle: string;
+  gallerySubtitle: string;
+  galleryCategory: keyof typeof galleryImageGroups;
+  ctaHeading: string;
+  ctaBody: string;
+  faq: Array<{ question: string; answer: string }>;
+};
+
+const spokePages: SpokePage[] = [
+  {
+    title: "Popcorn Ceiling Removal",
+    slug: "popcorn-ceiling-removal",
+    path: "/popcorn-ceiling-removal/",
+    serviceType: "Popcorn Ceiling Removal",
+    parent: "Interior Painting",
+    metaTitle: "Popcorn Ceiling Removal in Charlotte, NC | 593 EC Painting",
+    metaDescription:
+      "Professional popcorn ceiling removal in Charlotte, NC. Containment, scraping, drywall repair, and smooth ceiling painting. Family-owned, 3-year warranty, free quotes.",
+    heroTitle: "Popcorn Ceiling Removal in Charlotte, NC",
+    heroSubtitle:
+      "Scrape, smooth, and modernize the dated ceiling above your head. Family-owned, fully contained, and finished with a fresh coat of paint.",
+    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_19__2026__05_45_31_PM_1771541281424-CVjdMIIj.webp",
+    sections: [
+      {
+        type: "intro",
+        heading: "Goodbye Popcorn, Hello Modern Ceiling",
+        body: [
+          "Popcorn ceilings — also called acoustic or stippled ceilings — were popular in homes built from the 1950s through the 1990s. Today they make a home feel dated, they collect dust and cobwebs, they're impossible to clean properly, and they instantly age every room they're in. Removing them is one of the highest-impact upgrades you can make to an older Charlotte home.",
+          "We handle the full popcorn ceiling removal process across Charlotte and the surrounding Carolinas — containment, scraping, drywall repair, sanding, priming, and painting the smooth ceiling underneath. By the time we're done, your ceilings will look like they belong in a newer home and your rooms will feel taller and brighter.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Homeowners Remove Popcorn Ceilings",
+        items: [
+          { title: "Modern Look", description: "Smooth ceilings instantly modernize a room. The change is dramatic." },
+          {
+            title: "Higher Perceived Value",
+            description:
+              "Popcorn ceilings are one of the first things real-estate agents flag as dated. Removing them helps if you're selling.",
+          },
+          {
+            title: "Easier to Clean",
+            description: "Smooth ceilings can be dusted or wiped. Popcorn collects everything and can't be cleaned.",
+          },
+          { title: "More Light", description: "Smooth ceilings reflect light better, making rooms feel brighter." },
+          {
+            title: "Better Paint Finish",
+            description: "Smooth ceilings take paint cleanly. Popcorn always looks patchy when painted.",
+          },
+          {
+            title: "Modern Lighting Updates",
+            description:
+              "Easier to install recessed lights, new fixtures, or fan upgrades when the ceiling is smooth.",
+          },
+        ],
+      },
+      {
+        type: "process",
+        heading: "Our Popcorn Ceiling Removal Process",
+        body: "Containment first, mess second. Done right, this is a process — not a single day of chaos.",
+        items: [
+          {
+            title: "Free On-Site Quote",
+            description:
+              "We measure the rooms, look at the ceiling condition, and discuss whether asbestos testing is needed (see below). You get a clear written quote.",
+          },
+          {
+            title: "Asbestos Testing (if applicable)",
+            description:
+              "If your home was built before 1980, we'll test the popcorn texture for asbestos before any work begins. This is a small cost but it's the safe and legal way to do this.",
+          },
+          {
+            title: "Contain the Space",
+            description:
+              "We seal off the work area with plastic sheeting, cover floors and remaining furniture, and contain dust as much as possible.",
+          },
+          {
+            title: "Scrape the Popcorn",
+            description:
+              "Using water or other methods depending on what your ceiling needs, we scrape off the popcorn texture down to the drywall underneath.",
+          },
+          {
+            title: "Drywall Repair & Skim Coat",
+            description:
+              "The drywall underneath popcorn is rarely finish-quality. We skim coat, patch holes, fix any seam issues, and sand smooth.",
+          },
+          {
+            title: "Prime & Paint",
+            description: "Two coats of premium ceiling paint for a clean, modern, finished look.",
+          },
+          {
+            title: "Final Walkthrough",
+            description: "We walk every room with you to make sure the result is what you wanted.",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Asbestos Testing for Older Homes",
+        body: [
+          "If your home was built before 1980, the popcorn texture on your ceiling may contain asbestos — it was commonly used in popcorn texture compounds until it was banned in textured surfaces in 1978, and existing stock was used into the early 1980s.",
+          "This isn't a reason to panic. Asbestos is only a health risk when it's disturbed and the fibers become airborne. Popcorn ceilings that contain asbestos and are left alone aren't dangerous. But removing them without proper testing and containment is exactly the kind of disturbance that releases fibers.",
+          "We don't guess. For any home built before 1980, we have the popcorn tested at a certified lab before scraping. If asbestos is present, we either (a) refer you to a licensed asbestos abatement contractor who can safely remove it, then come back and finish the ceiling, or (b) recommend covering rather than removing, depending on what makes sense for your situation. We'll never scrape an asbestos popcorn ceiling — it's illegal in North Carolina, and it's dangerous.",
+          "If your home was built after 1980, asbestos isn't a concern and we can proceed directly with removal.",
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Pair It With Interior Painting",
+        body: [
+          'Most customers schedule popcorn ceiling removal as part of a larger <a href="/interior-painting/">interior painting project</a> — and there\'s a reason. The space is already contained, the furniture is already moved or covered, and the rooms are already disrupted. Doing both at once means one project, one timeline, one disruption — instead of two separate ones.',
+          "If you're planning to repaint a room or your whole home, this is the right time to also remove the popcorn ceiling. Mention both when you request a quote and we'll bundle them.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Choose 593 EC Painting for Popcorn Removal",
+        items: [
+          { title: "Family-owned, local", description: "Esau and Sandra oversee every project personally." },
+          {
+            title: "Proper containment",
+            description:
+              "Plastic sheeting, floor protection, dust control. Your home doesn't become a construction site.",
+          },
+          { title: "Asbestos-aware", description: "We test pre-1980 homes before any scraping. No shortcuts." },
+          {
+            title: "Real drywall finishing",
+            description:
+              "Skim coat, patch, sand, prime. The ceiling underneath gets finish-quality treatment.",
+          },
+          { title: "Paint included", description: "Two coats of premium ceiling paint, not just scrape-and-leave." },
+          { title: "3-year warranty", description: "Written into your contract." },
+        ],
+      },
+    ],
+    galleryTitle: "Recent Popcorn Removal Projects",
+    gallerySubtitle: "Before-and-after photos from Charlotte-area popcorn ceiling projects.",
+    galleryCategory: "interior",
+    ctaHeading: "Ready to Lose the Popcorn?",
+    ctaBody: "Get a free on-site quote for popcorn ceiling removal — single room or whole house.",
+    faq: [
+      {
+        question: "How much does popcorn ceiling removal cost in Charlotte?",
+        answer:
+          "Pricing depends on the size of the rooms, the condition of the drywall underneath, whether asbestos testing is needed, and whether you're doing one room or a whole house. We do free on-site quotes and provide clear written estimates, so you'll know the cost before anything begins.",
+      },
+      {
+        question: "Is popcorn ceiling removal messy?",
+        answer:
+          "It's messier than painting, but it doesn't have to be chaotic. We contain the work area with plastic sheeting, cover everything that stays in the room, and clean up thoroughly at the end of each day. Done with proper containment, the mess is controlled.",
+      },
+      {
+        question: "Do I need to test for asbestos?",
+        answer:
+          "If your home was built before 1980, yes. The popcorn texture compounds used in many homes from that era contained asbestos. We test before any scraping. If your home was built after 1980, asbestos isn't a concern.",
+      },
+      {
+        question: "Can I stay in the home during the project?",
+        answer:
+          "For single-room projects, yes — we contain the work area and you can use the rest of the house normally. For whole-house popcorn removal, some customers choose to be out during the messiest days. We'll talk through what makes sense for your situation.",
+      },
+      {
+        question: "What's underneath the popcorn?",
+        answer:
+          "Standard drywall, but rarely finished to a smooth-ceiling standard since builders knew the popcorn was going on top. That's why we skim coat and finish the drywall underneath rather than just scraping and painting — without the finish work, the ceiling will look uneven.",
+      },
+      {
+        question: "How long does it take?",
+        answer:
+          "A single room is usually 2–3 days from start to finish (scrape, repair, prime, paint, dry). Whole-house projects take 1–2 weeks depending on size. We'll give you a specific timeline in your written quote.",
+      },
+      {
+        question: "Can you install recessed lighting or fans at the same time?",
+        answer:
+          "We don't do electrical work ourselves, but we can coordinate with an electrician you've hired so the lighting work happens before we finish and paint the ceiling. Many customers take this opportunity to upgrade lighting since the ceiling is already being worked on.",
+      },
+    ],
+  },
+  {
+    title: "Drywall Repair",
+    slug: "drywall-repair",
+    path: "/drywall-repair/",
+    serviceType: "Drywall Repair",
+    parent: "Interior Painting",
+    metaTitle: "Drywall Repair in Charlotte, NC | 593 EC Painting",
+    metaDescription:
+      "Professional drywall repair in Charlotte, NC. Patches, holes, water damage, settling cracks, and texture matching. Family-owned, free quotes, paired with interior painting or standalone.",
+    heroTitle: "Drywall Repair in Charlotte, NC",
+    heroSubtitle:
+      "Cracks, holes, water damage, doorknob dents — fixed by Charlotte's family-owned painting team. As a standalone service or as part of a larger interior project.",
+    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__08_49_54_AM_1771595655139-EUdnvQPG.webp",
+    sections: [
+      {
+        type: "intro",
+        heading: "Smooth Walls Before Smooth Paint",
+        body: [
+          "A great paint job starts with great walls. Cracks at the corners of windows and doors, holes from old curtain rods, dents from doorknobs, water stains from a long-fixed leak, settling cracks running across a wall — these are the kinds of small problems that ruin an otherwise good paint job if they're not addressed first.",
+          "We repair drywall across Charlotte and the surrounding Carolinas. Most of our drywall work happens as part of a larger painting project, but we also handle standalone drywall repair — patches before listing a home for sale, repairs after a move-in inspection, fixes after a plumber or electrician opened up a wall. Whatever shape your drywall is in, we can leave it smooth and ready for paint.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Drywall Issues We Fix",
+        items: [
+          {
+            title: "Holes & Patches",
+            description:
+              "Doorknob holes, picture-hanger holes, larger holes from accidents or removed fixtures. Patched, taped, mudded, sanded, and texture-matched.",
+          },
+          {
+            title: "Cracks",
+            description:
+              "Settling cracks at window and door corners, cracks along ceiling-wall joints, hairline cracks in older homes. Repaired so they don't telegraph back through fresh paint.",
+          },
+          {
+            title: "Water Damage",
+            description:
+              "Stains, soft spots, and damaged drywall from past leaks (once the leak source is fixed). We cut out compromised sections and replace with new drywall, finished to match.",
+          },
+          {
+            title: "Dents & Gouges",
+            description:
+              "Furniture dings, doorknob impacts, anywhere the drywall has been pushed in or scuffed. Filled, sanded, and finished.",
+          },
+          {
+            title: "Failed Repairs",
+            description: "Bad patches from previous owners or DIY attempts. We cut them out and redo them right.",
+          },
+          {
+            title: "Drywall Replacement",
+            description:
+              "Larger sections of damaged drywall — full panels or partial — replaced and finished to match the existing wall.",
+          },
+          {
+            title: "Popcorn or Texture Removal",
+            description: 'See our <a href="/popcorn-ceiling-removal/">popcorn ceiling removal page</a> for ceiling textures.',
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Why Texture Matching Matters",
+        body: [
+          'The number-one mistake painters make on drywall repair is finishing the patch smooth when the surrounding wall has texture. The patch looks fine when it\'s just primer, but the moment paint goes on, that smooth spot screams "repair" against the textured wall around it.',
+          "Most Charlotte homes have one of a few common wall textures — light orange peel, knockdown, or smooth. We match the texture of the surrounding wall on every repair so the patch disappears once the paint dries. It's a small detail that most painters skip, and it's the difference between an invisible repair and an obvious one.",
+        ],
+      },
+      {
+        type: "process",
+        heading: "Our Drywall Repair Process",
+        items: [
+          {
+            title: "Free On-Site Quote",
+            description:
+              "We look at the repairs needed, identify the wall texture, and write you a clear estimate.",
+          },
+          {
+            title: "Cut & Patch",
+            description:
+              "For larger holes, we cut clean square edges and patch with new drywall. For smaller holes, we use mesh tape or backing as appropriate.",
+          },
+          {
+            title: "Tape, Mud, Sand",
+            description:
+              "Multiple coats of joint compound, sanded smooth between coats, feathered out to blend into the surrounding wall.",
+          },
+          {
+            title: "Texture Match",
+            description: "We match the existing wall texture using the appropriate tools and technique.",
+          },
+          {
+            title: "Prime",
+            description:
+              "Stain-blocking or PVA primer over the repair so the topcoat lays evenly.",
+          },
+          {
+            title: "Paint",
+            description:
+              "If we're handling the painting too, two coats of premium paint. If you're doing the painting yourself, we leave the wall primer-ready.",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Repair + Paint Is the Smart Pairing",
+        body: [
+          'Most customers schedule drywall repair as part of a larger <a href="/interior-painting/">interior painting project</a> — and there\'s a reason. The repairs need to be primed, and the primed spots look different from the surrounding paint. So either you paint the patches and have visible touch-ups, or you repaint the wall (or the whole room) so everything matches.',
+          "If you have multiple repairs, or repairs in visible areas, the most efficient approach is repair + repaint as one project. We handle both as one job with one quote and one timeline. If you only have a small repair in a hidden spot, standalone repair is fine.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Choose 593 EC Painting for Drywall Repair",
+        items: [
+          { title: "Family-owned, local", description: "Esau personally evaluates every repair." },
+          {
+            title: "Texture matching, every time",
+            description: "Patches that disappear instead of telegraphing.",
+          },
+          {
+            title: "Honest assessments",
+            description: "If a repair needs an electrician or plumber first, we tell you.",
+          },
+          {
+            title: "Real prep",
+            description: "Multiple coats of mud, sanded smooth, feathered out properly.",
+          },
+          {
+            title: "Paint included if you want it",
+            description: "Or we can leave it primer-ready for your own painter.",
+          },
+          { title: "3-year warranty", description: "On workmanship." },
+        ],
+      },
+    ],
+    galleryTitle: "Recent Drywall Projects",
+    gallerySubtitle: "Before-and-after photos of Charlotte-area drywall repairs.",
+    galleryCategory: "interior",
+    ctaHeading: "Need Walls Repaired?",
+    ctaBody:
+      "Get a free quote for drywall repair — single patch, multiple repairs, or full-room restoration.",
+    faq: [
+      {
+        question: "Can you repair drywall without painting?",
+        answer:
+          "Yes. We leave the repair primed and ready for paint if you'd rather handle the painting yourself or use a different painter. We'll match the surrounding wall texture so when the paint goes on, the repair disappears.",
+      },
+      {
+        question: "Can you match the texture on my walls?",
+        answer:
+          "Yes. We identify the existing texture (orange peel, knockdown, smooth, etc.) and match it on every repair. Texture matching is what separates a professional repair from a DIY-looking one.",
+      },
+      {
+        question: "How big a hole can you repair?",
+        answer:
+          "From pinholes to full drywall panel replacements. For holes larger than a few inches, we cut a clean square section, install backing or new drywall, tape, mud, and finish to match. For full-wall damage, we replace entire panels.",
+      },
+      {
+        question: "What about water-damaged drywall?",
+        answer:
+          "Once the leak source is fixed (we don't do plumbing, but we can recommend trusted local plumbers), we cut out compromised drywall, dry the space if needed, replace the section, and finish to match. If the damage includes mold, we'll recommend a remediation specialist first.",
+      },
+      {
+        question: "How long does drywall repair take?",
+        answer:
+          "Small patches in a single room are usually done in a day, though some repairs need overnight drying before the next coat of mud. Larger repairs or multiple rooms take 2–4 days. Full panel replacements take longer because mud has to cure between coats.",
+      },
+      {
+        question: "Why does my old patch still show through the paint?",
+        answer:
+          "Usually because the texture wasn't matched, the mud wasn't feathered out enough, or the patch wasn't primed. We cut out failed previous repairs and redo them right.",
+      },
+      {
+        question: "Do you repair drywall in ceilings too?",
+        answer:
+          'Yes — ceiling drywall repair, water damage repair, and seam cracks in ceilings are all common projects. If you also have popcorn texture, see our <a href="/popcorn-ceiling-removal/">popcorn ceiling removal page</a>.',
+      },
+    ],
+  },
+  {
+    title: "Wallpaper Removal",
+    slug: "wallpaper-removal",
+    path: "/wallpaper-removal/",
+    serviceType: "Wallpaper Removal",
+    parent: "Interior Painting",
+    metaTitle: "Wallpaper Removal in Charlotte, NC | 593 EC Painting",
+    metaDescription:
+      "Professional wallpaper removal in Charlotte, NC. Clean removal, drywall repair, and fresh paint. Family-owned, free quotes, 3-year warranty.",
+    heroTitle: "Wallpaper Removal in Charlotte, NC",
+    heroSubtitle:
+      "Steam, scrape, repair, and repaint — clean wallpaper removal that leaves you with smooth walls, not a worse problem than you started with.",
+    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__08_44_03_AM_1771595655139-BZ7K6keA.webp",
+    sections: [
+      {
+        type: "intro",
+        heading: "One of Those Projects Nobody Wants to Do Themselves",
+        body: [
+          "Removing old wallpaper is one of those projects every homeowner wants done and nobody wants to do themselves. It's messy. It's tedious. It takes far longer than you think it will. And if it's not done right, you end up with damaged drywall that needs more repair work than you started with.",
+          "We remove wallpaper across Charlotte and the surrounding Carolinas — and we do it the right way. Steam, scrape, clean the adhesive residue, repair any drywall damage underneath, prime, and paint. By the time we're done, you'd never know wallpaper was ever there.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Types of Wallpaper We Remove",
+        body: "Different wallpaper requires different removal techniques. We've handled all of it.",
+        items: [
+          {
+            title: "Strippable Wallpaper",
+            description:
+              "Newer wallpapers designed to pull off in sheets. The easiest case, but rarely as clean as advertised.",
+          },
+          {
+            title: "Vinyl Wallpaper",
+            description: "Common in kitchens and bathrooms. Requires steam to release the adhesive underneath.",
+          },
+          {
+            title: "Paper-Backed Vinyl",
+            description: "The vinyl layer pulls off; the paper backing requires steam and scraping.",
+          },
+          {
+            title: "Traditional Paper Wallpaper",
+            description: "Older homes often have these. Usually requires the most work.",
+          },
+          {
+            title: "Pasted Wallpaper",
+            description: "Heavily glued to the wall, sometimes painted over by previous owners. The hardest case.",
+          },
+          {
+            title: "Wallpaper Painted Over",
+            description: "Yes, this happens often. We can often still remove it, though it's more work.",
+          },
+          {
+            title: "Borders & Accent Strips",
+            description: "Old wallpaper borders along ceilings or chair-rail height.",
+          },
+        ],
+      },
+      {
+        type: "process",
+        heading: "Our Wallpaper Removal Process",
+        body: "It's a process — not a quick rip.",
+        items: [
+          {
+            title: "Free On-Site Quote",
+            description:
+              "We look at the wallpaper type, the condition, and what's underneath. You get a clear written estimate.",
+          },
+          {
+            title: "Contain the Space",
+            description:
+              "Floor protection, plastic sheeting, furniture protection. Wallpaper removal is wet work.",
+          },
+          {
+            title: "Score & Steam",
+            description:
+              "We score the wallpaper to let steam penetrate, then use a wallpaper steamer to release the adhesive underneath.",
+          },
+          {
+            title: "Scrape & Clean",
+            description:
+              "Carefully scrape the wallpaper off, then wash the walls to remove all remaining adhesive (the most-skipped step that ruins paint jobs later).",
+          },
+          {
+            title: "Repair Drywall",
+            description:
+              "Wallpaper removal often reveals damaged drywall underneath. We patch, tape, mud, and sand smooth.",
+          },
+          {
+            title: "Prime",
+            description: "Stain-blocking primer to seal any residual adhesive and prep the wall for paint.",
+          },
+          {
+            title: "Paint",
+            description: "Two coats of premium paint (if you've included painting in the project).",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "The Step Most People Skip",
+        body: [
+          "The most common reason a wallpaper-removal-and-repaint project fails is that the adhesive residue wasn't fully cleaned off the walls before painting. You can't see it once the wall is dry, but it's still there — and when paint goes on top of it, the paint bubbles, peels, or refuses to stick at all.",
+          "We wash the walls thoroughly after scraping — usually with hot water and a mild solution, sometimes with specific adhesive removers depending on the wallpaper type. Then we let the walls dry completely before priming. It adds time to the project, but it's the difference between a paint job that lasts and one that fails in six months.",
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Always Paired With Painting",
+        body: [
+          "Wallpaper removal almost always comes with painting. The walls underneath are never paint-ready as-is — they have adhesive residue, possibly drywall damage, and they need primer and paint to look finished.",
+          "When you request a wallpaper removal quote, we'll include the painting work in the estimate. If you only want the removal and you plan to handle the paint yourself, that's fine too — just let us know during the quote.",
+          'See our <a href="/interior-painting/">interior painting page</a> for details on our painting process.',
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Choose 593 EC Painting for Wallpaper Removal",
+        items: [
+          { title: "Family-owned, local", description: "Esau and Sandra oversee every project." },
+          {
+            title: "Patience for the tough cases",
+            description: "We've removed painted-over wallpaper from 1970s homes. We've seen it all.",
+          },
+          {
+            title: "Full adhesive cleaning",
+            description: "Not just scrape-and-go. We clean the walls properly so paint sticks.",
+          },
+          {
+            title: "Drywall repair included",
+            description: "We fix what's underneath before we paint over it.",
+          },
+          {
+            title: "Paint included",
+            description: "Or we can leave the wall primer-ready if you'd rather paint yourself.",
+          },
+          { title: "3-year warranty", description: "On workmanship." },
+        ],
+      },
+    ],
+    galleryTitle: "Recent Wallpaper Removal Projects",
+    gallerySubtitle: "Before-and-after photos from Charlotte-area wallpaper removal projects.",
+    galleryCategory: "interior",
+    ctaHeading: "Ready to Lose the Wallpaper?",
+    ctaBody: "Get a free quote for wallpaper removal — single accent wall or whole house.",
+    faq: [
+      {
+        question: "Can you remove wallpaper that's been painted over?",
+        answer:
+          "Usually, yes. It's more work than removing unpainted wallpaper because the paint layer prevents steam from penetrating easily, but we've handled this many times. We'll evaluate it during the quote and tell you honestly how the project will go.",
+      },
+      {
+        question: "Will my walls be damaged underneath?",
+        answer:
+          "Sometimes. Older drywall under old wallpaper occasionally has paper-layer damage or unfinished surfaces. We repair anything we find before priming and painting, so the final result is smooth and clean regardless of what we started with.",
+      },
+      {
+        question: "How long does wallpaper removal take?",
+        answer:
+          "A small accent wall: usually 1–2 days. A full room: 3–5 days. A whole house: 1–2 weeks. The variation depends on the wallpaper type, the condition, and whether the walls need significant repair before painting.",
+      },
+      {
+        question: "Can I just paint over my wallpaper?",
+        answer:
+          "We don't recommend it. Painting over wallpaper traps the adhesive, often shows the seams through the paint, and creates a much harder problem when you eventually do want to remove it. The honest answer is: just remove it now and paint properly.",
+      },
+      {
+        question: "Does wallpaper removal smell bad?",
+        answer:
+          "Not really. The steam is just hot water, and the cleaning solutions we use are low-odor. The biggest smell during the project is honestly the steamer itself, which smells like a humidifier.",
+      },
+      {
+        question: "Can you remove wallpaper borders?",
+        answer:
+          "Yes — old wallpaper borders along the ceiling or at chair-rail height are common. The process is the same: steam, scrape, clean adhesive, repair, prime, paint.",
+      },
+      {
+        question: "Do you remove wallpaper from ceilings?",
+        answer:
+          'Yes, including textured wallpaper sometimes found on older ceilings. If your ceiling has popcorn texture instead of wallpaper, see our <a href="/popcorn-ceiling-removal/">popcorn ceiling removal page</a>.',
+      },
+    ],
+  },
+  {
+    title: "Pressure Washing",
+    slug: "pressure-washing",
+    path: "/pressure-washing/",
+    serviceType: "Pressure Washing",
+    parent: "Exterior Painting",
+    metaTitle: "Pressure Washing in Charlotte, NC | 593 EC Painting",
+    metaDescription:
+      "Professional pressure washing for homes in Charlotte, NC. Siding, brick, concrete, decks, and patios. Family-owned, free quotes, paired with exterior painting or standalone.",
+    heroTitle: "Pressure Washing in Charlotte, NC",
+    heroSubtitle:
+      "Siding, brick, concrete, decks, and patios — cleaned by Charlotte's family-owned painting team. Available as a standalone service or paired with exterior painting.",
+    heroImage: "/img/gallery/domina/image_1771599160031-DGhi3ZGx.webp",
+    sections: [
+      {
+        type: "intro",
+        heading: "A Cleaner Home, Inside and Out",
+        body: [
+          "Charlotte's heat, humidity, and pollen are tough on the outside of a home. Mildew grows on north-facing walls. Pollen coats every surface in spring. Concrete picks up dirt, oil, and tire marks. Decks gray and stain over time. A good pressure wash brings everything back to looking how it should — clean, bright, and ready to enjoy.",
+          "We pressure wash homes across Charlotte and the surrounding Carolinas. Some customers hire us as part of a full exterior painting project (pressure washing is included with every exterior paint job). Others just want their home cleaned up — for a listing photo, before a family event, or because the siding has started to look dingy. Either way, we treat it as a real service, not an afterthought.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Surfaces We Clean",
+        body: "From siding to driveways, we handle the full exterior of your home.",
+        items: [
+          {
+            title: "House Siding",
+            description:
+              "Hardie plank, vinyl, wood, and aluminum siding cleaned with the right pressure and detergent for each material.",
+          },
+          {
+            title: "Brick & Masonry",
+            description: "Removes dirt, mildew, and atmospheric grime from brick walls and chimneys.",
+          },
+          {
+            title: "Concrete Driveways & Walkways",
+            description:
+              "Lifts oil stains, tire marks, dirt, and mildew. Brings concrete back to its original color.",
+          },
+          {
+            title: "Decks & Porches",
+            description: "Cleans wood decks and porches as standalone service, or as prep before staining.",
+          },
+          {
+            title: "Patios & Pool Decks",
+            description: "Concrete and paver patios, pool surrounds, and outdoor entertaining areas.",
+          },
+          { title: "Fences", description: "Wood and vinyl fences cleaned to remove mildew and graying." },
+          {
+            title: "Soft Wash",
+            description:
+              "For surfaces too delicate for high pressure (some sidings, painted brick, roofing), we use a low-pressure soft-wash technique with cleaning solutions that do the work instead of pressure.",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Why It's Worth Doing Right",
+        body: [
+          "Pressure washing isn't just cosmetic. Mildew and organic growth on siding will degrade paint and trap moisture against the wood underneath. Dirt and pollen left on Hardie plank can dull the finish and shorten its life. Untreated mold and mildew can spread under decks and around foundations.",
+          "There's also a wrong way to pressure wash. Too much pressure on vinyl siding cracks it. Hitting Hardie plank from the wrong angle drives water behind the boards. Spraying directly at brick mortar can blow out old grout. Most DIY pressure-wash damage comes from someone using a 3,500 PSI tip on a surface that should have been cleaned at 1,200 PSI with a detergent.",
+          "We bring the right pressure, the right detergent, and the right technique for each surface — which means a clean result without damage.",
+        ],
+      },
+      {
+        type: "process",
+        heading: "Our Pressure Washing Process",
+        items: [
+          {
+            title: "Free Quote",
+            description:
+              "We come out, walk the property, and write you a clear estimate based on square footage and what surfaces you want cleaned.",
+          },
+          {
+            title: "Protect & Prep",
+            description:
+              "We cover plants and shrubs, move outdoor furniture as needed, and protect any sensitive surfaces.",
+          },
+          {
+            title: "Apply Cleaning Solution",
+            description:
+              "For mildew, algae, and heavy organic growth, we pre-treat surfaces with the right cleaning solution. Pressure alone doesn't kill biological growth — the chemistry does.",
+          },
+          {
+            title: "Wash",
+            description:
+              "Using the right pressure for each surface, we wash from top to bottom in measured passes for even results.",
+          },
+          {
+            title: "Rinse & Walk-Through",
+            description:
+              "Final rinse, plant care (we rinse landscaping after the clean), and a walk-through with you to make sure everything looks right.",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Paired With Exterior Painting",
+        body: [
+          'If you\'re planning to repaint your home\'s exterior, pressure washing is the foundation of the project — paint won\'t bond properly to a dirty or mildewed surface. Every <a href="/exterior-painting/">exterior painting project</a> we do includes a thorough pressure wash before any paint goes on, at no additional charge.',
+          "If you'd like both services, mention it when you request a quote and we'll bundle them into one project.",
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Choose 593 EC Painting for Pressure Washing",
+        items: [
+          {
+            title: "Family-owned, local",
+            description: "We've cleaned hundreds of Carolina homes over the last 5 years.",
+          },
+          {
+            title: "Right pressure for the surface",
+            description: "No vinyl cracks, no driven water behind your Hardie boards.",
+          },
+          {
+            title: "Soft-wash capability",
+            description: "For delicate surfaces, we know when not to use high pressure.",
+          },
+          { title: "Landscaping protected", description: "Plants and shrubs covered before, rinsed after." },
+          { title: "Honest pricing", description: "No surprise add-ons. The quote is the quote." },
+          {
+            title: "Clean job site",
+            description: "When we leave, the only thing changed is how clean your home looks.",
+          },
+        ],
+      },
+    ],
+    galleryTitle: "Recent Pressure Washing Projects",
+    gallerySubtitle: "Before-and-after photos from Charlotte-area homes we've pressure washed.",
+    galleryCategory: "exterior",
+    ctaHeading: "Ready to See Your Home Cleaned Up?",
+    ctaBody:
+      "Get a free pressure washing quote — for one surface, the whole exterior, or paired with an exterior paint job.",
+    faq: [
+      {
+        question: "How often should I pressure wash my house?",
+        answer:
+          "Most Charlotte homes benefit from a pressure wash once a year — typically in spring after pollen season or in fall before winter. Homes with heavy shade, lots of trees, or visible mildew may need it more often.",
+      },
+      {
+        question: "Will pressure washing damage my siding?",
+        answer:
+          "Not when it's done right. We adjust the pressure and technique for each surface — high pressure for concrete, lower pressure for siding, soft-wash for delicate or already-painted surfaces. Most damage from pressure washing comes from using too much pressure on the wrong surface.",
+      },
+      {
+        question: "Do you pressure wash concrete driveways and walkways?",
+        answer:
+          "Yes — concrete is one of the most-requested pressure washing surfaces. We can remove oil stains, tire marks, mildew, and general dirt. Concrete that hasn't been cleaned in years often comes back two shades brighter.",
+      },
+      {
+        question: "Is pressure washing included with exterior painting?",
+        answer:
+          "Yes — every exterior paint job we do includes a thorough pressure wash as the first step. It's the foundation of a paint job that lasts. The pressure washing on its own page is for customers who want pressure washing as a standalone service.",
+      },
+      {
+        question: "Will pressure washing kill my plants?",
+        answer:
+          "Not when we do it. We cover plants and shrubs before applying any cleaning solution, and we rinse landscaping thoroughly after the wash. Cleaning solutions used in pressure washing can stress plants if left on the leaves; the prep and rinse work prevents that.",
+      },
+      {
+        question: "How long does pressure washing take?",
+        answer:
+          "Most residential pressure washing projects take 2–6 hours depending on the size of the home and how many surfaces you want cleaned. We'll give you a specific timeline in your quote.",
+      },
+      {
+        question: "Can you pressure wash a roof?",
+        answer:
+          "Not with high pressure — that would damage shingles. We can soft-wash roofs (low pressure, cleaning solution) to remove black streaks, algae, and moss. If your roof needs cleaning, mention it when you request a quote.",
+      },
+    ],
+  },
+  {
+    title: "Hardie Plank Painting",
+    slug: "hardie-plank-painting",
+    path: "/hardie-plank-painting/",
+    serviceType: "Hardie Plank Painting",
+    parent: "Exterior Painting",
+    metaTitle: "Hardie Plank Painting in Charlotte, NC | 593 EC Painting",
+    metaDescription:
+      "Professional Hardie plank and fiber cement siding painting in Charlotte, NC. Specialized prep and paint for fiber cement homes. Family-owned, 3-year warranty, free quotes.",
+    heroTitle: "Hardie Plank Painting in Charlotte, NC",
+    heroSubtitle:
+      "Specialized exterior painting for Hardie plank and fiber cement siding — the most common siding on newer Charlotte homes. Backed by a 3-year warranty.",
+    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__09_02_19_AM_1771596640069-D8btR19W.webp",
+    sections: [
+      {
+        type: "intro",
+        heading: "Hardie Plank Repaints Need More Than a Fresh Color",
+        body: [
+          "Hardie plank — also known as fiber cement siding — is one of the most common siding materials on newer Charlotte homes. It is tougher than wood, more stable than vinyl, and built to hold paint well for a long time. But when the factory finish starts to fade or the caulking begins to fail, the repaint needs to be handled differently from a standard exterior paint job.",
+          "The work is not just picking a new color and spraying the siding. A good Hardie plank repaint starts with a careful inspection of every board, butt joint, trim seam, nail head, and transition point where moisture can get behind the siding. Those small details are usually what decide whether the paint still looks sharp in year eight or starts failing after a few Carolina summers.",
+          "We've painted Hardie homes across Ballantyne, Waxhaw, Indian Trail, Huntersville, and the newer neighborhoods around Charlotte. We know how to clean fiber cement without forcing water behind the boards, where caulking typically breaks down first, and which primers and exterior paints bond properly to the surface.",
+          "If your Hardie plank looks faded, chalky, patchy, or more than 10 years old, this is the point where a repaint can protect the siding and make the whole home look newer again. Done right, it should look crisp on day one and keep looking cared-for for years.",
+        ],
+      },
+      {
+        type: "text-image",
+        heading: "A Repaint Should Protect the Siding, Not Just Cover It",
+        body: [
+          "Hardie plank is made from fiber cement, not wood. That means it expands, absorbs, releases moisture, and holds coatings differently from other exterior surfaces. The siding itself is durable, but the system around it — caulk, trim, flashing, nail heads, and exposed board edges — still needs attention before paint goes on.",
+          "On a Hardie repaint, we look closely at the places most homeowners never think about: the tiny gaps between boards, seams around window trim, lower courses near landscaping, and shaded sides where mildew builds up faster. If those areas are not cleaned, repaired, primed, and sealed correctly, the new paint can look good for a season and still fail early.",
+          "That is why our Hardie process is built around prep first. We pressure wash, let surfaces dry, re-caulk failing joints, prime bare or chalky spots, and use premium exterior products that are appropriate for fiber cement siding.",
+        ],
+        imageUrl: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__09_02_27_AM_1771596640068-Dopmfdvt.webp",
+        imageAlt: "Light tan painted Charlotte home exterior with white trim after a professional repaint",
+        imageCaption: "Hardie and exterior repaint details matter most at trim, joints, and lower siding courses.",
+        imagePosition: "right",
+      },
+      {
+        type: "feature",
+        heading: "Common Hardie Issues We Address Before Painting",
+        body:
+          "A repaint is the right time to fix the small problems that shorten the life of the finish. These are the details we look for during the quote and prep phase.",
+        items: [
+          {
+            title: "Failed caulking",
+            description:
+              "Cracked or pulling-away caulking around butt joints, windows, corners, and trim. This is one of the most common reasons Hardie repaints are needed.",
+          },
+          {
+            title: "Color fading or chalking",
+            description:
+              "Factory color can lose depth or develop a chalky surface after years of sun exposure. We clean and prep the surface so the new coating bonds.",
+          },
+          {
+            title: "Damaged boards",
+            description:
+              "Cracked, chipped, or impact-damaged boards can be replaced before painting so the finished exterior looks complete.",
+          },
+          {
+            title: "Worn trim and soffits",
+            description:
+              "Hardie homes often have wood, PVC, or composite trim that wears differently than the siding. We catch and repair those transitions.",
+          },
+          {
+            title: "Mildew on shaded sides",
+            description:
+              "North-facing walls and shaded areas collect mildew and pollen. Cleaning is part of the prep, not an optional extra.",
+          },
+          {
+            title: "Bare or exposed fiber cement",
+            description:
+              "Any worn-through areas need the right bonding primer before finish paint goes on. Wood primer is not the right product here.",
+          },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "Why Painting Hardie Plank Isn't Like Painting Wood Siding",
+        body: [
+          "Hardie plank looks like wood lap siding from the street, but the material behaves differently. It is a mix of cement, sand, and cellulose fibers, which gives it its durability but also changes the prep and coating approach.",
+          "<ul><li><strong>The factory finish is durable, but joints fail first.</strong> Butt joints, trim seams, and old caulking are usually where moisture and paint problems begin.</li><li><strong>Bare fiber cement needs the right primer.</strong> If the factory finish has worn through, those spots need a bonding primer that is appropriate for masonry/fiber cement surfaces.</li><li><strong>Aggressive sanding can damage the texture.</strong> We scuff-sand only where needed instead of flattening or chewing up the factory profile.</li><li><strong>Paint timing matters.</strong> Fiber cement needs to be clean and dry, and exterior paint needs the right temperature and weather window to cure correctly.</li></ul>",
+          "When all of that is handled correctly, Hardie plank holds paint extremely well. When it is treated like ordinary wood siding, the problems usually show up a few years later.",
+        ],
+      },
+      {
+        type: "process",
+        heading: "Our Hardie Plank Painting Process",
+        body:
+          "The process is designed to protect the siding first and improve curb appeal second. A clean, dry, properly sealed surface is what makes the finish last.",
+        items: [
+          {
+            title: "Free On-Site Quote",
+            description:
+              "We measure the home, inspect siding and trim, look for failing caulk or damaged boards, and write a detailed estimate.",
+          },
+          {
+            title: "Pressure Wash",
+            description:
+              "Hardie plank holds onto pollen, dirt, mildew, and chalking. A thorough wash is the foundation of a lasting paint job.",
+          },
+          {
+            title: "Dry Time & Inspection",
+            description:
+              "We let surfaces dry properly, then re-check seams, trim, and lower boards before repair and caulk begin.",
+          },
+          {
+            title: "Repair & Caulk",
+            description:
+              "We re-caulk failed butt joints, gaps, windows, corners, and trim seams, and replace damaged boards where needed.",
+          },
+          {
+            title: "Prime Bare Spots",
+            description:
+              "Anywhere the finish has worn through gets a bonding primer selected for fiber cement and exterior exposure.",
+          },
+          {
+            title: "Paint",
+            description:
+              "Two coats of premium exterior paint, applied in the right weather conditions for proper adhesion and cure.",
+          },
+          {
+            title: "Final Walkthrough",
+            description:
+              "We walk the exterior with you, handle touch-ups, clean the job site, and leave you with warranty-backed work.",
+          },
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Why Choose 593 EC Painting for Hardie Plank",
+        body:
+          "Hardie plank rewards careful painters. Our job is to protect the material, make the home look sharp, and communicate clearly from quote to final walkthrough.",
+        items: [
+          {
+            title: "Hardie-specific experience",
+            description: "We've painted dozens of Hardie homes across Charlotte's newer subdivisions.",
+          },
+          {
+            title: "Right primer, right paint",
+            description: "Fiber-cement-friendly primers and premium exterior paints that bond properly.",
+          },
+          {
+            title: "We re-caulk everything",
+            description:
+              "The most common reason Hardie paint fails is caulking — we handle it as part of every project.",
+          },
+          {
+            title: "Premium paints included",
+            description: "Sherwin-Williams and Benjamin Moore as standard, not an upcharge.",
+          },
+          { title: "3-year workmanship warranty", description: "Written into your contract." },
+          { title: "Family-owned", description: "Esau personally oversees every Hardie project." },
+        ],
+      },
+      {
+        type: "intro",
+        heading: "When to Repaint Hardie Plank",
+        body: [
+          "James Hardie's factory ColorPlus finish carries a 15-year limited warranty, but many Charlotte homeowners start seeing visible fading, chalking, or caulking failure somewhere between years 8 and 12. If your home was built in the early 2010s — common in Ballantyne, Waxhaw, Indian Trail, Huntersville, and surrounding subdivisions — you may be reaching the point where a repaint adds the most value.",
+          "The best time to repaint is usually before the siding looks desperate. Repainting before the original finish fully fails means less scraping, fewer repairs, cleaner prep, and a better-looking result. Waiting until caulk has opened up, trim has deteriorated, and siding is visibly chalky can turn a straightforward repaint into a more expensive exterior repair project.",
+          "If you're not sure where your home falls, we can inspect it during a free quote and tell you whether it needs paint now, needs targeted caulk and touch-up work, or still has a few good years left.",
+        ],
+      },
+    ],
+    galleryTitle: "Recent Hardie Plank Projects",
+    gallerySubtitle: "Before-and-after photos from Hardie plank homes we've painted across Charlotte.",
+    galleryCategory: "exterior",
+    ctaHeading: "Ready to Refresh Your Hardie Plank?",
+    ctaBody:
+      "Get a free on-site quote. We'll inspect the siding, identify any repair needs, and write a clear estimate.",
+    faq: [
+      {
+        question: "How often does Hardie plank need to be repainted?",
+        answer:
+          "Most Hardie plank homes in Charlotte need repainting every 10–15 years. The factory finish lasts longer than wood siding, but caulking and trim usually fail before the paint itself does, and that's often what triggers the repaint.",
+      },
+      {
+        question: "Can I paint over the factory ColorPlus finish?",
+        answer:
+          "Yes — and many homeowners do, both to change the color and to refresh a faded original finish. Painting over factory-finished Hardie just requires the right prep (clean surface, scuff-sand where needed, prime any bare spots).",
+      },
+      {
+        question: "What paint brands do you use on Hardie plank?",
+        answer:
+          "Sherwin-Williams Duration and Emerald exterior, or Benjamin Moore Aura exterior. Both are top-tier exterior paints that bond well to fiber cement. We don't cut corners on paint for Hardie projects.",
+      },
+      {
+        question: "Will painting Hardie plank void the manufacturer warranty?",
+        answer:
+          "James Hardie's 30-year material warranty covers the siding itself, regardless of whether it's been repainted. The 15-year ColorPlus finish warranty is on the factory finish, so once you repaint, the new paint's warranty (our 3-year workmanship warranty plus the paint manufacturer's warranty) becomes the relevant coverage.",
+      },
+      {
+        question: "Do you re-caulk during a Hardie plank repaint?",
+        answer:
+          "Yes — and it's a critical part of doing the job right. Failed caulking is the most common reason Hardie paint fails early. We re-caulk butt joints, trim seams, and any other failing areas as part of every Hardie project.",
+      },
+      {
+        question: "What's the best time of year to paint Hardie plank in Charlotte?",
+        answer:
+          "Spring and fall are ideal — daytime temperatures between 50°F and 90°F, overnight lows above 50°F, and dry weather. April–June and September–October are the sweet spots. We can paint year-round when conditions allow.",
+      },
+      {
+        question: "Can you handle Hardie plank repair as well as painting?",
+        answer:
+          "Yes. We replace damaged Hardie boards as part of the project when needed. For significant siding damage or structural issues, we'll be honest about whether replacement of larger sections makes more sense than spot repair.",
+      },
+    ],
   },
 ];
 
@@ -1371,7 +2660,8 @@ function galleryContent() {
       galleryBlock(
         "Browse Our Work",
         "Filter categories: All • Interior • Exterior • Cabinets • Decks & Fences",
-        7,
+        galleryImages,
+        galleryImages.length,
       ),
       cta(
         "Want Your Home in This Gallery?",
@@ -1469,6 +2759,43 @@ function servicesContent() {
           icon: "ClipboardCheck",
         },
       ]),
+      cards(
+        "Specialty Services",
+        "In addition to our core painting services, we also offer these specialty services across the Charlotte area — available standalone or paired with a larger project.",
+        [
+          {
+            title: "Popcorn Ceiling Removal",
+            description: "Scrape, smooth, and finish dated popcorn ceilings into clean, modern ones.",
+            icon: "Layers",
+            link: "/popcorn-ceiling-removal/",
+          },
+          {
+            title: "Drywall Repair",
+            description: "Patch, repair, and finish drywall before painting — or as a standalone service.",
+            icon: "Wrench",
+            link: "/drywall-repair/",
+          },
+          {
+            title: "Wallpaper Removal",
+            description: "Clean removal of old wallpaper with drywall repair and a fresh coat of paint.",
+            icon: "PaintBucket",
+            link: "/wallpaper-removal/",
+          },
+          {
+            title: "Pressure Washing",
+            description: "Siding, brick, concrete, decks, and patios cleaned the right way for each surface.",
+            icon: "Droplets",
+            link: "/pressure-washing/",
+          },
+          {
+            title: "Hardie Plank Painting",
+            description: "Specialized exterior painting for fiber cement siding on Charlotte's newer subdivisions.",
+            icon: "Home",
+            link: "/hardie-plank-painting/",
+          },
+        ],
+        { columns: "3" },
+      ),
       featureList(
         "Why Homeowners Across Charlotte Choose 593 EC Painting",
         "A family-owned painting business serving Charlotte and the surrounding Carolinas for 5 years. Same approach to every project, every customer, every time.",
@@ -1520,9 +2847,14 @@ function serviceDetailContent(service: (typeof services)[number]) {
     whyItems?: Array<{ title: string; description: string; icon?: string }>;
     galleryTitle?: string;
     gallerySubtitle?: string;
+    galleryCategory?: string;
+    relatedServices?: Array<{ title: string; description: string; icon?: string; link?: string }>;
     ctaHeading?: string;
     ctaBody?: string;
   };
+  const serviceGalleryImages = serviceData.galleryCategory
+    ? galleryImageGroups[serviceData.galleryCategory]
+    : undefined;
   return {
     blocks: [
       hero({
@@ -1546,6 +2878,19 @@ function serviceDetailContent(service: (typeof services)[number]) {
         serviceData.processSubtitle ?? "Here is exactly what to expect from quote to walkthrough.",
         service.steps.map(([title, description]) => ({ title, description })),
       ),
+      ...(serviceData.relatedServices
+        ? [
+            cards(
+              service.slug === "interior-painting"
+                ? "Related Interior Services We Offer"
+                : "Related Exterior Services We Offer",
+              service.slug === "interior-painting"
+                ? "Interior projects often involve more than just paint. We handle the related work too — each as its own dedicated service."
+                : "Exterior projects often involve more than just paint. We handle the related work too — each as its own dedicated service.",
+              serviceData.relatedServices,
+            ),
+          ]
+        : []),
       ...service.extras.map((entry) => {
         const title = String(entry[0]);
         const body = entry[1];
@@ -1576,6 +2921,7 @@ function serviceDetailContent(service: (typeof services)[number]) {
         serviceData.galleryTitle ?? `Recent ${service.navTitle} Projects`,
         serviceData.gallerySubtitle ??
           "A look at recent work across Charlotte and the surrounding Carolinas.",
+        serviceGalleryImages,
       ),
       cta(
         serviceData.ctaHeading ?? `Ready for ${service.navTitle}?`,
@@ -1583,6 +2929,54 @@ function serviceDetailContent(service: (typeof services)[number]) {
           "Get a free quote for your project. Most quotes scheduled within 48 hours.",
       ),
       faq(service.faq.map(([question, answer]) => ({ question, answer }))),
+    ],
+  };
+}
+
+function spokePageContent(spoke: SpokePage) {
+  return {
+    metadata: {
+      breadcrumbParent: { name: "Services", url: `${SITE_URL}/services/` },
+      serviceSchema: {
+        serviceType: spoke.serviceType,
+        areaServed: SERVICE_AREA_CITIES,
+      },
+    },
+    blocks: [
+      breadcrumb(spoke.title),
+      hero({
+        headline: spoke.heroTitle,
+        subheadline: spoke.heroSubtitle,
+        image: spoke.heroImage,
+      }),
+      ...spoke.sections.map((section) => {
+        if (section.type === "intro") {
+          return rich(section.heading, section.body);
+        }
+        if (section.type === "text-image") {
+          return block("text-image", {
+            heading: section.heading,
+            body: section.body
+              .map((paragraph) => (paragraph.trim().startsWith("<") ? paragraph : p(paragraph)))
+              .join(""),
+            imageUrl: section.imageUrl,
+            imageAlt: section.imageAlt,
+            imageCaption: section.imageCaption ?? "",
+            imagePosition: section.imagePosition ?? "right",
+          });
+        }
+        if (section.type === "feature") {
+          return featureList(section.heading, section.body ?? "", section.items);
+        }
+        return processBlock(section.heading, section.body ?? "", section.items);
+      }),
+      galleryBlock(
+        spoke.galleryTitle,
+        spoke.gallerySubtitle,
+        galleryImageGroups[spoke.galleryCategory],
+      ),
+      cta(spoke.ctaHeading, spoke.ctaBody),
+      faq(spoke.faq),
     ],
   };
 }
@@ -2006,13 +3400,13 @@ function sitemapContent() {
         },
         {
           title: "Interior Painting",
-          description: "Walls, ceilings, trim, popcorn removal, wallpaper, drywall repair.",
+          description: "Walls, ceilings, trim, doors, and full home repaints.",
           link: "/interior-painting/",
           icon: "PaintBucket",
         },
         {
           title: "Exterior Painting",
-          description: "Siding, brick, stucco, trim, pressure washing.",
+          description: "Siding, brick, stucco, trim, and full exterior repaints.",
           link: "/exterior-painting/",
           icon: "Home",
         },
@@ -2033,6 +3427,38 @@ function sitemapContent() {
           description: "Wood fence cleaning, staining, and painting.",
           link: "/fence-staining/",
           icon: "Fence",
+        },
+      ]),
+      cards("Specialty Services", "", [
+        {
+          title: "Popcorn Ceiling Removal",
+          description: "Scrape, smooth, and finish dated popcorn ceilings.",
+          link: "/popcorn-ceiling-removal/",
+          icon: "Layers",
+        },
+        {
+          title: "Drywall Repair",
+          description: "Patch and repair drywall before painting or as a standalone service.",
+          link: "/drywall-repair/",
+          icon: "Wrench",
+        },
+        {
+          title: "Wallpaper Removal",
+          description: "Clean removal of old wallpaper, including drywall repair.",
+          link: "/wallpaper-removal/",
+          icon: "PaintBucket",
+        },
+        {
+          title: "Pressure Washing",
+          description: "Cleaning for siding, brick, concrete, decks, and patios.",
+          link: "/pressure-washing/",
+          icon: "Droplets",
+        },
+        {
+          title: "Hardie Plank Painting",
+          description: "Specialized exterior painting for fiber cement siding.",
+          link: "/hardie-plank-painting/",
+          icon: "Home",
         },
       ]),
       cards("Legal", "", [
@@ -2143,6 +3569,14 @@ function allPageSpecs(): PageSpec[] {
       metaTitle: service.metaTitle,
       metaDescription: service.metaDescription,
       content: serviceDetailContent(service),
+    })),
+    ...spokePages.map((spoke) => ({
+      title: spoke.title,
+      slug: spoke.slug,
+      path: spoke.path,
+      metaTitle: spoke.metaTitle,
+      metaDescription: spoke.metaDescription,
+      content: spokePageContent(spoke),
     })),
     {
       title: "Privacy Policy",
