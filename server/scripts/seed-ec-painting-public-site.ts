@@ -2272,6 +2272,14 @@ const spokePages: SpokePage[] = [
         ],
       },
       {
+        type: "intro",
+        heading: "When to Repaint Hardie Plank",
+        body: [
+          "James Hardie's factory ColorPlus finish carries a 15-year limited warranty, but most Charlotte homeowners start seeing visible fading or caulking failure between years 8 and 12. If your home was built in the early 2010s — which describes a huge percentage of Ballantyne, Waxhaw, Indian Trail, and Huntersville housing stock — you may be approaching the time when a repaint adds the most value.",
+          "Repainting before the original finish fails completely also means less prep work, faster turnaround, and a lower total cost than waiting until the siding is visibly damaged. The right time to repaint Hardie plank is usually before you absolutely need to.",
+        ],
+      },
+      {
         type: "feature",
         heading: "Why Choose 593 EC Painting for Hardie Plank",
         body:
@@ -2296,14 +2304,6 @@ const spokePages: SpokePage[] = [
           },
           { title: "3-year workmanship warranty", description: "Written into your contract." },
           { title: "Family-owned", description: "Esau personally oversees every Hardie project." },
-        ],
-      },
-      {
-        type: "intro",
-        heading: "When to Repaint Hardie Plank",
-        body: [
-          "James Hardie's factory ColorPlus finish carries a 15-year limited warranty, but most Charlotte homeowners start seeing visible fading or caulking failure between years 8 and 12. If your home was built in the early 2010s — which describes a huge percentage of Ballantyne, Waxhaw, Indian Trail, and Huntersville housing stock — you may be approaching the time when a repaint adds the most value.",
-          "Repainting before the original finish fails completely also means less prep work, faster turnaround, and a lower total cost than waiting until the siding is visibly damaged. The right time to repaint Hardie plank is usually before you absolutely need to.",
         ],
       },
     ],
