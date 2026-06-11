@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { pathToFileURL } from "url";
 import { pool } from "../db";
 import { storage } from "../storage";
 import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } from "@shared/schema";
@@ -3506,7 +3507,7 @@ type PageSpec = {
   noindex?: boolean;
 };
 
-function allPageSpecs(): PageSpec[] {
+export function allPageSpecs(): PageSpec[] {
   return [
     {
       title: "Home",
@@ -3646,7 +3647,7 @@ async function upsertPage(data: InsertCmsPage) {
   await storage.cmsPages.createPage(data);
 }
 
-function page(spec: PageSpec): InsertCmsPage {
+export function page(spec: PageSpec): InsertCmsPage {
   return {
     title: spec.title,
     slug: spec.slug,
@@ -3812,11 +3813,13 @@ async function main() {
   console.log("Seeded 593 EC Painting public CMS pages, menus, branding, and SEO settings.");
 }
 
-main()
-  .catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    await pool.end();
-  });
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+    .catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    })
+    .finally(async () => {
+      await pool.end();
+    });
+}
