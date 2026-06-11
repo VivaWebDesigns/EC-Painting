@@ -246,7 +246,8 @@ function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
   if (!seo?.organizationName && !seo?.siteName) return null;
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "LocalBusiness",
+    "@id": `${siteUrl}/#business`,
     name: seo?.organizationName || seo?.siteName || "593 EC Painting",
     url: siteUrl,
     logo: seo?.organizationLogoUrl
@@ -255,6 +256,40 @@ function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
           url: absoluteUrl(seo.organizationLogoUrl, siteUrl),
         }
       : undefined,
+  };
+}
+
+function getCmsMetadata(page: CmsPage) {
+  const content = page.content;
+  if (!content || typeof content !== "object") return {};
+  const metadata = (content as { metadata?: unknown }).metadata;
+  return metadata && typeof metadata === "object" ? (metadata as Record<string, unknown>) : {};
+}
+
+function buildServiceSchema(
+  page: CmsPage,
+  metadata: Record<string, unknown>,
+  canonicalUrl: string,
+  description: string,
+  siteUrl: string,
+) {
+  const serviceSchema = metadata.serviceSchema;
+  if (!serviceSchema || typeof serviceSchema !== "object") return null;
+  const schema = serviceSchema as { serviceType?: unknown; areaServed?: unknown };
+  if (typeof schema.serviceType !== "string") return null;
+  const areaServed = Array.isArray(schema.areaServed)
+    ? schema.areaServed.filter((city): city is string => typeof city === "string")
+    : [];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: schema.serviceType,
+    name: page.title,
+    description,
+    url: canonicalUrl,
+    provider: { "@id": `${siteUrl}/#business` },
+    areaServed: areaServed.map((name) => ({ "@type": "City", name })),
   };
 }
 
@@ -295,6 +330,47 @@ function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
   };
 }
 
+function extractFaqItems(pageContent: unknown): Array<{ question: string; answer: string }> {
+  if (!pageContent || typeof pageContent !== "object") return [];
+  const blocks = (pageContent as { blocks?: unknown }).blocks;
+  if (!Array.isArray(blocks)) return [];
+
+  const items: Array<{ question: string; answer: string }> = [];
+  for (const block of blocks) {
+    if (!block || typeof block !== "object") continue;
+    const typedBlock = block as { type?: unknown; props?: { items?: unknown } };
+    if (typedBlock.type !== "faq" || !Array.isArray(typedBlock.props?.items)) continue;
+
+    for (const item of typedBlock.props.items) {
+      if (!item || typeof item !== "object") continue;
+      const faqItem = item as { question?: unknown; answer?: unknown };
+      if (typeof faqItem.question !== "string" || typeof faqItem.answer !== "string") continue;
+      const question = stripHtml(faqItem.question);
+      const answer = stripHtml(faqItem.answer);
+      if (question && answer) items.push({ question, answer });
+    }
+  }
+  return items;
+}
+
+function buildFaqPageSchema(pageContent: unknown) {
+  const faqItems = extractFaqItems(pageContent);
+  if (faqItems.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 function buildSimplePageBody(title: string, description: string, fragments: string[] = []) {
   const paragraphs = uniqueFragments([description, ...fragments])
     .filter((fragment) => fragment && fragment.toLowerCase() !== title.trim().toLowerCase())
@@ -318,30 +394,51 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     DEFAULT_DESCRIPTION;
   const canonicalUrl =
     page.canonicalUrl || (page.slug === "home" ? siteUrl : `${siteUrl}/${page.slug}`);
+  const metadata = getCmsMetadata(page);
   const bodyHtml = buildSimplePageBody(
     page.title,
     description,
     uniqueFragments(collectTextFragments(page.content)),
   );
 
+  const breadcrumbParent =
+    metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
+      ? (metadata.breadcrumbParent as { name?: unknown; url?: unknown })
+      : null;
   const breadcrumbs =
     page.slug === "home"
       ? null
-      : buildBreadcrumbSchema([
-          { name: "Home", url: siteUrl },
-          { name: page.title, url: canonicalUrl },
-        ]);
+      : buildBreadcrumbSchema(
+          breadcrumbParent &&
+            typeof breadcrumbParent.name === "string" &&
+            typeof breadcrumbParent.url === "string"
+            ? [
+                { name: "Home", url: siteUrl },
+                { name: breadcrumbParent.name, url: breadcrumbParent.url },
+                { name: page.title, url: canonicalUrl },
+              ]
+            : [
+                { name: "Home", url: siteUrl },
+                { name: page.title, url: canonicalUrl },
+              ],
+        );
 
   return {
     title: buildHeadTitle(title, seo),
     description,
     canonicalUrl,
     ogImageUrl: page.ogImageUrl || seo?.defaultOgImageUrl || null,
-    robots: page.noindex ? "noindex,nofollow" : null,
+    robots: page.noindex
+      ? "noindex,nofollow"
+      : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
     bodyHtml,
-    jsonLd: [buildOrganizationSchema(seo, siteUrl), buildWebsiteSchema(seo, siteUrl), breadcrumbs].filter(
-      Boolean,
-    ) as Array<Record<string, unknown>>,
+    jsonLd: [
+      buildOrganizationSchema(seo, siteUrl),
+      buildWebsiteSchema(seo, siteUrl),
+      breadcrumbs,
+      buildServiceSchema(page, metadata, canonicalUrl, description, siteUrl),
+      buildFaqPageSchema(page.content),
+    ].filter(Boolean) as Array<Record<string, unknown>>,
   };
 }
 

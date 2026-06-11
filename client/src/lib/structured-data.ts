@@ -34,7 +34,8 @@ export function buildOrganizationLd(globalSeo: SeoSettings): JsonLdObject | null
 
   return compactObject({
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "LocalBusiness",
+    "@id": `${siteUrl}/#business`,
     name,
     url: siteUrl || undefined,
     logo: globalSeo.organizationLogoUrl
@@ -72,6 +73,38 @@ export function buildBreadcrumbLd(
       item: item.url,
     })),
   };
+}
+
+export function buildServiceLd({
+  name,
+  description,
+  url,
+  serviceType,
+  providerId,
+  areaServed,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  serviceType: string;
+  providerId: string;
+  areaServed: string[];
+}): JsonLdObject | null {
+  if (!name || !description || !url || !serviceType) return null;
+
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType,
+    name,
+    description,
+    url,
+    provider: { "@id": providerId },
+    areaServed: areaServed.map((name) => ({
+      "@type": "City",
+      name,
+    })),
+  });
 }
 
 export function buildArticleLd(

@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ "${ALLOW_DIRTY_PUSH:-}" = "1" ]; then
+  exit 0
+fi
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Push blocked: working tree has uncommitted changes." >&2
+  echo "Commit, stash, or remove all changes before pushing." >&2
+  echo "Run 'git status --short' for details." >&2
+  echo "Set ALLOW_DIRTY_PUSH=1 only for an intentional emergency bypass." >&2
+  exit 1
+fi

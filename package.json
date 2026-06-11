@@ -11,6 +11,8 @@
     "db:push": "drizzle-kit push",
     "backup:run": "tsx server/scripts/run-system-backup.ts",
     "backup:restore": "tsx server/scripts/restore-system-backup.ts",
+    "git:install-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/pre-push",
+    "git:ensure-clean": "test -z \"$(git status --porcelain)\"",
     "lint": "eslint client/src server shared",
     "format": "prettier --check client/src server shared",
     "test": "vitest run"

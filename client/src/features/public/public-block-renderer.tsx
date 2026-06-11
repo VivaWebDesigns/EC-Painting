@@ -170,6 +170,39 @@ function DynamicFallback() {
   );
 }
 
+function BreadcrumbBlock({ props }: { props: Record<string, unknown> }) {
+  const items = arr<{ name: string; url?: string }>(props.items);
+  if (items.length === 0) return null;
+
+  return (
+    <nav
+      aria-label="Breadcrumb"
+      className="mx-auto max-w-6xl px-5 pt-6 text-sm text-muted-foreground sm:px-8"
+      data-testid="block-breadcrumb"
+    >
+      <ol className="flex flex-wrap items-center gap-2">
+        {items.map((item, index) => {
+          const isCurrent = index === items.length - 1 || !item.url;
+          return (
+            <li key={`${item.name}-${index}`} className="flex items-center gap-2">
+              {index > 0 && <span aria-hidden="true">›</span>}
+              {isCurrent ? (
+                <span aria-current="page" className="font-medium text-foreground">
+                  {item.name}
+                </span>
+              ) : (
+                <Link href={item.url || "/"} className="hover:text-foreground hover:underline">
+                  {item.name}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
 function HeroBlock({ props }: { props: Record<string, unknown> }) {
   const bg = resolveCmsAssetUrl(str(props.backgroundImageUrl));
   const videoBg = str(props.videoBackgroundUrl);
@@ -1733,6 +1766,7 @@ function ProtocolBuilderBlock({ props }: { props: Record<string, unknown> }) {
 }
 
 const RENDERERS: Record<string, React.ComponentType<{ props: Record<string, unknown> }>> = {
+  breadcrumb: BreadcrumbBlock,
   hero: HeroBlock,
   "section-header": SectionHeaderBlock,
   "rich-text": RichTextBlock,

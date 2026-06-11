@@ -12,6 +12,7 @@ import {
   buildOrganizationLd,
   buildBreadcrumbLd,
   buildFaqPageLd,
+  buildServiceLd,
   extractFaqItems,
 } from "@/lib/structured-data";
 
@@ -48,6 +49,12 @@ function parseCmsContent(content: unknown): BlockInstance[] {
   if (!content || typeof content !== "object") return [];
   const c = content as BuilderContent;
   return Array.isArray(c.blocks) ? c.blocks : [];
+}
+
+function parseCmsMetadata(content: unknown): Record<string, unknown> {
+  if (!content || typeof content !== "object") return {};
+  const c = content as BuilderContent & { metadata?: Record<string, unknown> };
+  return c.metadata && typeof c.metadata === "object" ? c.metadata : {};
 }
 
 function setMeta(name: string, content: string, property = false) {
@@ -114,7 +121,7 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
     if (page.noindex) {
       setMeta("robots", "noindex,nofollow");
     } else {
-      removeMeta("robots");
+      setMeta("robots", "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
     }
 
     return () => {
@@ -130,21 +137,52 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
   const isHome = page.slug === "home" || page.slug === "";
   const pageUrl = page.canonicalUrl || (isHome ? origin : `${origin}/${page.slug}`);
   const pageLabel = page.seoTitle || page.title;
+  const metadata = parseCmsMetadata(page.content);
+  const breadcrumbParent =
+    metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
+      ? (metadata.breadcrumbParent as { name?: unknown; url?: unknown })
+      : null;
 
   const breadcrumbs = isHome
     ? null
-    : buildBreadcrumbLd([
-        { name: "Home", url: origin || "/" },
-        { name: pageLabel, url: pageUrl },
-      ]);
+    : buildBreadcrumbLd(
+        breadcrumbParent &&
+          typeof breadcrumbParent.name === "string" &&
+          typeof breadcrumbParent.url === "string"
+          ? [
+              { name: "Home", url: origin || "/" },
+              { name: breadcrumbParent.name, url: breadcrumbParent.url },
+              { name: page.title, url: pageUrl },
+            ]
+          : [
+              { name: "Home", url: origin || "/" },
+              { name: pageLabel, url: pageUrl },
+            ],
+      );
 
   const faqItems = extractFaqItems(page.content);
+  const serviceSchema =
+    metadata.serviceSchema && typeof metadata.serviceSchema === "object"
+      ? (metadata.serviceSchema as { serviceType?: unknown; areaServed?: unknown })
+      : null;
 
   return (
     <JsonLd
       schemas={[
         globalSeo ? buildOrganizationLd(globalSeo) : null,
         breadcrumbs,
+        serviceSchema && typeof serviceSchema.serviceType === "string"
+          ? buildServiceLd({
+              name: page.title,
+              description: page.seoDescription || "",
+              url: pageUrl,
+              serviceType: serviceSchema.serviceType,
+              providerId: `${origin}/#business`,
+              areaServed: Array.isArray(serviceSchema.areaServed)
+                ? serviceSchema.areaServed.filter((city): city is string => typeof city === "string")
+                : [],
+            })
+          : null,
         buildFaqPageLd(faqItems),
       ]}
     />

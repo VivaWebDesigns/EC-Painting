@@ -132,6 +132,11 @@ function Router() {
         <Route path="/cabinet-painting" component={() => <CmsHybridPage slug="cabinet-painting" fallback={<NotFound />} />} />
         <Route path="/deck-staining" component={() => <CmsHybridPage slug="deck-staining" fallback={<NotFound />} />} />
         <Route path="/fence-staining" component={() => <CmsHybridPage slug="fence-staining" fallback={<NotFound />} />} />
+        <Route path="/popcorn-ceiling-removal" component={() => <CmsHybridPage slug="popcorn-ceiling-removal" fallback={<NotFound />} />} />
+        <Route path="/drywall-repair" component={() => <CmsHybridPage slug="drywall-repair" fallback={<NotFound />} />} />
+        <Route path="/wallpaper-removal" component={() => <CmsHybridPage slug="wallpaper-removal" fallback={<NotFound />} />} />
+        <Route path="/pressure-washing" component={() => <CmsHybridPage slug="pressure-washing" fallback={<NotFound />} />} />
+        <Route path="/hardie-plank-painting" component={() => <CmsHybridPage slug="hardie-plank-painting" fallback={<NotFound />} />} />
         <Route path="/services/interior-painting"><Redirect to="/interior-painting" replace /></Route>
         <Route path="/services/exterior-painting"><Redirect to="/exterior-painting" replace /></Route>
         <Route path="/services/kitchen-cabinet-painting"><Redirect to="/cabinet-painting" replace /></Route>

@@ -42,6 +42,14 @@ function escapeXml(str: string): string {
     .replace(/'/g, "&apos;");
 }
 
+const SPOKE_SERVICE_SLUGS = new Set([
+  "popcorn-ceiling-removal",
+  "drywall-repair",
+  "wallpaper-removal",
+  "pressure-washing",
+  "hardie-plank-painting",
+]);
+
 export function registerApiRoutes(app: Express) {
   app.use("/r2", r2PublicRoutes);
   app.use("/api/auth", authRoutes);
@@ -274,7 +282,7 @@ export function registerApiRoutes(app: Express) {
             ? new Date(page.updatedAt).toISOString().split("T")[0]
             : undefined,
           changefreq: "monthly",
-          priority: "0.6",
+          priority: SPOKE_SERVICE_SLUGS.has(page.slug) ? "0.8" : "0.6",
         });
       }
 
