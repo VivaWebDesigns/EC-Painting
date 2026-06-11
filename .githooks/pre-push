@@ -15,6 +15,10 @@ fi
 
 while read -r local_ref local_sha remote_ref remote_sha
 do
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+
   case "$remote_ref" in
     refs/heads/main)
       ;;
