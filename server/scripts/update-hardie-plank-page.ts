@@ -51,9 +51,9 @@ async function main() {
         backupPath,
         title: spec.title,
         markers: [
-          "Hardie Plank Repaints Need More Than a Fresh Color",
-          "A Repaint Should Protect the Siding, Not Just Cover It",
-          "Our Hardie Plank Painting Process",
+          "Painting Hardie Plank the Right Way",
+          "A few things that matter",
+          "Our Process",
         ],
       },
       null,

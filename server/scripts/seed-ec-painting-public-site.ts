@@ -2187,114 +2187,87 @@ const spokePages: SpokePage[] = [
     sections: [
       {
         type: "intro",
-        heading: "Hardie Plank Repaints Need More Than a Fresh Color",
+        heading: "Painting Hardie Plank the Right Way",
         body: [
-          "Hardie plank — also known as fiber cement siding — is one of the most common siding materials on newer Charlotte homes. It is tougher than wood, more stable than vinyl, and built to hold paint well for a long time. But when the factory finish starts to fade or the caulking begins to fail, the repaint needs to be handled differently from a standard exterior paint job.",
-          "The work is not just picking a new color and spraying the siding. A good Hardie plank repaint starts with a careful inspection of every board, butt joint, trim seam, nail head, and transition point where moisture can get behind the siding. Those small details are usually what decide whether the paint still looks sharp in year eight or starts failing after a few Carolina summers.",
-          "We've painted Hardie homes across Ballantyne, Waxhaw, Indian Trail, Huntersville, and the newer neighborhoods around Charlotte. We know how to clean fiber cement without forcing water behind the boards, where caulking typically breaks down first, and which primers and exterior paints bond properly to the surface.",
-          "If your Hardie plank looks faded, chalky, patchy, or more than 10 years old, this is the point where a repaint can protect the siding and make the whole home look newer again. Done right, it should look crisp on day one and keep looking cared-for for years.",
-        ],
-      },
-      {
-        type: "text-image",
-        heading: "A Repaint Should Protect the Siding, Not Just Cover It",
-        body: [
-          "Hardie plank is made from fiber cement, not wood. That means it expands, absorbs, releases moisture, and holds coatings differently from other exterior surfaces. The siding itself is durable, but the system around it — caulk, trim, flashing, nail heads, and exposed board edges — still needs attention before paint goes on.",
-          "On a Hardie repaint, we look closely at the places most homeowners never think about: the tiny gaps between boards, seams around window trim, lower courses near landscaping, and shaded sides where mildew builds up faster. If those areas are not cleaned, repaired, primed, and sealed correctly, the new paint can look good for a season and still fail early.",
-          "That is why our Hardie process is built around prep first. We pressure wash, let surfaces dry, re-caulk failing joints, prime bare or chalky spots, and use premium exterior products that are appropriate for fiber cement siding.",
-        ],
-        imageUrl: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__09_02_27_AM_1771596640068-Dopmfdvt.webp",
-        imageAlt: "Light tan painted Charlotte home exterior with white trim after a professional repaint",
-        imageCaption: "Hardie and exterior repaint details matter most at trim, joints, and lower siding courses.",
-        imagePosition: "right",
-      },
-      {
-        type: "feature",
-        heading: "Common Hardie Issues We Address Before Painting",
-        body:
-          "A repaint is the right time to fix the small problems that shorten the life of the finish. These are the details we look for during the quote and prep phase.",
-        items: [
-          {
-            title: "Failed caulking",
-            description:
-              "Cracked or pulling-away caulking around butt joints, windows, corners, and trim. This is one of the most common reasons Hardie repaints are needed.",
-          },
-          {
-            title: "Color fading or chalking",
-            description:
-              "Factory color can lose depth or develop a chalky surface after years of sun exposure. We clean and prep the surface so the new coating bonds.",
-          },
-          {
-            title: "Damaged boards",
-            description:
-              "Cracked, chipped, or impact-damaged boards can be replaced before painting so the finished exterior looks complete.",
-          },
-          {
-            title: "Worn trim and soffits",
-            description:
-              "Hardie homes often have wood, PVC, or composite trim that wears differently than the siding. We catch and repair those transitions.",
-          },
-          {
-            title: "Mildew on shaded sides",
-            description:
-              "North-facing walls and shaded areas collect mildew and pollen. Cleaning is part of the prep, not an optional extra.",
-          },
-          {
-            title: "Bare or exposed fiber cement",
-            description:
-              "Any worn-through areas need the right bonding primer before finish paint goes on. Wood primer is not the right product here.",
-          },
+          "Hardie plank — also known as fiber cement siding — is the most common siding on newer Charlotte homes. It's tougher and longer-lasting than vinyl, and the factory finish typically holds up for 10–15 years before it needs repainting. When that time comes, painting Hardie plank well is different from painting wood or vinyl, and most painters don't know the difference.",
+          "We've painted dozens of Hardie homes across Ballantyne, Waxhaw, Indian Trail, and the newer Charlotte subdivisions. We know which paints adhere to fiber cement, how to prep the surface without damaging the factory primer, and how to handle the caulking, trim, and butt joints that fail first on Hardie homes.",
+          "If your Hardie plank is looking faded, chalky, or it's been more than 10 years since the original paint, it's probably time. Done right, a Hardie plank repaint should last another 10–15 years and look factory-fresh on day one.",
         ],
       },
       {
         type: "intro",
         heading: "Why Painting Hardie Plank Isn't Like Painting Wood Siding",
         body: [
-          "Hardie plank looks like wood lap siding from the street, but the material behaves differently. It is a mix of cement, sand, and cellulose fibers, which gives it its durability but also changes the prep and coating approach.",
-          "<ul><li><strong>The factory finish is durable, but joints fail first.</strong> Butt joints, trim seams, and old caulking are usually where moisture and paint problems begin.</li><li><strong>Bare fiber cement needs the right primer.</strong> If the factory finish has worn through, those spots need a bonding primer that is appropriate for masonry/fiber cement surfaces.</li><li><strong>Aggressive sanding can damage the texture.</strong> We scuff-sand only where needed instead of flattening or chewing up the factory profile.</li><li><strong>Paint timing matters.</strong> Fiber cement needs to be clean and dry, and exterior paint needs the right temperature and weather window to cure correctly.</li></ul>",
-          "When all of that is handled correctly, Hardie plank holds paint extremely well. When it is treated like ordinary wood siding, the problems usually show up a few years later.",
+          "Hardie plank looks like wood lap siding, but it's actually fiber cement — a mix of cement, sand, and cellulose fibers. That changes everything about how it should be painted.",
+          "A few things that matter:",
+          "<ul><li><strong>The factory finish is durable, but the joints fail first.</strong> Butt joints, gaps where caulking has cracked, and trim connections are usually where you'll first see paint failure on Hardie homes. We caulk these properly before repainting.</li><li><strong>It needs the right primer.</strong> Bare fiber cement (where the factory finish has worn through) requires a masonry-friendly primer, not a wood primer.</li><li><strong>It can't be sanded the same way.</strong> Aggressive sanding damages the factory texture. We scuff-sand only where needed.</li><li><strong>It holds paint extremely well — when prepped correctly.</strong> A properly prepped and painted Hardie plank repaint should last 10–15 years. Done wrong, you'll see issues in 2–3 years.</li></ul>",
         ],
       },
       {
         type: "process",
-        heading: "Our Hardie Plank Painting Process",
-        body:
-          "The process is designed to protect the siding first and improve curb appeal second. A clean, dry, properly sealed surface is what makes the finish last.",
+        heading: "Our Process",
         items: [
           {
             title: "Free On-Site Quote",
             description:
-              "We measure the home, inspect siding and trim, look for failing caulk or damaged boards, and write a detailed estimate.",
+              "We measure the home, inspect the Hardie siding for any damage or repair needs, and write a detailed estimate.",
           },
           {
             title: "Pressure Wash",
             description:
-              "Hardie plank holds onto pollen, dirt, mildew, and chalking. A thorough wash is the foundation of a lasting paint job.",
-          },
-          {
-            title: "Dry Time & Inspection",
-            description:
-              "We let surfaces dry properly, then re-check seams, trim, and lower boards before repair and caulk begin.",
+              "Hardie plank holds onto pollen, dirt, and mildew. A thorough wash is the foundation of a paint job that lasts.",
           },
           {
             title: "Repair & Caulk",
             description:
-              "We re-caulk failed butt joints, gaps, windows, corners, and trim seams, and replace damaged boards where needed.",
+              "Re-caulk failed butt joints, gaps, and trim seams. Replace any damaged boards before paint touches the wall.",
           },
           {
             title: "Prime Bare Spots",
             description:
-              "Anywhere the finish has worn through gets a bonding primer selected for fiber cement and exterior exposure.",
+              "Anywhere the factory finish has worn through gets a coat of bonding primer designed for fiber cement.",
           },
           {
             title: "Paint",
             description:
-              "Two coats of premium exterior paint, applied in the right weather conditions for proper adhesion and cure.",
+              "Two coats of premium exterior paint (Sherwin-Williams Duration or Emerald, or Benjamin Moore Aura) applied in the right weather conditions.",
           },
           {
             title: "Final Walkthrough",
             description:
-              "We walk the exterior with you, handle touch-ups, clean the job site, and leave you with warranty-backed work.",
+              "We walk the home with you, touch up anything that needs it, and leave the job site clean.",
+          },
+        ],
+      },
+      {
+        type: "feature",
+        heading: "Common Hardie Issues We Address",
+        body:
+          "A repaint is the right time to fix the small issues that often go ignored.",
+        items: [
+          {
+            title: "Failed caulking",
+            description:
+              "Cracked or pulling-away caulking around butt joints, windows, and trim. Most common reason a Hardie repaint is needed.",
+          },
+          {
+            title: "Color fading or chalking",
+            description:
+              "The factory color has lost depth or developed a chalky surface. Common after 10+ years.",
+          },
+          {
+            title: "Damaged boards",
+            description:
+              "Cracked or chipped Hardie planks from impact or installation issues. Replaced before painting.",
+          },
+          {
+            title: "Worn trim & soffits",
+            description:
+              "Hardie homes usually have wood or PVC trim that wears differently than the siding. We catch this and repair as needed.",
+          },
+          {
+            title: "Mildew on shaded sides",
+            description: "Common on north-facing walls. Cleaned during pressure wash.",
           },
         ],
       },
@@ -2329,9 +2302,8 @@ const spokePages: SpokePage[] = [
         type: "intro",
         heading: "When to Repaint Hardie Plank",
         body: [
-          "James Hardie's factory ColorPlus finish carries a 15-year limited warranty, but many Charlotte homeowners start seeing visible fading, chalking, or caulking failure somewhere between years 8 and 12. If your home was built in the early 2010s — common in Ballantyne, Waxhaw, Indian Trail, Huntersville, and surrounding subdivisions — you may be reaching the point where a repaint adds the most value.",
-          "The best time to repaint is usually before the siding looks desperate. Repainting before the original finish fully fails means less scraping, fewer repairs, cleaner prep, and a better-looking result. Waiting until caulk has opened up, trim has deteriorated, and siding is visibly chalky can turn a straightforward repaint into a more expensive exterior repair project.",
-          "If you're not sure where your home falls, we can inspect it during a free quote and tell you whether it needs paint now, needs targeted caulk and touch-up work, or still has a few good years left.",
+          "James Hardie's factory ColorPlus finish carries a 15-year limited warranty, but most Charlotte homeowners start seeing visible fading or caulking failure between years 8 and 12. If your home was built in the early 2010s — which describes a huge percentage of Ballantyne, Waxhaw, Indian Trail, and Huntersville housing stock — you may be approaching the time when a repaint adds the most value.",
+          "Repainting before the original finish fails completely also means less prep work, faster turnaround, and a lower total cost than waiting until the siding is visibly damaged. The right time to repaint Hardie plank is usually before you absolutely need to.",
         ],
       },
     ],
