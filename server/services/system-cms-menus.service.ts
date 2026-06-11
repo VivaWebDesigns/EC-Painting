@@ -16,6 +16,44 @@ function item(label: string, url: string, children: MenuItem[] = [], openInNewTa
   };
 }
 
+const obsoleteCorePlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings"]);
+const obsoleteCorePlatformMenuLabels = new Set([
+  "browse specializations",
+  "events",
+  "events & workshops",
+  "find a mental health professional",
+  "insights & articles",
+  "upcoming events",
+  "video archives",
+]);
+
+function pruneObsoleteCorePlatformItems(items: MenuItem[]): { items: MenuItem[]; changed: boolean } {
+  let changed = false;
+
+  const nextItems = items.flatMap((entry) => {
+    const nextChildren = entry.children?.length
+      ? pruneObsoleteCorePlatformItems(entry.children)
+      : { items: entry.children ?? [], changed: false };
+    const normalizedLabel = entry.label.trim().toLowerCase();
+    const shouldRemove =
+      obsoleteCorePlatformMenuUrls.has(entry.url) ||
+      obsoleteCorePlatformMenuLabels.has(normalizedLabel) ||
+      (entry.url === "#" && normalizedLabel === "resources" && nextChildren.items.length === 0);
+
+    if (nextChildren.changed || shouldRemove) {
+      changed = true;
+    }
+
+    if (shouldRemove) {
+      return [];
+    }
+
+    return [{ ...entry, children: nextChildren.items }];
+  });
+
+  return { items: nextItems, changed };
+}
+
 function patchLegalItemUrls(items: MenuItem[]): { items: MenuItem[]; changed: boolean } {
   let changed = false;
 
@@ -77,12 +115,7 @@ const defaultMenus: Array<InsertCmsMenu & { location: StandardMenuLocation }> = 
     location: "main_navigation",
     items: [
       item("About", "/about"),
-      item("Find a Mental Health Professional", "/directory"),
       item("Join the Network", "/join"),
-      item("Resources", "#", [
-        item("Events", "/events"),
-        item("Insights & Articles", "/insights"),
-      ]),
       item("Contact", "/contact"),
     ],
   },
@@ -90,8 +123,6 @@ const defaultMenus: Array<InsertCmsMenu & { location: StandardMenuLocation }> = 
     name: "Platform",
     location: "footer_platform",
     items: [
-      item("Find a Mental Health Professional", "/directory"),
-      item("Events & Workshops", "/events"),
       item("How It Works", "/about"),
     ],
   },
@@ -109,8 +140,6 @@ const defaultMenus: Array<InsertCmsMenu & { location: StandardMenuLocation }> = 
     location: "footer_resources",
     items: [
       item("About Core Platforms", "/about"),
-      item("Upcoming Events", "/events"),
-      item("Browse Specializations", "/directory"),
     ],
   },
   {
@@ -164,6 +193,15 @@ export async function ensureSystemCmsMenus() {
     if (patched.changed) {
       await storage.cmsMenus.update(legalMenu.id, {
         items: patched.items,
+      });
+    }
+  }
+
+  for (const menu of await storage.cmsMenus.getAll()) {
+    const pruned = pruneObsoleteCorePlatformItems((menu.items as MenuItem[]) || []);
+    if (pruned.changed) {
+      await storage.cmsMenus.update(menu.id, {
+        items: pruned.items,
       });
     }
   }

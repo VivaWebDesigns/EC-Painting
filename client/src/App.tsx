@@ -15,8 +15,6 @@ import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features"
 const HomePage = lazy(() => import("@/features/public/home-page"));
 const AboutPage = lazy(() => import("@/features/public/about-page"));
 const ContactPage = lazy(() => import("@/features/public/contact-page"));
-const EventsPage = lazy(() => import("@/features/public/events-page"));
-const EventDetailPage = lazy(() => import("@/features/public/event-detail-page"));
 const JoinNetworkPage = lazy(() => import("@/features/public/join-network-page"));
 const CmsHybridPage = lazy(() =>
   import("@/features/public/cms-hybrid-page").then((module) => ({
@@ -29,9 +27,6 @@ const LoginPage = lazy(() => import("@/features/auth/login-page"));
 const ForgotPasswordPage = lazy(() => import("@/features/auth/forgot-password-page"));
 const ResetPasswordPage = lazy(() => import("@/features/auth/reset-password-page"));
 const AdminSetupPage = lazy(() => import("@/features/auth/admin-setup-page"));
-
-const DirectoryPage = lazy(() => import("@/features/directory/directory-page"));
-const TherapistProfilePage = lazy(() => import("@/features/directory/therapist-profile-page"));
 
 const TherapistDashboardPage = lazy(() => import("@/features/therapist/dashboard-page"));
 const ProfileEditPage = lazy(() => import("@/features/therapist/profile-edit-page"));
@@ -68,9 +63,6 @@ const CmsMenusPage = lazy(() => import("@/features/admin/cms/cms-menus-page"));
 const CmsSidebarsPage = lazy(() => import("@/features/admin/cms/cms-sidebars-page"));
 const SystemBackupsPage = lazy(() => import("@/features/admin/system-backups-page"));
 
-const InsightsPage = lazy(() => import("@/features/public/insights-page"));
-const InsightsPostPage = lazy(() => import("@/features/public/insights-post-page"));
-const RecordingArchivesPage = lazy(() => import("@/features/public/recording-archives-page"));
 const SearchResultsPage = lazy(() => import("@/features/public/search-results-page"));
 const LegalFallbackPage = lazy(() => import("@/features/public/legal-fallback-page"));
 
@@ -147,17 +139,17 @@ function Router() {
         <Route path="/404" component={() => <CmsHybridPage slug="404" fallback={<NotFound />} />} />
         <Route path="/preview/cms/:id" component={CmsPreviewPage} />
         <Route path="/join" component={() => <CmsHybridPage slug="join" fallback={<JoinNetworkPage />} />} />
-        <Route path="/events" component={() => siteFeatures.eventsEnabled ? <CmsHybridPage slug="events" fallback={<EventsPage />} /> : <NotFound />} />
-        <Route path="/events/:id" component={() => siteFeatures.eventsEnabled ? <EventDetailPage /> : <NotFound />} />
-        <Route path="/recordings" component={() => <CmsHybridPage slug="recordings" fallback={<RecordingArchivesPage />} />} />
+        <Route path="/events" component={NotFound} />
+        <Route path="/events/:id" component={NotFound} />
+        <Route path="/recordings" component={NotFound} />
         <Route path="/search" component={SearchResultsPage} />
-        <Route path="/insights" component={() => siteFeatures.blogEnabled ? <CmsHybridPage slug="insights" fallback={<InsightsPage />} /> : <NotFound />} />
-        <Route path="/insights/:slug" component={() => siteFeatures.blogEnabled ? <InsightsPostPage /> : <NotFound />} />
-        <Route path="/directory" component={() => siteFeatures.directoryEnabled ? <CmsHybridPage slug="directory" fallback={<DirectoryPage />} /> : <NotFound />} />
+        <Route path="/insights" component={NotFound} />
+        <Route path="/insights/:slug" component={NotFound} />
+        <Route path="/directory" component={NotFound} />
         <Route path="/privacy-policy" component={() => <CmsHybridPage slug="privacy-policy" fallback={<LegalFallbackPage title="Privacy Policy" subtitle="Review how Core Platform collects, uses, stores, and protects information across the website and related services." />} />} />
         <Route path="/terms-of-service" component={() => <CmsHybridPage slug="terms-of-service" fallback={<LegalFallbackPage title="Terms of Service" subtitle="Review the terms governing use of the Core Platform website, directory, events, and related services." />} />} />
         <Route path="/disclaimer" component={() => <CmsHybridPage slug="disclaimer" fallback={<LegalFallbackPage title="Disclaimer" subtitle="Review emergency guidance, directory vetting limitations, and important information about using the Core Platform directory and related services." />} />} />
-        <Route path="/directory/:id" component={() => siteFeatures.directoryEnabled ? <TherapistProfilePage /> : <NotFound />} />
+        <Route path="/directory/:id" component={NotFound} />
         <Route path="/reference/:token" component={ReferenceFormPage} />
         <Route path="/forms/:slug" component={StandaloneFormPage} />
         <Route path="/auth/login" component={LoginPage} />

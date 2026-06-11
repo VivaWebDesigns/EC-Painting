@@ -6,9 +6,9 @@ export interface SiteFeatures {
 }
 
 export const DEFAULT_SITE_FEATURES: SiteFeatures = {
-  directoryEnabled: true,
-  blogEnabled: true,
-  eventsEnabled: true,
+  directoryEnabled: false,
+  blogEnabled: false,
+  eventsEnabled: false,
   crmEnabled: true,
 };
 
