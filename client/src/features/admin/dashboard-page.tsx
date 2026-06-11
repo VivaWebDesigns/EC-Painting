@@ -23,32 +23,21 @@ import {
   CartesianGrid,
 } from "recharts";
 import {
-  UserCheck,
-  CreditCard,
-  Clock,
   Mail,
   Users,
-  CalendarDays,
   TrendingUp,
   Activity,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface DashboardStats {
-  totalTherapists: number;
-  activeSubscriptions: number;
-  pendingTherapists: number;
-  approvedTherapists: number;
   unreadMessages: number;
 }
 
 interface AnalyticsData {
   usersByRole: { role: string; count: number }[];
-  therapistsByStatus: { status: string; count: number }[];
-  subscriptionsByStatus: { status: string; count: number }[];
   registrationTrend: { month: string; count: number }[];
   contactsTrend: { month: string; count: number }[];
-  topSpecializations: { name: string; count: number }[];
   recentActivity: {
     id: string;
     userId: string;
@@ -58,8 +47,6 @@ interface AnalyticsData {
     userName: string;
   }[];
   totalUsers: number;
-  totalEvents: number;
-  upcomingEvents: number;
 }
 
 export default function AdminDashboardPage() {
@@ -86,10 +73,6 @@ const registrationConfig = {
 
 const contactsConfig = {
   count: { label: "Messages", color: "hsl(var(--chart-3))" },
-} satisfies ChartConfig;
-
-const specConfig = {
-  count: { label: "Mental Health Professionals", color: "hsl(var(--chart-2))" },
 } satisfies ChartConfig;
 
 const pieConfig = {
@@ -144,11 +127,7 @@ function DashboardContent() {
 
   const statCards = [
     { title: "Total Users", value: analytics?.totalUsers ?? 0, icon: Users, color: "text-blue-500" },
-    { title: "Total Mental Health Professionals", value: stats?.totalTherapists ?? 0, icon: UserCheck, color: "text-emerald-500" },
-    { title: "Active Subscriptions", value: stats?.activeSubscriptions ?? 0, icon: CreditCard, color: "text-violet-500" },
-    { title: "Pending Approvals", value: stats?.pendingTherapists ?? 0, icon: Clock, color: "text-amber-500" },
     { title: "Unread Messages", value: stats?.unreadMessages ?? 0, icon: Mail, color: "text-rose-500" },
-    { title: "Upcoming Events", value: analytics?.upcomingEvents ?? 0, icon: CalendarDays, color: "text-cyan-500" },
   ];
 
   const registrationData = (analytics?.registrationTrend ?? []).map((r) => ({
@@ -173,7 +152,7 @@ function DashboardContent() {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {statCards.map((card) => (
           <Card key={card.title} data-testid={`card-stat-${card.title.toLowerCase().replace(/\s+/g, "-")}`}>
             <CardContent className="pt-4 pb-3 px-4">
@@ -252,54 +231,7 @@ function DashboardContent() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card data-testid="card-therapist-status">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Mental Health Professional Status</CardTitle>
-            <CardDescription>Approval breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {(analytics?.therapistsByStatus ?? []).length > 0 ? (
-              <ChartContainer config={pieConfig} className="h-[200px] w-full">
-                <PieChart>
-                  <Pie
-                    data={analytics?.therapistsByStatus}
-                    dataKey="count"
-                    nameKey="status"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={75}
-                    innerRadius={40}
-                    paddingAngle={2}
-                    label={({ status, count }) => `${status} (${count})`}
-                    labelLine={false}
-                  >
-                    {(analytics?.therapistsByStatus ?? []).map((_entry, idx) => (
-                      <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent nameKey="status" />} />
-                </PieChart>
-              </ChartContainer>
-            ) : (
-              <div className="h-[200px] flex items-center justify-center text-muted-foreground text-sm">
-                No data
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2 mt-2 justify-center">
-              {(analytics?.therapistsByStatus ?? []).map((s, idx) => (
-                <Badge key={s.status} variant="outline" className="text-xs capitalize">
-                  <span
-                    className="w-2 h-2 rounded-full mr-1.5 inline-block"
-                    style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }}
-                  />
-                  {s.status}: {s.count}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card data-testid="card-user-roles">
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Users by Role</CardTitle>
@@ -344,88 +276,6 @@ function DashboardContent() {
                 </Badge>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="card-subscription-status">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Subscriptions</CardTitle>
-            <CardDescription>Status breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {(analytics?.subscriptionsByStatus ?? []).length > 0 ? (
-              <ChartContainer config={pieConfig} className="h-[200px] w-full">
-                <PieChart>
-                  <Pie
-                    data={analytics?.subscriptionsByStatus}
-                    dataKey="count"
-                    nameKey="status"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={75}
-                    innerRadius={40}
-                    paddingAngle={2}
-                    label={({ status, count }) => `${status} (${count})`}
-                    labelLine={false}
-                  >
-                    {(analytics?.subscriptionsByStatus ?? []).map((_entry, idx) => (
-                      <Cell key={idx} fill={PIE_COLORS[(idx + 2) % PIE_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent nameKey="status" />} />
-                </PieChart>
-              </ChartContainer>
-            ) : (
-              <div className="h-[200px] flex items-center justify-center text-muted-foreground text-sm">
-                No subscriptions yet
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2 mt-2 justify-center">
-              {(analytics?.subscriptionsByStatus ?? []).map((s, idx) => (
-                <Badge key={s.status} variant="outline" className="text-xs capitalize">
-                  <span
-                    className="w-2 h-2 rounded-full mr-1.5 inline-block"
-                    style={{ backgroundColor: PIE_COLORS[(idx + 2) % PIE_COLORS.length] }}
-                  />
-                  {s.status}: {s.count}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card data-testid="card-top-specializations">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Top Specializations</CardTitle>
-            <CardDescription>Most common mental health professional specializations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {(analytics?.topSpecializations ?? []).length > 0 ? (
-              <ChartContainer config={specConfig} className="h-[260px] w-full">
-                <BarChart
-                  data={analytics?.topSpecializations}
-                  layout="vertical"
-                  margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12 }} />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    width={140}
-                    tick={{ fontSize: 11 }}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ChartContainer>
-            ) : (
-              <div className="h-[260px] flex items-center justify-center text-muted-foreground text-sm">
-                No specialization data yet
-              </div>
-            )}
           </CardContent>
         </Card>
 
