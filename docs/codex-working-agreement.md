@@ -20,6 +20,12 @@ Codex should work directly on `main` and push directly to `main` unless explicit
 
 Do not create feature branches for normal Codex work. If Codex starts on another branch, finish or commit the work, fast-forward or merge it into `main`, push `main`, and leave the repository clean.
 
+## Domain Scope
+
+Do not bring up domain-name routing, current-domain status, or temporary domain issues unless the user explicitly asks about them.
+
+The future production domain is `ecpaintingcharlotte.com`; other domains are out of scope for normal project work.
+
 ## Exceptions
 
 Only skip commit or push if the user explicitly says not to commit, not to push, or to leave the worktree as-is.

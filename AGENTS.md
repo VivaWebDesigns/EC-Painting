@@ -25,6 +25,11 @@ These rules apply to every Codex session in this repository.
 - For frontend or build-impacting changes, run `npm run build`.
 - Report any verification command that could not be run.
 
+## Project Scope Notes
+
+- Do not bring up domain-name routing, current-domain status, or temporary domain issues unless the user explicitly asks about them.
+- The future production domain is `ecpaintingcharlotte.com`. Treat other domains as out of scope for normal project work.
+
 ## Local Guardrail
 
 - This repo uses `.githooks/pre-push` to block pushes when the worktree is dirty.
