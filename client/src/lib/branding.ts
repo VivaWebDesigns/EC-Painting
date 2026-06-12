@@ -61,7 +61,7 @@ export const BRANDING_FONT_OPTIONS: BrandingFontOption[] = [
 export const BRANDING_SANS_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) => option.category === "sans");
 export const BRANDING_SERIF_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) => option.category === "serif");
 
-export const BRAND_ASSET_VERSION = "20260612-logo-v2";
+export const BRAND_ASSET_VERSION = "20260612-logo-v3";
 
 export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
   frontendLogoUrl: "/img/593-ec-painting-logo-full-color.png",
