@@ -26,6 +26,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { UserProfileDialog } from "@/components/shared/user-profile-dialog";
 import { NotificationBell } from "@/components/shared/notification-bell";
 import { NavbarSearchPopover } from "@/components/layout/navbar-search-popover";
+import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
 const defaultNavLinks = [
@@ -136,7 +137,9 @@ export function Navbar() {
 
   const unreadNotifCount = useUnreadNotificationCount();
   const brandName = companyName?.trim() || "593 EC Painting";
-  const brandLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
+  const brandLogo = versionBrandAssetUrl(
+    frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png",
+  );
 
   return (
     <nav

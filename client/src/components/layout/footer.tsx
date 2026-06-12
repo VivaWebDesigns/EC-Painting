@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useBranding } from "@/components/shared/branding-provider";
+import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
 const defaultPlatformLinks = [
@@ -204,7 +205,7 @@ export function Footer() {
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
   const brandName = companyName?.trim() || "593 EC Painting";
-  const footerLogo = "/img/593-ec-painting-logo-footer.png";
+  const footerLogo = versionBrandAssetUrl("/img/593-ec-painting-logo-footer.png");
 
   return (
     <footer

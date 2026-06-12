@@ -1,5 +1,6 @@
 import { useBranding } from "@/components/shared/branding-provider";
 import { PublicFormRenderer } from "@/components/forms/public-form-renderer";
+import { versionBrandAssetUrl } from "@/lib/branding";
 import { useParams } from "wouter";
 
 export default function StandaloneFormPage() {
@@ -16,7 +17,7 @@ export default function StandaloneFormPage() {
         <div className="flex justify-center">
           {frontendLogoUrl ? (
             <img
-              src={frontendLogoUrl}
+              src={versionBrandAssetUrl(frontendLogoUrl)}
               alt={companyName || "Company logo"}
               className="max-h-20 w-auto object-contain"
             />

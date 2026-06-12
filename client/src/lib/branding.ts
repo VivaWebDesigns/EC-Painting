@@ -61,6 +61,8 @@ export const BRANDING_FONT_OPTIONS: BrandingFontOption[] = [
 export const BRANDING_SANS_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) => option.category === "sans");
 export const BRANDING_SERIF_FONT_OPTIONS = BRANDING_FONT_OPTIONS.filter((option) => option.category === "serif");
 
+export const BRAND_ASSET_VERSION = "20260612-logo-v2";
+
 export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
   frontendLogoUrl: "/img/593-ec-painting-logo-full-color.png",
   faviconUrl: "/favicon.ico",
@@ -89,6 +91,14 @@ export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
   secondaryTextColor: null,
   tertiaryTextColor: null,
 };
+
+export function versionBrandAssetUrl(url: string | null | undefined): string {
+  const trimmed = url?.trim() || "";
+  if (!trimmed) return "";
+
+  const separator = trimmed.includes("?") ? "&" : "?";
+  return `${trimmed}${separator}v=${BRAND_ASSET_VERSION}`;
+}
 
 export function fontFamilyForBrandingOption(value: string | null | undefined): string | null {
   if (!value) return null;

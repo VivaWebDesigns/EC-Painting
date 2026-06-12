@@ -5,6 +5,7 @@ import {
   DEFAULT_BRANDING_SETTINGS,
   fontFamilyForBrandingOption,
   hexToHslToken,
+  versionBrandAssetUrl,
   type BrandingSettings,
 } from "@/lib/branding";
 
@@ -272,7 +273,8 @@ export function BrandingProvider({ children }: { children: React.ReactNode }) {
   ]);
 
   useEffect(() => {
-    const faviconHref = branding.faviconUrl || "/favicon.ico";
+    const rawFaviconHref = branding.faviconUrl || "/favicon.ico";
+    const faviconHref = versionBrandAssetUrl(rawFaviconHref);
     let faviconEl = document.head.querySelector<HTMLLinkElement>('link[rel="icon"]');
 
     if (!faviconEl) {
@@ -282,9 +284,9 @@ export function BrandingProvider({ children }: { children: React.ReactNode }) {
     }
 
     faviconEl.setAttribute("href", faviconHref);
-    if (faviconHref.endsWith(".svg")) {
+    if (rawFaviconHref.endsWith(".svg")) {
       faviconEl.setAttribute("type", "image/svg+xml");
-    } else if (faviconHref.endsWith(".ico")) {
+    } else if (rawFaviconHref.endsWith(".ico")) {
       faviconEl.setAttribute("type", "image/x-icon");
     } else {
       faviconEl.setAttribute("type", "image/png");

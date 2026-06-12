@@ -31,6 +31,7 @@ import {
   Handshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { versionBrandAssetUrl } from "@/lib/branding";
 import { useAuth } from "@/hooks/use-auth";
 import { useBranding } from "@/components/shared/branding-provider";
 import { Badge } from "@/components/ui/badge";
@@ -296,7 +297,10 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const { frontendLogoUrl, companyName } = useBranding();
-  const adminLogo = frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png";
+  const adminLogo = versionBrandAssetUrl(
+    frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png",
+  );
+  const adminIconLogo = versionBrandAssetUrl("/img/593-ec-painting-icon.png");
   const adminBrandName = companyName?.trim() || "593 EC Painting";
   const { data: siteFeaturesData } = useQuery<SiteFeatures>({
     queryKey: ["/api/site-config"],
@@ -432,7 +436,7 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
             <div className="border-b border-[#0A83A5]/15 bg-[#F3F7FA] p-4">
               <div className="flex items-center gap-3" data-testid="text-admin-title">
                 <img
-                  src={collapsed ? "/img/593-ec-painting-icon.png" : adminLogo}
+                  src={collapsed ? adminIconLogo : adminLogo}
                   alt={adminBrandName}
                   className={cn(
                     "object-contain flex-shrink-0",
