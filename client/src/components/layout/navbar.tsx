@@ -29,10 +29,65 @@ import { NavbarSearchPopover } from "@/components/layout/navbar-search-popover";
 import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
-const defaultNavLinks = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/services" },
+const defaultServiceLinks = [
+  { label: "All Services", href: "/services" },
+  { label: "Interior Painting", href: "/interior-painting" },
+  { label: "Exterior Painting", href: "/exterior-painting" },
+  { label: "Cabinet Painting", href: "/cabinet-painting" },
+  { label: "Deck Staining", href: "/deck-staining" },
+  { label: "Fence Staining", href: "/fence-staining" },
+];
+
+const defaultLegalLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms of Service", href: "/terms-of-service" },
+  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "Sitemap", href: "/sitemap" },
+];
+
+const defaultCompanyLinks = [
   { label: "About", href: "/about" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Reviews", href: "/reviews" },
+  { label: "Contact", href: "/contact" },
+];
+
+function makeMenuItem(id: string, label: string, url: string, children: MenuItem[] = []): MenuItem {
+  return {
+    id,
+    label,
+    url,
+    openInNewTab: false,
+    children,
+  };
+}
+
+const defaultNavItems: MenuItem[] = [
+  makeMenuItem("default-home", "Home", "/"),
+  makeMenuItem(
+    "default-services",
+    "Services",
+    "/services",
+    defaultServiceLinks.map((link) =>
+      makeMenuItem(
+        `default-service-${link.href.replace(/[^a-z0-9]+/g, "-")}`,
+        link.label,
+        link.href,
+      ),
+    ),
+  ),
+  makeMenuItem("default-about", "About", "/about"),
+  makeMenuItem("default-gallery", "Gallery", "/gallery"),
+  makeMenuItem("default-reviews", "Reviews", "/reviews"),
+  makeMenuItem("default-contact", "Contact", "/contact"),
+  makeMenuItem(
+    "default-legal",
+    "Legal",
+    "/privacy-policy",
+    defaultLegalLinks.map((link) =>
+      makeMenuItem(`default-legal-${link.href.replace(/[^a-z0-9]+/g, "-")}`, link.label, link.href),
+    ),
+  ),
 ];
 
 const navButtonClass =
@@ -49,6 +104,46 @@ function flattenItems(items: MenuItem[], depth = 0): { item: MenuItem; depth: nu
     }
   }
   return result;
+}
+
+function collectInternalUrls(items: MenuItem[], urls = new Set<string>()) {
+  for (const item of items) {
+    if (!item.openInNewTab && item.url.startsWith("/")) {
+      urls.add(item.url);
+    }
+    if (item.children?.length > 0) {
+      collectInternalUrls(item.children, urls);
+    }
+  }
+  return urls;
+}
+
+function missingFooterMenuLinks(menu: CmsMenu | undefined, existingUrls: Set<string>) {
+  if (!menu?.items) return [];
+
+  const links: MenuItem[] = [];
+  for (const item of flattenItems((menu.items as MenuItem[]) || []).map(({ item }) => item)) {
+    if (item.openInNewTab || !item.url.startsWith("/") || existingUrls.has(item.url)) continue;
+    existingUrls.add(item.url);
+    links.push({ ...item, children: [] });
+  }
+
+  return links;
+}
+
+function missingDefaultMenuLinks(
+  id: string,
+  label: string,
+  links: { label: string; href: string }[],
+  existingUrls: Set<string>,
+) {
+  const children = links.flatMap((link) => {
+    if (existingUrls.has(link.href)) return [];
+    existingUrls.add(link.href);
+    return [makeMenuItem(`${id}-${link.href.replace(/[^a-z0-9]+/g, "-")}`, link.label, link.href)];
+  });
+
+  return children.length > 0 ? makeMenuItem(id, label, children[0].url, children) : null;
 }
 
 function isActiveRecursive(items: MenuItem[], currentPath: string): boolean {
@@ -130,9 +225,54 @@ export function Navbar() {
 
   const dynamicItems = useMemo(() => {
     const headerMenu = publicMenus?.main_navigation ?? publicMenus?.header;
-    if (!headerMenu?.items) return null;
+    if (!headerMenu?.items) return defaultNavItems;
     const items = headerMenu.items as MenuItem[];
-    return items.length > 0 ? items : null;
+    if (items.length === 0) return defaultNavItems;
+
+    const existingUrls = collectInternalUrls(items);
+    const footerMenus = [
+      publicMenus?.footer_platform,
+      publicMenus?.footer_professionals,
+      publicMenus?.footer_resources,
+      publicMenus?.footer_company,
+      publicMenus?.footer_legal,
+    ];
+    const supplementalGroups = footerMenus
+      .map((menu) => {
+        const links = missingFooterMenuLinks(menu, existingUrls);
+        if (!menu || links.length === 0) return null;
+        return makeMenuItem(`header-supplement-${menu.location}`, menu.name, links[0].url, links);
+      })
+      .filter((item): item is MenuItem => Boolean(item));
+    const fallbackSupplementalGroups = [
+      publicMenus?.footer_platform
+        ? null
+        : missingDefaultMenuLinks(
+            "header-supplement-services",
+            "Services",
+            defaultServiceLinks,
+            existingUrls,
+          ),
+      publicMenus?.footer_professionals
+        ? null
+        : missingDefaultMenuLinks(
+            "header-supplement-company",
+            "Company",
+            defaultCompanyLinks,
+            existingUrls,
+          ),
+      publicMenus?.footer_legal
+        ? null
+        : missingDefaultMenuLinks(
+            "header-supplement-legal",
+            "Legal",
+            defaultLegalLinks,
+            existingUrls,
+          ),
+    ].filter((item): item is MenuItem => Boolean(item));
+
+    const supplements = [...supplementalGroups, ...fallbackSupplementalGroups];
+    return supplements.length > 0 ? [...items, ...supplements] : items;
   }, [publicMenus]);
 
   const unreadNotifCount = useUnreadNotificationCount();
@@ -152,58 +292,31 @@ export function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {dynamicItems ? (
-            dynamicItems.map((item) =>
-              item.children && item.children.length > 0 ? (
-                <DynamicDropdown key={item.id} item={item} location={location} />
-              ) : item.openInNewTab ? (
-                <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Button
-                    variant="ghost"
-                    className={navButtonClass}
-                    data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                  >
-                    {item.label}
-                  </Button>
-                </a>
-              ) : (
-                <Link key={item.id} href={item.url}>
-                  <Button
-                    variant="ghost"
-                    className={location === item.url ? activeNavButtonClass : navButtonClass}
-                    data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                    aria-current={location === item.url ? "page" : undefined}
-                  >
-                    {item.label}
-                  </Button>
-                </Link>
-              ),
-            )
-          ) : (
-            <>
-              {defaultNavLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <Button
-                    variant="ghost"
-                    className={location === link.href ? activeNavButtonClass : navButtonClass}
-                    data-testid={`link-nav-${link.label.toLowerCase()}`}
-                    aria-current={location === link.href ? "page" : undefined}
-                  >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
-              <Link href="/contact">
+          {dynamicItems.map((item) =>
+            item.children && item.children.length > 0 ? (
+              <DynamicDropdown key={item.id} item={item} location={location} />
+            ) : item.openInNewTab ? (
+              <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="ghost"
-                  className={location === "/contact" ? activeNavButtonClass : navButtonClass}
-                  data-testid="link-nav-contact"
-                  aria-current={location === "/contact" ? "page" : undefined}
+                  className={navButtonClass}
+                  data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                 >
-                  Contact
+                  {item.label}
+                </Button>
+              </a>
+            ) : (
+              <Link key={item.id} href={item.url}>
+                <Button
+                  variant="ghost"
+                  className={location === item.url ? activeNavButtonClass : navButtonClass}
+                  data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                  aria-current={location === item.url ? "page" : undefined}
+                >
+                  {item.label}
                 </Button>
               </Link>
-            </>
+            ),
           )}
         </div>
 
@@ -309,73 +422,46 @@ export function Navbar() {
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-1 mt-6">
-                {dynamicItems ? (
-                  flattenItems(dynamicItems).map(({ item, depth }) =>
-                    item.children && item.children.length > 0 ? (
-                      <p
-                        key={item.id}
-                        className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider"
-                        style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
-                        data-testid={`text-mobile-group-${item.id}`}
-                      >
-                        {item.label}
-                      </p>
-                    ) : item.openInNewTab ? (
-                      <a
-                        key={item.id}
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                          style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
-                          data-testid={`link-mobile-${item.id}`}
-                        >
-                          {item.label}
-                        </Button>
-                      </a>
-                    ) : (
-                      <Link key={item.id} href={item.url} onClick={() => setMobileOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className={`w-full justify-start ${location === item.url ? "toggle-elevate toggle-elevated" : ""}`}
-                          style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
-                          data-testid={`link-mobile-${item.id}`}
-                          aria-current={location === item.url ? "page" : undefined}
-                        >
-                          {item.label}
-                        </Button>
-                      </Link>
-                    ),
-                  )
-                ) : (
-                  <>
-                    {defaultNavLinks.map((link) => (
-                      <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className={`w-full justify-start ${location === link.href ? "toggle-elevate toggle-elevated" : ""}`}
-                          data-testid={`link-mobile-${link.label.toLowerCase()}`}
-                          aria-current={location === link.href ? "page" : undefined}
-                        >
-                          {link.label}
-                        </Button>
-                      </Link>
-                    ))}
-                    <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                {flattenItems(dynamicItems).map(({ item, depth }) =>
+                  item.children && item.children.length > 0 ? (
+                    <p
+                      key={item.id}
+                      className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                      style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
+                      data-testid={`text-mobile-group-${item.id}`}
+                    >
+                      {item.label}
+                    </p>
+                  ) : item.openInNewTab ? (
+                    <a
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileOpen(false)}
+                    >
                       <Button
                         variant="ghost"
-                        className={`w-full justify-start ${location === "/contact" ? "toggle-elevate toggle-elevated" : ""}`}
-                        data-testid="link-mobile-contact"
-                        aria-current={location === "/contact" ? "page" : undefined}
+                        className="w-full justify-start"
+                        style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
+                        data-testid={`link-mobile-${item.id}`}
                       >
-                        Contact
+                        {item.label}
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link key={item.id} href={item.url} onClick={() => setMobileOpen(false)}>
+                      <Button
+                        variant="ghost"
+                        className={`w-full justify-start ${location === item.url ? "toggle-elevate toggle-elevated" : ""}`}
+                        style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
+                        data-testid={`link-mobile-${item.id}`}
+                        aria-current={location === item.url ? "page" : undefined}
+                      >
+                        {item.label}
                       </Button>
                     </Link>
-                  </>
+                  ),
                 )}
 
                 <div className="my-3 border-t" />
