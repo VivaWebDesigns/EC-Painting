@@ -2,30 +2,18 @@ import { useState, useMemo } from "react";
 import { Link, useLocation } from "wouter";
 import {
   Menu,
-  User,
-  LogOut,
-  LayoutDashboard,
-  Shield,
-  UserCog,
   ChevronDown,
-  Bell,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useUnreadNotificationCount } from "@/hooks/use-unread-notification-count";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useBranding } from "@/components/shared/branding-provider";
-import { useAuth } from "@/hooks/use-auth";
-import { UserProfileDialog } from "@/components/shared/user-profile-dialog";
-import { NotificationBell } from "@/components/shared/notification-bell";
-import { NavbarSearchPopover } from "@/components/layout/navbar-search-popover";
 import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
 
@@ -36,13 +24,6 @@ const defaultServiceLinks = [
   { label: "Cabinet Painting", href: "/cabinet-painting" },
   { label: "Deck Staining", href: "/deck-staining" },
   { label: "Fence Staining", href: "/fence-staining" },
-];
-
-const defaultLegalLinks = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Terms of Service", href: "/terms-of-service" },
-  { label: "Disclaimer", href: "/disclaimer" },
-  { label: "Sitemap", href: "/sitemap" },
 ];
 
 const defaultCompanyLinks = [
@@ -80,14 +61,6 @@ const defaultNavItems: MenuItem[] = [
   makeMenuItem("default-gallery", "Gallery", "/gallery"),
   makeMenuItem("default-reviews", "Reviews", "/reviews"),
   makeMenuItem("default-contact", "Contact", "/contact"),
-  makeMenuItem(
-    "default-legal",
-    "Legal",
-    "/privacy-policy",
-    defaultLegalLinks.map((link) =>
-      makeMenuItem(`default-legal-${link.href.replace(/[^a-z0-9]+/g, "-")}`, link.label, link.href),
-    ),
-  ),
 ];
 
 const navButtonClass =
@@ -116,6 +89,27 @@ function collectInternalUrls(items: MenuItem[], urls = new Set<string>()) {
     }
   }
   return urls;
+}
+
+function isLegalMenuItem(item: MenuItem) {
+  return (
+    item.id.toLowerCase().includes("legal") ||
+    item.label.trim().toLowerCase() === "legal" ||
+    ["/privacy-policy", "/terms-of-service", "/disclaimer"].includes(item.url)
+  );
+}
+
+function removeLegalMenuItems(items: MenuItem[]): MenuItem[] {
+  return items.flatMap((item) => {
+    if (isLegalMenuItem(item)) return [];
+
+    return [
+      {
+        ...item,
+        children: item.children ? removeLegalMenuItems(item.children) : [],
+      },
+    ];
+  });
 }
 
 function missingFooterMenuLinks(menu: CmsMenu | undefined, existingUrls: Set<string>) {
@@ -207,11 +201,8 @@ function DynamicDropdown({ item, location: currentPath }: { item: MenuItem; loca
 
 export function Navbar() {
   const [location] = useLocation();
-  const { user, isLoading, logout, isAdmin, isTherapist } = useAuth();
   const { frontendLogoUrl, companyName } = useBranding();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
 
   const { data: publicMenus } = useQuery<Partial<Record<PublicMenuLocation, CmsMenu>>>({
     queryKey: ["/api/cms/menus"],
@@ -226,7 +217,7 @@ export function Navbar() {
   const dynamicItems = useMemo(() => {
     const headerMenu = publicMenus?.main_navigation ?? publicMenus?.header;
     if (!headerMenu?.items) return defaultNavItems;
-    const items = headerMenu.items as MenuItem[];
+    const items = removeLegalMenuItems(headerMenu.items as MenuItem[]);
     if (items.length === 0) return defaultNavItems;
 
     const existingUrls = collectInternalUrls(items);
@@ -235,7 +226,6 @@ export function Navbar() {
       publicMenus?.footer_professionals,
       publicMenus?.footer_resources,
       publicMenus?.footer_company,
-      publicMenus?.footer_legal,
     ];
     const supplementalGroups = footerMenus
       .map((menu) => {
@@ -261,21 +251,12 @@ export function Navbar() {
             defaultCompanyLinks,
             existingUrls,
           ),
-      publicMenus?.footer_legal
-        ? null
-        : missingDefaultMenuLinks(
-            "header-supplement-legal",
-            "Legal",
-            defaultLegalLinks,
-            existingUrls,
-          ),
     ].filter((item): item is MenuItem => Boolean(item));
 
     const supplements = [...supplementalGroups, ...fallbackSupplementalGroups];
     return supplements.length > 0 ? [...items, ...supplements] : items;
   }, [publicMenus]);
 
-  const unreadNotifCount = useUnreadNotificationCount();
   const brandName = companyName?.trim() || "593 EC Painting";
   const brandLogo = versionBrandAssetUrl(
     frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png",
@@ -317,94 +298,6 @@ export function Navbar() {
                 </Button>
               </Link>
             ),
-          )}
-        </div>
-
-        <div className="hidden items-center gap-3 md:flex">
-          <NavbarSearchPopover />
-          {isLoading ? null : user ? (
-            <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="relative h-8 w-8 rounded-full border border-border bg-background flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-ring hover:ring-offset-1 transition-shadow"
-                    data-testid="button-user-menu"
-                  >
-                    {user.profileImageUrl ? (
-                      <img
-                        src={user.profileImageUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <User className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {unreadNotifCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1 leading-none">
-                        {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
-                      </span>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="z-[1000]">
-                  {isTherapist && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/therapist" data-testid="link-therapist-dashboard">
-                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Mental Health Professional Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin" data-testid="link-admin-dashboard">
-                        <Shield className="mr-2 h-4 w-4" />
-                        Admin Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => setNotifOpen(true)}
-                    data-testid="button-notifications-menu"
-                  >
-                    <Bell className="mr-2 h-4 w-4" />
-                    Notifications
-                    {unreadNotifCount > 0 && (
-                      <span className="ml-auto bg-accent text-accent-foreground text-xs font-semibold rounded-full h-5 min-w-5 flex items-center justify-center px-1.5">
-                        {unreadNotifCount}
-                      </span>
-                    )}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => setProfileOpen(true)}
-                    data-testid="button-my-profile"
-                  >
-                    <UserCog className="mr-2 h-4 w-4" />
-                    My Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => logout.mutate()} data-testid="button-logout">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
-          ) : (
-            <>
-              <Link href="/auth/login">
-                <Button
-                  variant="ghost"
-                  className="font-semibold text-foreground/70 hover:text-foreground"
-                  data-testid="link-login"
-                >
-                  Login
-                </Button>
-              </Link>
-            </>
           )}
         </div>
 
@@ -464,103 +357,11 @@ export function Navbar() {
                   ),
                 )}
 
-                <div className="my-3 border-t" />
-
-                {isLoading ? null : user ? (
-                  <>
-                    <p className="px-4 py-2 text-sm text-muted-foreground">
-                      Signed in as {user.firstName} {user.lastName}
-                    </p>
-                    {isTherapist && (
-                      <Link href="/therapist" onClick={() => setMobileOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                          data-testid="link-mobile-therapist"
-                        >
-                          <LayoutDashboard className="mr-2 h-4 w-4" />
-                          Mental Health Professional Dashboard
-                        </Button>
-                      </Link>
-                    )}
-                    {isAdmin && (
-                      <Link href="/admin" onClick={() => setMobileOpen(false)}>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                          data-testid="link-mobile-admin"
-                        >
-                          <Shield className="mr-2 h-4 w-4" />
-                          Admin Dashboard
-                        </Button>
-                      </Link>
-                    )}
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        setNotifOpen(true);
-                        setMobileOpen(false);
-                      }}
-                      data-testid="button-mobile-notifications"
-                    >
-                      <Bell className="mr-2 h-4 w-4" />
-                      Notifications
-                      {unreadNotifCount > 0 && (
-                        <span className="ml-auto bg-accent text-accent-foreground text-xs font-semibold rounded-full h-5 min-w-5 flex items-center justify-center px-1.5">
-                          {unreadNotifCount}
-                        </span>
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        setProfileOpen(true);
-                        setMobileOpen(false);
-                      }}
-                      data-testid="button-mobile-profile"
-                    >
-                      <UserCog className="mr-2 h-4 w-4" />
-                      My Profile
-                    </Button>
-                    <div className="my-1 border-t" />
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        logout.mutate();
-                        setMobileOpen(false);
-                      }}
-                      data-testid="button-mobile-logout"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/login" onClick={() => setMobileOpen(false)}>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        data-testid="link-mobile-login"
-                      >
-                        Login
-                      </Button>
-                    </Link>
-                  </>
-                )}
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
-
-      {user && (
-        <NotificationBell open={notifOpen} onOpenChange={setNotifOpen} showTrigger={false} />
-      )}
-      <UserProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
     </nav>
   );
 }
