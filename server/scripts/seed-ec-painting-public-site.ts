@@ -180,7 +180,7 @@ function hero({
     ctaSecondaryLink: PHONE_TEL,
     backgroundImageUrl: image || "/img/gallery/exterior-home.webp",
     overlayColor: "#000000",
-    overlayOpacity: 42,
+    overlayOpacity: 30,
     layout: "stacked",
     minHeight: "580",
   });
