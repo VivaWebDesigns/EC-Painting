@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import {
   ArrowRight,
-  BadgeCheck,
   CheckCircle,
   Clock,
   ShieldCheck,
@@ -105,20 +104,6 @@ export default function AboutPage() {
                 alt="Esau and Sandra with their family outdoors"
                 className="aspect-[4/3] w-full object-cover"
               />
-            </div>
-            <div className="absolute -bottom-6 left-4 max-w-[320px] rounded-md border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.16)] sm:left-8">
-              <div className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <BadgeCheck className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="font-semibold text-slate-900">100% Satisfaction</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-500">
-                    We walk every project with you and handle touch-ups before we
-                    call the job complete.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
