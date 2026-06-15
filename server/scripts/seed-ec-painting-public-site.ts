@@ -3634,6 +3634,11 @@ async function upsertMenu(data: InsertCmsMenu & { location: StandardMenuLocation
   await storage.cmsMenus.create(data);
 }
 
+async function deleteMenuByLocation(location: StandardMenuLocation) {
+  const existing = await storage.cmsMenus.getByLocation(location);
+  if (existing) await storage.cmsMenus.delete(existing.id);
+}
+
 async function seedMenus() {
   const serviceItems = services.map((service) => item(service.navTitle, service.path));
   await upsertMenu({
@@ -3659,17 +3664,7 @@ async function seedMenus() {
       item("Contact", "/contact"),
     ],
   });
-  await upsertMenu({
-    name: "Service Area",
-    location: "footer_resources",
-    items: [
-      item("Charlotte", "/contact"),
-      item("Matthews", "/contact"),
-      item("Mint Hill", "/contact"),
-      item("Fort Mill", "/contact"),
-      item("Rock Hill", "/contact"),
-    ],
-  });
+  await deleteMenuByLocation("footer_resources");
   await upsertMenu({
     name: "Connect",
     location: "footer_company",
