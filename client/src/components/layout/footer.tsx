@@ -120,6 +120,10 @@ function flattenMenuLinks(items: MenuItem[]): MenuItem[] {
   return flattenFooterItems(items).map(({ item }) => item);
 }
 
+function isServiceAreaMenu(menu: CmsMenu) {
+  return menu.location === "footer_resources" || menu.name.trim().toLowerCase() === "service area";
+}
+
 function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
   const links = flattenMenuLinks((menu.items as MenuItem[]) || []);
   if (links.length === 0) return null;
@@ -183,7 +187,9 @@ export function Footer() {
         publicMenus?.footer_resources,
         publicMenus?.footer_company,
       ].filter((menu): menu is CmsMenu =>
-        Boolean(menu && Array.isArray(menu.items) && menu.items.length > 0),
+        Boolean(
+          menu && !isServiceAreaMenu(menu) && Array.isArray(menu.items) && menu.items.length > 0,
+        ),
       ),
     [publicMenus],
   );
