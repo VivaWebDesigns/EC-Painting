@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/page-layout";
 import { useSeo } from "@/hooks/use-seo";
 
-const ABOUT_IMAGE_URL = "/img/about-family-placeholder.jpg";
+const ABOUT_IMAGE_URL = "/img/about-family.webp";
 
 const stats = [
   { value: "5+", label: "Years Serving Charlotte" },
@@ -102,8 +102,8 @@ export default function AboutPage() {
             <div className="overflow-hidden rounded-lg shadow-[0_22px_55px_rgba(15,23,42,0.16)]">
               <img
                 src={ABOUT_IMAGE_URL}
-                alt="Placeholder family photo for 593 EC Painting"
-                className="aspect-[1.12/1] w-full object-cover"
+                alt="Esau and Sandra with their family outdoors"
+                className="aspect-[4/3] w-full object-cover"
               />
             </div>
             <div className="absolute -bottom-6 left-4 max-w-[320px] rounded-md border border-slate-200 bg-white p-5 shadow-[0_14px_35px_rgba(15,23,42,0.16)] sm:left-8">
