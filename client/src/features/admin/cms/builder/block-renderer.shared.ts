@@ -68,6 +68,17 @@ const LEGACY_CMS_ASSET_MAP: Record<string, string> = {
   "/images/hero-therapy-session.png": "/images/hero-therapy-session-1920w.webp",
 };
 
+const SERVICE_HERO_ASSET_VERSION = "20260615-service-heroes";
+
+function versionServiceHeroAssetUrl(url: string): string {
+  if (!url.startsWith("/img/services/")) {
+    return url;
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}v=${SERVICE_HERO_ASSET_VERSION}`;
+}
+
 export function resolveCmsAssetUrl(url: string): string {
-  return LEGACY_CMS_ASSET_MAP[url] ?? url;
+  return versionServiceHeroAssetUrl(LEGACY_CMS_ASSET_MAP[url] ?? url);
 }
