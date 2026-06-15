@@ -1373,41 +1373,6 @@ const galleryImages: GalleryImage[] = [
     "Horizontal Fence Staining",
     "Matthews, NC",
   ),
-  galleryItem(
-    "Commercial",
-    "ChatGPT_Image_Feb_20__2026__10_09_51_AM_1771600212443-CzQiJfRF.webp",
-    "Freshly painted retail strip center with cream stucco and black trim",
-    "Retail Center Painting",
-    "South Charlotte",
-  ),
-  galleryItem(
-    "Commercial",
-    "ChatGPT_Image_Feb_20__2026__10_09_46_AM_1771600212444-CNgelwC2.webp",
-    "Green painted brick warehouse building with industrial windows",
-    "Warehouse Exterior",
-    "NoDa, Charlotte",
-  ),
-  galleryItem(
-    "Commercial",
-    "ChatGPT_Image_Feb_20__2026__10_09_31_AM_1771600212444-D4FXa8Ap.webp",
-    "Professional office building with tan exterior and white columns",
-    "Office Building",
-    "Ballantyne, Charlotte",
-  ),
-  galleryItem(
-    "Commercial",
-    "ChatGPT_Image_Feb_20__2026__10_09_28_AM_1771600212444-atarbJPv.webp",
-    "Restaurant exterior with warm orange stucco and outdoor patio",
-    "Restaurant Repaint",
-    "Huntersville, NC",
-  ),
-  galleryItem(
-    "Commercial",
-    "ChatGPT_Image_Feb_20__2026__10_09_24_AM_1771600212445-SfR0jfmA.webp",
-    "Modern commercial building with gray stucco and large windows",
-    "Commercial Office",
-    "South End, Charlotte",
-  ),
 ];
 
 const galleryImageGroups: Record<string, GalleryImage[]> = {
