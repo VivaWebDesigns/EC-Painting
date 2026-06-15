@@ -3665,15 +3665,7 @@ async function seedMenus() {
     ],
   });
   await deleteMenuByLocation("footer_resources");
-  await upsertMenu({
-    name: "Connect",
-    location: "footer_company",
-    items: [
-      item("Facebook", FACEBOOK_URL),
-      item("Instagram", INSTAGRAM_URL),
-      item("Google Reviews", GOOGLE_BUSINESS_URL),
-    ],
-  });
+  await deleteMenuByLocation("footer_company");
   await upsertMenu({
     name: "Legal",
     location: "footer_legal",

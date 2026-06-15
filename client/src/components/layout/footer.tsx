@@ -1,9 +1,13 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { SiFacebook, SiInstagram } from "react-icons/si";
 import { useBranding } from "@/components/shared/branding-provider";
 import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
+
+const FACEBOOK_URL = "https://www.facebook.com/ec.painting.3/";
+const INSTAGRAM_URL = "https://www.instagram.com/593ecpainting/";
 
 const defaultPlatformLinks = [
   { href: "/services", label: "All Services", testId: "link-footer-services" },
@@ -120,8 +124,9 @@ function flattenMenuLinks(items: MenuItem[]): MenuItem[] {
   return flattenFooterItems(items).map(({ item }) => item);
 }
 
-function isServiceAreaMenu(menu: CmsMenu) {
-  return menu.location === "footer_resources" || menu.name.trim().toLowerCase() === "service area";
+function isHiddenFooterMenu(menu: CmsMenu) {
+  const name = menu.name.trim().toLowerCase();
+  return menu.location === "footer_resources" || name === "service area" || name === "connect";
 }
 
 function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
@@ -188,7 +193,7 @@ export function Footer() {
         publicMenus?.footer_company,
       ].filter((menu): menu is CmsMenu =>
         Boolean(
-          menu && !isServiceAreaMenu(menu) && Array.isArray(menu.items) && menu.items.length > 0,
+          menu && !isHiddenFooterMenu(menu) && Array.isArray(menu.items) && menu.items.length > 0,
         ),
       ),
     [publicMenus],
@@ -232,6 +237,28 @@ export function Footer() {
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
               Professional painting for interiors, exteriors, cabinets, decks, and fences.
             </p>
+            <div className="mt-5 flex items-center gap-3">
+              <a
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-slate-300/85 transition-colors hover:border-white/35 hover:text-white focus-visible:border-white/50 focus-visible:text-white"
+                data-testid="link-footer-facebook"
+              >
+                <SiFacebook className="h-4 w-4" />
+              </a>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-slate-300/85 transition-colors hover:border-white/35 hover:text-white focus-visible:border-white/50 focus-visible:text-white"
+                data-testid="link-footer-instagram"
+              >
+                <SiInstagram className="h-4 w-4" />
+              </a>
+            </div>
           </div>
 
           {useStandardFooterMenus ? (
