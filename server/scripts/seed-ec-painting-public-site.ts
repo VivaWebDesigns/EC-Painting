@@ -1300,7 +1300,7 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Cabinets",
-    "claude-06-green-kitchen.webp",
+    "claude-06-green-kitchen-20260616.webp",
     "Green kitchen cabinets with painted shelving and trim",
     "Green Cabinet Painting",
     "Charlotte Area",
