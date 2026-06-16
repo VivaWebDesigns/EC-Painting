@@ -2148,7 +2148,7 @@ const spokePages: SpokePage[] = [
     heroTitle: "Hardie Plank Painting in Charlotte, NC",
     heroSubtitle:
       "Specialized exterior painting for Hardie plank and fiber cement siding — the most common siding on newer Charlotte homes. Backed by a 3-year warranty.",
-    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__09_02_19_AM_1771596640069-D8btR19W.webp",
+    heroImage: "/img/services/hardie-plank-painting.webp",
     sections: [
       {
         type: "intro",
