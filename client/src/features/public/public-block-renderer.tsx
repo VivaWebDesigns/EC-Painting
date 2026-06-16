@@ -770,7 +770,7 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
 
   const renderCard = (item: TestimonialItem, i: number) =>
     isGoogleCarousel ? (
-      <Card key={i} className="rounded-none border-0 bg-white shadow-none">
+      <Card key={i} className="rounded-lg border-none bg-white shadow-lg">
         <CardContent className="pt-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex text-yellow-400">
@@ -840,14 +840,7 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
             >
               <CarouselContent className="-ml-6">
                 {items.map((item, i) => (
-                  <CarouselItem
-                    key={i}
-                    className={
-                      isGoogleCarousel
-                        ? "pl-6 basis-full md:basis-1/2 md:border-r md:border-slate-100 last:border-r-0"
-                        : "pl-6 basis-full md:basis-1/2"
-                    }
-                  >
+                  <CarouselItem key={i} className="pl-6 basis-full md:basis-1/2">
                     {renderCard(item, i)}
                   </CarouselItem>
                 ))}
