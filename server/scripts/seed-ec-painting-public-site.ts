@@ -2666,7 +2666,7 @@ function servicesContent() {
         headline: "Professional Painting Services",
         subheadline:
           "Interior, exterior, cabinet, deck, and fence painting services built around careful prep and clean results.",
-        image: "/img/gallery/exterior-home.webp",
+        image: "/img/services/services.webp",
       }),
       cards("", "", [
         {
