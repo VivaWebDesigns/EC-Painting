@@ -452,6 +452,23 @@ function RouteAdminModeManager() {
   return null;
 }
 
+function RouteTitleManager() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const pathname = location.split(/[?#]/)[0] || "/";
+    if (pathname.startsWith("/admin")) {
+      document.title = "593 EC Painting Admin";
+    } else if (document.title === "593 EC Painting Admin") {
+      document.title = "593 EC Painting";
+    }
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -460,6 +477,7 @@ function App() {
           <Toaster />
           <SetupGuard>
             <RouteAdminModeManager />
+            <RouteTitleManager />
             <RouteScrollManager />
             <Router />
             <CookieConsentBanner />
