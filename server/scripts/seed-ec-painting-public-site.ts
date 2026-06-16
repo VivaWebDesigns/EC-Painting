@@ -1791,7 +1791,7 @@ const spokePages: SpokePage[] = [
     heroTitle: "Wallpaper Removal in Charlotte, NC",
     heroSubtitle:
       "Steam, scrape, repair, and repaint — clean wallpaper removal that leaves you with smooth walls, not a worse problem than you started with.",
-    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__08_44_03_AM_1771595655139-BZ7K6keA.webp",
+    heroImage: "/img/services/wallpaper-removal.webp",
     sections: [
       {
         type: "intro",
