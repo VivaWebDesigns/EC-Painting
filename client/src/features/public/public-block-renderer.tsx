@@ -684,13 +684,15 @@ type TestimonialItem = {
   date?: string;
   reviewCount?: string;
   source?: string;
+  sourceIcon?: string;
+  rating?: number;
 };
 
 function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
+  const variant = str(props.variant);
   const items = arr<TestimonialItem>(props.items);
-  const isGoogleReviews = str(props.variant) === "google-reviews";
-  const shouldCarousel = items.length > (isGoogleReviews ? 2 : 3);
-  const [googleReviewIndex, setGoogleReviewIndex] = useState(0);
+  const isGoogleCarousel = variant === "google-carousel" || variant === "google-reviews";
+  const shouldCarousel = items.length > (isGoogleCarousel ? 2 : 3);
 
   const renderStars = (sizeClass = "h-4 w-4") => (
     <div className="flex gap-0.5 text-amber-400" aria-label="5 star review">
@@ -701,62 +703,67 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   );
 
   const GoogleMark = () => (
-    <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5 shrink-0">
       <path
         fill="#4285F4"
-        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+        d="M44.5 20H24v8.5h11.8C34.7 34 30 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l6-6C34.8 4.9 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.8 0 20.5-7.8 20.5-21 0-1.4-.1-2.7-.3-4Z"
       />
       <path
         fill="#34A853"
-        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+        d="M6.1 14.1 13.1 19.2C15 14.3 19.2 11 24 11c3.3 0 6.3 1.2 8.6 3.3l6-6C34.8 4.9 29.6 3 24 3 16.1 3 9.2 7.5 5.7 14Z"
       />
       <path
         fill="#FBBC05"
-        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+        d="M24 45c5.5 0 10.3-1.8 14-5l-6.5-5.4C29.5 36.1 26.9 37 24 37c-5.9 0-10.9-4-12.6-9.4l-7.1 5.5C7.8 40.1 15.2 45 24 45Z"
       />
       <path
         fill="#EA4335"
-        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+        d="M11.4 27.6A13 13 0 0 1 11 24c0-1.3.2-2.6.6-3.8l-7.3-5.6A21 21 0 0 0 3 24c0 3.3.8 6.4 2.2 9.1Z"
       />
     </svg>
   );
 
-  const renderGoogleCard = (item: TestimonialItem, i: number) => {
-    const footerMeta = [item.reviewCount, "Customer", item.source || "Google review"].filter(Boolean);
+  const SourceBadge = ({ item }: { item: TestimonialItem }) => {
+    const source = item.source || "Google";
+    const showGoogleIcon = (item.sourceIcon || source).toLowerCase() === "google";
 
     return (
-      <Card key={i} className="rounded-md border-0 bg-white shadow-none">
-        <CardContent className="px-6 py-7 sm:px-8">
-          <div className="mb-5 flex items-start justify-between gap-4">
-            {renderStars()}
-            <div className="flex items-center gap-2 text-xs font-medium text-primary">
-              <GoogleMark />
-              {item.date && (
-                <>
-                  <span className="text-muted-foreground">·</span>
-                  <span>{item.date}</span>
-                </>
-              )}
-            </div>
-          </div>
-          <p className="mb-7 text-[15px] italic leading-8 text-slate-800">"{item.quote}"</p>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-sm font-medium text-primary">{item.name?.[0] ?? "?"}</span>
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
-              <p className="text-xs text-muted-foreground">{footerMeta.join(" · ")}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+        {showGoogleIcon ? <GoogleMark /> : <span>{source}</span>}
+        {item.date ? <span className="font-medium text-[#1a8ead]">· {item.date}</span> : null}
+      </div>
     );
   };
 
   const renderCard = (item: TestimonialItem, i: number) =>
-    isGoogleReviews ? (
-      renderGoogleCard(item, i)
+    isGoogleCarousel ? (
+      <Card key={i} className="h-full rounded-lg border-none bg-white shadow-lg">
+        <CardContent className="pt-6">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex text-yellow-400">
+              {Array.from({ length: Math.max(1, Math.min(5, num(item.rating, 5))) }).map(
+                (_, index) => (
+                  <Star key={index} className="h-4 w-4 fill-current" />
+                ),
+              )}
+            </div>
+            <SourceBadge item={item} />
+          </div>
+          <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
+            </div>
+            <div>
+              <p className="text-sm font-semibold">{item.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {item.role || "Customer"}
+                {item.location ? ` · ${item.location}` : ""}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     ) : (
       <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
         <CardContent className="pt-6">
@@ -784,40 +791,6 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
       {items.length === 0 ? (
         <p className="text-muted-foreground">Add testimonials to display here.</p>
-      ) : isGoogleReviews && shouldCarousel ? (
-        <div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {items.slice(googleReviewIndex, googleReviewIndex + 2).map((item, i) => (
-              <div key={`${googleReviewIndex}-${i}`} className={i === 1 ? "hidden md:block" : ""}>
-                {renderCard(item, googleReviewIndex + i)}
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full border-border/70 bg-background/95"
-              disabled={googleReviewIndex === 0}
-              onClick={() => setGoogleReviewIndex((index) => Math.max(0, index - 1))}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Previous review</span>
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full border-border/70 bg-background/95"
-              disabled={googleReviewIndex >= items.length - 1}
-              onClick={() => setGoogleReviewIndex((index) => Math.min(items.length - 1, index + 1))}
-            >
-              <ChevronRight className="h-4 w-4" />
-              <span className="sr-only">Next review</span>
-            </Button>
-          </div>
-        </div>
       ) : shouldCarousel ? (
         <div>
           <Carousel

@@ -2800,8 +2800,18 @@ function reviewsContent() {
       block("testimonials", {
         title: "Latest Google Reviews",
         subtitle: "Newest first from the 593 EC Painting Google Business Profile.",
-        variant: "google-reviews",
-        items: reviews,
+        variant: "google-carousel",
+        sectionBackgroundColor: "#ffffff",
+        sectionPaddingTop: "md",
+        sectionPaddingBottom: "lg",
+        items: reviews.map((review) => ({
+          ...review,
+          role: "Customer",
+          location: "Google review",
+          rating: 5,
+          source: "Google",
+          sourceIcon: "google",
+        })),
       }),
       cta(
         "Ready to Join Them?",
