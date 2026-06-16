@@ -1106,129 +1106,7 @@ const services = [
   },
 ];
 
-function galleryItem(
-  category: string,
-  file: string,
-  alt: string,
-  caption: string,
-  location: string,
-): GalleryImage {
-  return {
-    url: `/img/gallery/gbp/${file}`,
-    alt,
-    caption: `${caption} — ${location}`,
-    category,
-    location,
-  };
-}
-
-const galleryImages: GalleryImage[] = [
-  galleryItem(
-    "Cabinets",
-    "painting-project-01.webp",
-    "White kitchen cabinets with dark countertops and freshly painted trim",
-    "Kitchen Cabinet Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-02.webp",
-    "White kitchen cabinets with black counters and warm wood flooring",
-    "Cabinet Refinish",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-03.webp",
-    "Bright kitchen with white painted cabinets and black island counter",
-    "Kitchen Cabinet Refresh",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-04.webp",
-    "Dining room with fresh wall paint, white trim, and chair rail",
-    "Dining Room Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-05.webp",
-    "Home office nook with painted walls, trim, and built-in desk area",
-    "Home Office Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-06.webp",
-    "Bedroom with fresh neutral wall paint and white trim",
-    "Bedroom Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-07.webp",
-    "Bedroom with freshly painted walls, trim, and window surround",
-    "Bedroom Wall Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-08.webp",
-    "Green kitchen cabinets with painted uppers, trim, and shelving",
-    "Green Cabinet Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Exterior",
-    "painting-project-09.webp",
-    "Painted home exterior with updated trim and front elevation",
-    "Exterior Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-10.webp",
-    "Mudroom and built-in bench area with crisp white painted trim",
-    "Mudroom Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-11.webp",
-    "Open dining and living area with fresh wall and trim paint",
-    "Open Concept Interior Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-12.webp",
-    "White kitchen cabinets and island with bright painted finishes",
-    "Kitchen Cabinet Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Interior",
-    "painting-project-13.webp",
-    "Living room with fresh white wall paint and fireplace surround",
-    "Living Room Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-14.webp",
-    "Close-up of freshly painted cabinet doors and hardware",
-    "Cabinet Door Painting",
-    "Charlotte Area",
-  ),
-  galleryItem(
-    "Cabinets",
-    "painting-project-15.webp",
-    "Close-up of freshly painted white cabinet drawers and pulls",
-    "Cabinet Drawer Painting",
-    "Charlotte Area",
-  ),
-];
+const galleryImages: GalleryImage[] = [];
 
 const galleryImageGroups: Record<string, GalleryImage[]> = {
   all: galleryImages,
@@ -2613,14 +2491,8 @@ function galleryContent() {
         image: "/img/gallery/kitchen-cabinets.webp",
       }),
       rich("", [
-        "Every photo on this page is a real 593 EC Painting project — no stock images, no Pinterest screenshots. We update this gallery regularly as we complete new work across Charlotte and the surrounding Carolinas. Browse by category or scroll through to see the full range of what we do.",
+        "We are refreshing this gallery with cleaned-up real project photos from 593 EC Painting jobs across Charlotte and the surrounding Carolinas.",
       ]),
-      galleryBlock(
-        "Browse Our Work",
-        "Real project photos from cabinet painting, interior painting, and exterior painting work.",
-        galleryImages,
-        galleryImages.length,
-      ),
       cta(
         "Want Your Home in This Gallery?",
         "Get a free quote and let us add your project to the next batch of before-and-afters.",
