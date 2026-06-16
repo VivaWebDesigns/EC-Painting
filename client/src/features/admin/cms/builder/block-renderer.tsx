@@ -667,38 +667,112 @@ function FaqBlock({ props }: { props: Record<string, unknown> }) {
   );
 }
 
-function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
-  const items = arr<{ quote: string; name: string; role: string; location: string }>(props.items);
-  const shouldCarousel = items.length > 3;
+type TestimonialItem = {
+  quote: string;
+  name: string;
+  role?: string;
+  location?: string;
+  date?: string;
+  reviewCount?: string;
+  badge?: string;
+  source?: string;
+  services?: string[] | string;
+};
 
-  const renderCard = (
-    item: { quote: string; name: string; role: string; location: string },
-    i: number,
-  ) => (
+function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
+  const items = arr<TestimonialItem>(props.items);
+  const isGoogleReviews = str(props.variant) === "google-reviews";
+  const shouldCarousel = items.length > (isGoogleReviews ? 2 : 3);
+
+  const renderStars = (sizeClass = "h-4 w-4") => (
+    <div className="flex gap-0.5 text-amber-400" aria-label="5 star review">
+      {Array.from({ length: 5 }).map((_, starIndex) => (
+        <Star key={starIndex} className={`${sizeClass} fill-current`} />
+      ))}
+    </div>
+  );
+
+  const GoogleMark = () => (
+    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-base font-bold text-[#4285F4] shadow-sm ring-1 ring-border">
+      G
+    </span>
+  );
+
+  const renderGoogleCard = (item: TestimonialItem, i: number) => (
     <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
-      <CardContent className="pt-6">
-        <Quote className="h-5 w-5 text-primary/30 mb-3" />
-        <div className="mb-3 flex gap-0.5 text-amber-400">
-          {Array.from({ length: 5 }).map((_, starIndex) => (
-            <Star key={starIndex} className="h-4 w-4 fill-current" />
-          ))}
-        </div>
-        <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
+      <CardContent className="flex h-full flex-col px-5 py-6 sm:px-7">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          {renderStars()}
+          <div className="flex items-center gap-2 text-xs font-medium text-primary">
+            <GoogleMark />
+            {item.date && <span>{item.date}</span>}
           </div>
-          <div>
-            <p className="text-sm font-semibold">{item.name}</p>
+        </div>
+        {item.badge && (
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
+            {item.badge}
+          </p>
+        )}
+        <p className="mb-5 flex-1 text-sm italic leading-relaxed text-slate-700">"{item.quote}"</p>
+        {(() => {
+          const services = Array.isArray(item.services)
+            ? item.services
+            : str(item.services)
+                .split(",")
+                .map((service) => service.trim())
+                .filter(Boolean);
+          return services.length > 0 ? (
+            <div className="mb-5 flex flex-wrap gap-2">
+              {services.map((service) => (
+                <span
+                  key={service}
+                  className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
+                >
+                  {service}
+                </span>
+              ))}
+            </div>
+          ) : null;
+        })()}
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
+            <span className="text-xs font-bold text-primary">{item.name?.[0] ?? "?"}</span>
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
             <p className="text-xs text-muted-foreground">
-              {item.role}
-              {item.location ? ` · ${item.location}` : ""}
+              {[item.reviewCount, item.source || "Google review"].filter(Boolean).join(" · ")}
             </p>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+
+  const renderCard = (item: TestimonialItem, i: number) =>
+    isGoogleReviews ? (
+      renderGoogleCard(item, i)
+    ) : (
+      <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
+        <CardContent className="pt-6">
+          <Quote className="h-5 w-5 text-primary/30 mb-3" />
+          <div className="mb-3">{renderStars()}</div>
+          <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
+            </div>
+            <div>
+              <p className="text-sm font-semibold">{item.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {item.role}
+                {item.location ? ` · ${item.location}` : ""}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
 
   return (
     <div className="py-4">

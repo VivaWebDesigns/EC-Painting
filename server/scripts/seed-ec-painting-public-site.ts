@@ -2323,24 +2323,201 @@ const spokePages: SpokePage[] = [
 const reviews = [
   {
     quote:
-      "The team painted our downstairs quickly and left everything spotless. The lines are clean and the rooms feel brand new.",
-    name: "Sarah Jenkins",
-    role: "Residential Client",
-    location: "Charlotte",
+      "We have used Ec painting for cabinet painting. Easu and team is very professional and they make sure the final touch ups are performed well before they say job done. Highly recommend this team for any paint project.",
+    name: "Vaddi V Jaya Prasad",
+    reviewCount: "6 reviews",
+    date: "a week ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Cabinet painting"],
   },
   {
     quote:
-      "We hired 593 EC Painting for exterior painting and deck staining. The house looks refreshed and the process was easy.",
-    name: "Mike and Linda Ross",
-    role: "Homeowners",
-    location: "Matthews",
+      "Esau and his team painted our kitchen cabinets and exterior stair rails and arbor and did a fantastic job on both. We appreciated Esau's texts that kept us informed on their start date, arrival time and any questions he had. He and his team were prompt, did a great job of covering and protecting all surfaces, cleaned up well and the cabinets came out beautifully. We were also very happy with the finished stair rails and arbor. We highly recommend Esau and his team for excellent work and reasonable prices.",
+    name: "Jeannie Carney",
+    reviewCount: "2 reviews · 3 photos",
+    date: "3 weeks ago",
+    badge: "Reasonable price",
+    source: "Google review",
+    services: ["Cabinet painting", "Exterior painting"],
   },
   {
     quote:
-      "The cabinet finish made our kitchen feel completely updated. They helped us choose a color and the final result looks polished.",
-    name: "Elena Rodriguez",
-    role: "Cabinet Painting Client",
-    location: "Ballantyne",
+      "I agree with all of the other reviews. This team was GREAT to work with and we are thrilled with the results! The price was very competitive!",
+    name: "Katherine Williams",
+    reviewCount: "9 reviews",
+    date: "2 months ago",
+    badge: "Reasonable price",
+    source: "Google review",
+    services: ["Interior painting"],
+  },
+  {
+    quote:
+      "Esau is incredible. He has done work on both homes I've owned in Charlotte. He painted the cabinets in my first house, did an incredible job, took down popcorn ceilings and painted the entire exterior of my new home as well as staining the deck, and now as I am selling the home his crew came back and patched holes and touched up paint as well as repainted my current cabinets. He does an incredible job, is very nice, and I have and will continue to recommend him to everyone who needs a painter or any type of work needed on their home!",
+    name: "Kevin Moss",
+    reviewCount: "11 reviews · 3 photos",
+    date: "4 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: [
+      "Drywall painting",
+      "Cabinet painting",
+      "Door painting",
+      "Interior painting",
+      "Exterior painting",
+      "Drywall repair",
+      "Deck painting",
+    ],
+  },
+  {
+    quote:
+      "Esau and team did a great job painting our walls and kitchen cabinets. Highly recommend and we will definitely use them again!",
+    name: "porter burkett",
+    reviewCount: "1 review",
+    date: "4 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Drywall painting", "Cabinet painting"],
+  },
+  {
+    quote:
+      "Esau and his team are wonderful, pleasant, prompt, professional and detailed minded. They did an amazing job on an investment property I am setting up for a Client. Both, my client and I are very pleased with his work. It’s beautiful. I highly recommend Esau and his company.",
+    name: "Kemet Shetty",
+    reviewCount: "Local Guide · 11 reviews · 10 photos",
+    date: "5 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Interior painting"],
+  },
+  {
+    quote:
+      "Esaú and his team are simply the best. The quality of his work is outstanding. He handled every detail with care and professionalism. What truly set him apart is his HONESTY and character. During the job, he found my diamond ring that I thought was lost forever and returned to me inmediately. That level of integrity is rare and deserve recognition!",
+    name: "Diana Paola Castro",
+    reviewCount: "Local Guide · 13 reviews · 6 photos",
+    date: "6 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Drywall painting", "Cabinet painting"],
+  },
+  {
+    quote:
+      "Day and crew do a wonderful job. We are thrilled with the result. I am a Realtoe and I recommend them every chance I get",
+    name: "jody hoffman",
+    reviewCount: "3 reviews · 1 photo",
+    date: "6 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "Five-stars in every way! The work they did in our home is spectacular and we can’t wait to start our next project with this team!",
+    name: "Becky Bogle",
+    reviewCount: "1 review",
+    date: "7 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "593 EC Painting is the best painting team around. They paint and handle everything with perfection. I'm a perfectionist and I am very impressed with the jobs they have done for me.",
+    name: "Rebecca Wills",
+    reviewCount: "1 review",
+    date: "7 months ago",
+    badge: "Reasonable price",
+    source: "Google review",
+    services: ["Cabinet painting", "Interior painting"],
+  },
+  {
+    quote:
+      "This crew goes above and beyond! They are kind and professional and really take pride in their work. I was having my house painted to sell and they made it look brand new again. Will definitely use for all future needs and highly recommend!!",
+    name: "Malia",
+    reviewCount: "6 reviews",
+    date: "7 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "Great company !!, hard working and well structured team, their work is fantastic and prices are a super value !! Highly recommended",
+    name: "alexei gt3rs4.0",
+    reviewCount: "3 reviews",
+    date: "7 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Drywall painting", "Cabinet painting", "Door painting", "Interior painting", "Exterior painting"],
+  },
+  {
+    quote: "Very professional, communicative and affordable. :)",
+    name: "Allison Ray",
+    reviewCount: "Local Guide · 17 reviews · 7 photos",
+    date: "8 months ago",
+    source: "Google review",
+    services: ["Cabinet painting"],
+  },
+  {
+    quote:
+      "Esau and his team recently painted the interior and exterior of our new construction home. They did an awesome job and were reasonably priced. Highly recommend!",
+    name: "Anthony Welker",
+    reviewCount: "1 review · 5 photos",
+    date: "9 months ago",
+    badge: "Reasonable price",
+    source: "Google review",
+    services: ["Drywall painting", "Door painting", "Interior painting", "Exterior painting"],
+  },
+  {
+    quote:
+      "My neighbor recommended Esau after their house exterior was painted and I am so thankful. Not only was he by far the best for the money, but his entire team was professional and courteous. He did an incredible job. If you need any painting done you must get a quote from Esau first. You will thank me.",
+    name: "Greg Hankinson",
+    reviewCount: "4 reviews · 3 photos",
+    date: "9 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "We couldn’t be happier with our experience! From start to finish, the 593 EC Painting was professional, friendly, and incredibly detail-oriented. They painted our entire house, refinished all our cabinets, and even did epoxy coating on our garage floors — and everything looks absolutely stunning. The quality of their work is top-notch, with flawless lines, smooth finishes, and an attention to detail you just don’t see every day. They showed up on time, kept the workspace clean, and treated our home with the utmost respect. The transformation is unbelievable, and we’ve already received so many compliments. If you want beautiful, high-quality results and a stress-free experience, this is the company to call!",
+    name: "Holli Reed",
+    reviewCount: "Local Guide · 13 reviews · 8 photos",
+    date: "10 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "I’ve had the pleasure of working with 593 EC Painting LLC and can confidently say they’re a fantastic team. Esau and Sandra are professional, easy to communicate with, and take real pride in their work. From interior and exterior painting to drywall repair, staining, and pressure washing, they handle every job with care and attention to detail. It’s always great to collaborate with people who are reliable, friendly, and committed to quality results.",
+    name: "Cole Weaver",
+    reviewCount: "105 reviews",
+    date: "10 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "Esau did an amazing job painting the entire inside of my house. He did walls, ceilings and woodwork. He painted my bathroom cabinet and outside he painted my shutters and mail box. He was the most polite and kind. He texted me pictures every day as to what he did. He came back and completed all touch ups after I had paid him. His free quote was very reasonable. I will always call him for any future painting needs.",
+    name: "Laura Hasian",
+    reviewCount: "5 reviews · 1 photo",
+    date: "10 months ago",
+    badge: "Great price",
+    source: "Google review",
+    services: ["Interior painting"],
+  },
+  {
+    quote:
+      "I have known Esau for years. He started by doing our foyer in 2019 and ever since I have used him multiple times. Prices are super reasonable, very professional and does a great job. More importantly, cleans up well after job and is very nice to customers. If you have an issue, he ensures he comes back and fixes it. There were times when I would ask for estimates but would then decide to do the painting myself, yet when I call him the next time for a job, he would show up. I highly recommend him and very thankful for his work.",
+    name: "Pradeep Sridhar",
+    reviewCount: "11 reviews · 5 photos",
+    date: "10 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "This was the most amazing service I’ve ever received, very nice and considerate. My house was done so quickly and efficiently with no mess at all! I 1,000% recommend!",
+    name: "Skyler Klingebiel",
+    reviewCount: "6 reviews",
+    date: "10 months ago",
+    source: "Google review",
+  },
+  {
+    quote:
+      "Excellent service all around. Great price, excellent response time. Very helpful, friendly, and knowledgeable. Did one bedroom and two bathrooms. My walls were in pretty bad shape before they did patch work and paint, making them nice rooms again! I will be using this service again. Thanks again to the team.",
+    name: "Kelly Allen",
+    reviewCount: "10 reviews · 2 photos",
+    date: "10 months ago",
+    source: "Google review",
   },
 ];
 
@@ -2633,30 +2810,30 @@ function galleryContent() {
 function reviewsContent() {
   return {
     blocks: [
-      hero({
-        headline: "What Charlotte Homeowners Say About 593 EC Painting",
-        subheadline:
-          "Real reviews from real customers. We've built this business on word of mouth — here's the word.",
-        image: "/img/services/reviews.webp",
-      }),
-      block("stats-bar", {
-        items: [
-          { icon: "Star", value: "5.0", label: "Google Rating" },
-          { icon: "MessageSquare", value: "[REVIEW PLACEHOLDER]", label: "Total Google Reviews" },
-          { icon: "ThumbsUp", value: "100%", label: "Would Recommend" },
-          { icon: "Calendar", value: "5 Years", label: "Serving Charlotte" },
-        ],
+      block("hero", {
+        badge: "Customer Reviews",
+        heading: "What Charlotte Homeowners Say About 593 EC Painting",
+        subheading:
+          "<p>Real feedback from homeowners who trusted Esau and the 593 EC Painting team for cabinets, interiors, exteriors, drywall, decks, and more.</p>",
+        ctaText: "Read all reviews on Google",
+        ctaAction: "custom-link",
+        ctaLink: GOOGLE_BUSINESS_URL,
+        ctaOpenInNewTab: true,
+        ctaSecondaryText: "Request a Free Estimate",
+        ctaSecondaryAction: "internal-link",
+        ctaSecondaryLink: "/contact/",
+        backgroundImageUrl: "/img/services/reviews.webp",
+        overlayColor: "#000000",
+        overlayOpacity: 38,
+        layout: "stacked",
+        minHeight: "620",
       }),
       block("testimonials", {
-        title: "Reviews from Our Customers",
-        subtitle:
-          "Below are real reviews from homeowners across Charlotte and the surrounding Carolinas, pulled directly from our Google Business Profile. We don't curate or filter them — they're the unedited word from people we've painted for.",
+        title: "Latest Google Reviews",
+        subtitle: "Newest first from the 593 EC Painting Google Business Profile.",
+        variant: "google-reviews",
         items: reviews,
       }),
-      rich("Word of Mouth Built This Business", [
-        "We don't spend much on advertising. We've never had to. From the day we started 593 EC Painting, our customers have referred us to their friends, their family, and their neighbors — and that's how we've grown.",
-        "If you've worked with us, leaving a Google review is the single most helpful thing you can do to support our family business. It helps us keep our prices fair, our team employed, and our doors open to more Charlotte homeowners who need an honest painter.",
-      ]),
       cta(
         "Ready to Join Them?",
         "Get a free quote from Charlotte's most-reviewed family-owned painters.",
