@@ -32,6 +32,12 @@ These rules apply to every Codex session in this repository.
 - Do not use plain local commands for scripts that need `DATABASE_URL`; the local shell does not have it.
 - Do not use `railway run` for local DB-backed scripts that connect to Postgres. It injects `DATABASE_URL`, but the value uses Railway's private `postgres.railway.internal` hostname, which only resolves inside Railway.
 
+## CMS Page Generation Notes
+
+- Repeated "Recent Work" / "Recent Projects" gallery sections on the home, core service, and specialty service pages are intentionally hidden by `SHOW_RECENT_WORK_SECTIONS = false` in `server/scripts/seed-ec-painting-public-site.ts`.
+- The standalone `/gallery` page still keeps its image grid.
+- To restore those repeated sections, set `SHOW_RECENT_WORK_SECTIONS` to `true`, commit/push, then rerun the EC Painting seed script inside Railway.
+
 ## Project Scope Notes
 
 - Do not bring up domain-name routing, current-domain status, or temporary domain issues unless the user explicitly asks about them.

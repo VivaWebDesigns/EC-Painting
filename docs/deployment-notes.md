@@ -40,6 +40,12 @@
 - `railway run --service EC-Painting -- <command>` injects `DATABASE_URL`, but local execution cannot resolve Railway's private `postgres.railway.internal` hostname.
 - Plain local commands such as `npx tsx server/scripts/seed-ec-painting-public-site.ts` will fail unless a separate locally reachable `DATABASE_URL` is exported.
 
+### CMS Content Toggles
+
+- Repeated "Recent Work" / "Recent Projects" image-grid sections are currently hidden on generated home, core service, and specialty service pages via `SHOW_RECENT_WORK_SECTIONS = false` in `server/scripts/seed-ec-painting-public-site.ts`.
+- The standalone `/gallery` page remains active and still includes its image grid.
+- To bring the repeated sections back, set `SHOW_RECENT_WORK_SECTIONS` to `true`, deploy, and rerun the seed script from inside Railway.
+
 ### Database Schema
 
 - Migrations are managed by Drizzle ORM and stored in `migrations/` directory (with journal metadata in `migrations/meta/`)
