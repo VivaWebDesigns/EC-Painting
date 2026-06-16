@@ -2798,6 +2798,7 @@ function reviewsContent() {
         minHeight: "620",
       }),
       block("testimonials", {
+        anchorId: "reviews",
         title: "Latest Google Reviews",
         subtitle: "Newest first from the 593 EC Painting Google Business Profile.",
         variant: "google-carousel",
@@ -2805,7 +2806,9 @@ function reviewsContent() {
         sectionPaddingTop: "md",
         sectionPaddingBottom: "lg",
         items: reviews.map((review) => ({
-          ...review,
+          quote: review.quote,
+          name: review.name,
+          date: review.date,
           role: "Customer",
           location: "Google review",
           rating: 5,
@@ -2813,10 +2816,6 @@ function reviewsContent() {
           sourceIcon: "google",
         })),
       }),
-      cta(
-        "Ready to Join Them?",
-        "Get a free quote from Charlotte's most-reviewed family-owned painters.",
-      ),
     ],
   };
 }

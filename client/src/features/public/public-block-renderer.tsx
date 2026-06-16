@@ -691,49 +691,7 @@ type TestimonialItem = {
 function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   const variant = str(props.variant);
   const items = arr<TestimonialItem>(props.items);
-  const isGoogleCarousel = variant === "google-carousel" || variant === "google-reviews";
-  const shouldCarousel = items.length > (isGoogleCarousel ? 2 : 3);
-  const [carouselApi, setCarouselApi] = useState<any>(null);
-  const [activeSlideHeight, setActiveSlideHeight] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!carouselApi || !isGoogleCarousel || !shouldCarousel) {
-      setActiveSlideHeight(null);
-      return;
-    }
-
-    const updateHeight = () => {
-      const slideNodes = carouselApi.slideNodes?.() ?? [];
-      const visibleIndexes = carouselApi.slidesInView?.() ?? [carouselApi.selectedScrollSnap?.() ?? 0];
-      const visibleHeights = visibleIndexes
-        .map((index: number) => {
-          const slide = slideNodes[index] as HTMLElement | undefined;
-          const card = slide?.firstElementChild as HTMLElement | null | undefined;
-          return Math.ceil(card?.getBoundingClientRect().height ?? slide?.getBoundingClientRect().height ?? 0);
-        })
-        .filter((height: number) => height > 0);
-      setActiveSlideHeight(visibleHeights.length ? Math.max(...visibleHeights) : null);
-    };
-
-    updateHeight();
-    carouselApi.on("select", updateHeight);
-    carouselApi.on("reInit", updateHeight);
-    window.addEventListener("resize", updateHeight);
-
-    return () => {
-      carouselApi.off("select", updateHeight);
-      carouselApi.off("reInit", updateHeight);
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, [carouselApi, isGoogleCarousel, shouldCarousel, items.length]);
-
-  const renderStars = (sizeClass = "h-4 w-4") => (
-    <div className="flex gap-0.5 text-amber-400" aria-label="5 star review">
-      {Array.from({ length: 5 }).map((_, starIndex) => (
-        <Star key={starIndex} className={`${sizeClass} fill-current`} />
-      ))}
-    </div>
-  );
+  const shouldCarousel = items.length > 2;
 
   const GoogleMark = () => (
     <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5 shrink-0">
@@ -762,16 +720,22 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
 
     return (
       <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-        {showGoogleIcon ? <GoogleMark /> : <span>{source}</span>}
+        {showGoogleIcon ? <GoogleMark /> : null}
+        {!showGoogleIcon ? <span>{source}</span> : null}
         {item.date ? <span className="font-medium text-[#1a8ead]">· {item.date}</span> : null}
       </div>
     );
   };
 
-  const renderCard = (item: TestimonialItem, i: number) =>
-    isGoogleCarousel ? (
-      <Card key={i} className="rounded-lg border-none bg-white shadow-lg">
-        <CardContent className="pt-6">
+  const renderCard = (item: TestimonialItem, i: number) => (
+    <Card
+      key={i}
+      className={`public-section-card h-full rounded-lg ${
+        variant === "google-carousel" ? "border-none bg-white shadow-lg" : ""
+      }`}
+    >
+      <CardContent className="pt-6">
+        {variant === "google-carousel" ? (
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex text-yellow-400">
               {Array.from({ length: Math.max(1, Math.min(5, num(item.rating, 5))) }).map(
@@ -782,42 +746,25 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
             </div>
             <SourceBadge item={item} />
           </div>
-          <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">{item.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {item.role || "Customer"}
-                {item.location ? ` · ${item.location}` : ""}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    ) : (
-      <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
-        <CardContent className="pt-6">
+        ) : (
           <Quote className="h-5 w-5 text-primary/30 mb-3" />
-          <div className="mb-3">{renderStars()}</div>
-          <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold">{item.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {item.role}
-                {item.location ? ` · ${item.location}` : ""}
-              </p>
-            </div>
+        )}
+        <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
           </div>
-        </CardContent>
-      </Card>
-    );
+          <div>
+            <p className="text-sm font-semibold">{item.name}</p>
+            <p className="text-xs text-muted-foreground">
+              {item.role || "Customer"}
+              {item.location ? ` · ${item.location}` : ""}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="py-4">
@@ -831,21 +778,15 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
               align: "start",
               loop: false,
             }}
-            setApi={isGoogleCarousel ? setCarouselApi : undefined}
             className="w-full"
           >
-            <div
-              className={isGoogleCarousel ? "overflow-hidden transition-[height] duration-300 ease-out" : undefined}
-              style={isGoogleCarousel && activeSlideHeight ? { height: `${activeSlideHeight}px` } : undefined}
-            >
-              <CarouselContent className="-ml-6">
-                {items.map((item, i) => (
-                  <CarouselItem key={i} className="pl-6 basis-full md:basis-1/2">
-                    {renderCard(item, i)}
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </div>
+            <CarouselContent className="-ml-6">
+              {items.map((item, i) => (
+                <CarouselItem key={i} className="pl-6 basis-full md:basis-1/2">
+                  {renderCard(item, i)}
+                </CarouselItem>
+              ))}
+            </CarouselContent>
             <div className="mt-6 flex items-center justify-center gap-3">
               <CarouselPrevious className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
               <CarouselNext className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
