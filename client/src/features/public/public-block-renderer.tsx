@@ -724,8 +724,8 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
     const footerMeta = [item.reviewCount, "Customer", item.source || "Google review"].filter(Boolean);
 
     return (
-      <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
-        <CardContent className="flex h-full flex-col px-6 py-7 sm:px-8">
+      <Card key={i} className="rounded-md border-0 bg-white shadow-none">
+        <CardContent className="px-6 py-7 sm:px-8">
           <div className="mb-5 flex items-start justify-between gap-4">
             {renderStars()}
             <div className="flex items-center gap-2 text-xs font-medium text-primary">
@@ -738,7 +738,7 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
               )}
             </div>
           </div>
-          <p className="mb-7 flex-1 text-[15px] italic leading-8 text-slate-800">"{item.quote}"</p>
+          <p className="mb-7 text-[15px] italic leading-8 text-slate-800">"{item.quote}"</p>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
               <span className="text-sm font-medium text-primary">{item.name?.[0] ?? "?"}</span>
