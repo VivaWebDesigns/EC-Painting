@@ -1440,7 +1440,7 @@ const spokePages: SpokePage[] = [
     heroTitle: "Popcorn Ceiling Removal in Charlotte, NC",
     heroSubtitle:
       "Scrape, smooth, and modernize the dated ceiling above your head. Family-owned, fully contained, and finished with a fresh coat of paint.",
-    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_19__2026__05_45_31_PM_1771541281424-CVjdMIIj.webp",
+    heroImage: "/img/services/popcorn-ceiling-removal.webp",
     sections: [
       {
         type: "intro",
