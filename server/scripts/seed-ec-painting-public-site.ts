@@ -198,6 +198,8 @@ type GalleryImage = {
   location?: string;
 };
 
+const SHOW_RECENT_WORK_SECTIONS = false;
+
 function galleryBlock(
   title: string,
   subtitle: string,
@@ -2439,10 +2441,14 @@ function homeContent() {
           },
         ],
       ),
-      galleryBlock(
-        "Recent Work in the Charlotte Area",
-        "A look at some of the homes we've painted recently across Charlotte and the surrounding communities.",
-      ),
+      ...(SHOW_RECENT_WORK_SECTIONS
+        ? [
+            galleryBlock(
+              "Recent Work in the Charlotte Area",
+              "A look at some of the homes we've painted recently across Charlotte and the surrounding communities.",
+            ),
+          ]
+        : []),
       block("testimonials", {
         title: "What Our Customers Say",
         subtitle: "Real reviews from homeowners across Charlotte and the surrounding areas.",
@@ -2870,12 +2876,16 @@ function serviceDetailContent(service: (typeof services)[number]) {
           { title: "Clean job site", description: "Your home and landscaping are protected." },
         ],
       ),
-      galleryBlock(
-        serviceData.galleryTitle ?? `Recent ${service.navTitle} Projects`,
-        serviceData.gallerySubtitle ??
-          "A look at recent work across Charlotte and the surrounding Carolinas.",
-        serviceGalleryImages,
-      ),
+      ...(SHOW_RECENT_WORK_SECTIONS
+        ? [
+            galleryBlock(
+              serviceData.galleryTitle ?? `Recent ${service.navTitle} Projects`,
+              serviceData.gallerySubtitle ??
+                "A look at recent work across Charlotte and the surrounding Carolinas.",
+              serviceGalleryImages,
+            ),
+          ]
+        : []),
       cta(
         serviceData.ctaHeading ?? `Ready for ${service.navTitle}?`,
         serviceData.ctaBody ??
@@ -2923,11 +2933,15 @@ function spokePageContent(spoke: SpokePage) {
         }
         return processBlock(section.heading, section.body ?? "", section.items);
       }),
-      galleryBlock(
-        spoke.galleryTitle,
-        spoke.gallerySubtitle,
-        galleryImageGroups[spoke.galleryCategory],
-      ),
+      ...(SHOW_RECENT_WORK_SECTIONS
+        ? [
+            galleryBlock(
+              spoke.galleryTitle,
+              spoke.gallerySubtitle,
+              galleryImageGroups[spoke.galleryCategory],
+            ),
+          ]
+        : []),
       cta(spoke.ctaHeading, spoke.ctaBody),
       faq(spoke.faq),
     ],
