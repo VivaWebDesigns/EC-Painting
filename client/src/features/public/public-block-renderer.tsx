@@ -693,6 +693,35 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   const items = arr<TestimonialItem>(props.items);
   const isGoogleCarousel = variant === "google-carousel" || variant === "google-reviews";
   const shouldCarousel = items.length > (isGoogleCarousel ? 2 : 3);
+  const [carouselApi, setCarouselApi] = useState<any>(null);
+  const [activeSlideHeight, setActiveSlideHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!carouselApi || !isGoogleCarousel || !shouldCarousel) {
+      setActiveSlideHeight(null);
+      return;
+    }
+
+    const updateHeight = () => {
+      const slideNodes = carouselApi.slideNodes?.() ?? [];
+      const visibleIndexes = carouselApi.slidesInView?.() ?? [carouselApi.selectedScrollSnap?.() ?? 0];
+      const visibleHeights = visibleIndexes
+        .map((index: number) => slideNodes[index]?.offsetHeight ?? 0)
+        .filter((height: number) => height > 0);
+      setActiveSlideHeight(visibleHeights.length ? Math.max(...visibleHeights) : null);
+    };
+
+    updateHeight();
+    carouselApi.on("select", updateHeight);
+    carouselApi.on("reInit", updateHeight);
+    window.addEventListener("resize", updateHeight);
+
+    return () => {
+      carouselApi.off("select", updateHeight);
+      carouselApi.off("reInit", updateHeight);
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, [carouselApi, isGoogleCarousel, shouldCarousel, items.length]);
 
   const renderStars = (sizeClass = "h-4 w-4") => (
     <div className="flex gap-0.5 text-amber-400" aria-label="5 star review">
@@ -798,15 +827,21 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
               align: "start",
               loop: false,
             }}
+            setApi={isGoogleCarousel ? setCarouselApi : undefined}
             className="w-full"
           >
-            <CarouselContent className="-ml-6">
-              {items.map((item, i) => (
-                <CarouselItem key={i} className="pl-6 basis-full md:basis-1/2">
-                  {renderCard(item, i)}
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+            <div
+              className={isGoogleCarousel ? "overflow-hidden transition-[height] duration-300 ease-out" : undefined}
+              style={isGoogleCarousel && activeSlideHeight ? { height: `${activeSlideHeight}px` } : undefined}
+            >
+              <CarouselContent className="-ml-6">
+                {items.map((item, i) => (
+                  <CarouselItem key={i} className="pl-6 basis-full md:basis-1/2">
+                    {renderCard(item, i)}
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </div>
             <div className="mt-6 flex items-center justify-center gap-3">
               <CarouselPrevious className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
               <CarouselNext className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
