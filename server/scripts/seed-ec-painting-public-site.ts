@@ -1139,6 +1139,13 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Interior",
+    "dining-room-arched-entry-20260616.webp",
+    "Dining room with arched entry, fresh wall paint, white trim, and dark wood floors",
+    "Dining Room Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
     "bright-and-minimalist-bedroom-interior.webp",
     "Minimal bedroom with freshly painted neutral walls and trim",
     "Bedroom Painting",
