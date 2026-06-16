@@ -1106,7 +1106,94 @@ const services = [
   },
 ];
 
-const galleryImages: GalleryImage[] = [];
+function galleryItem(
+  category: string,
+  file: string,
+  alt: string,
+  caption: string,
+  location: string,
+): GalleryImage {
+  return {
+    url: `/img/gallery/fb/${file}`,
+    alt,
+    caption: `${caption} — ${location}`,
+    category,
+    location,
+  };
+}
+
+const galleryImages: GalleryImage[] = [
+  galleryItem(
+    "Interior",
+    "bright-airy-foyer-with-staircase-view.webp",
+    "Bright foyer with fresh wall paint, staircase, and wood floors",
+    "Foyer and Staircase Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "bright-and-airy-living-room-space.webp",
+    "Bright living room with fresh neutral paint and white trim",
+    "Living Room Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "bright-and-minimalist-bedroom-interior.webp",
+    "Minimal bedroom with freshly painted neutral walls and trim",
+    "Bedroom Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Exterior",
+    "bright-blue-door-and-white-porch.webp",
+    "Bright blue front door with white porch trim",
+    "Front Door and Porch Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Exterior",
+    "charming-modern-farmhouse-with-porch.webp",
+    "Modern farmhouse exterior with painted trim and blue front door",
+    "Exterior Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "elegant-stairway-with-wooden-accents.webp",
+    "Freshly painted stairway with white walls and wood railing",
+    "Stairway Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Cabinets",
+    "modern-kitchen-with-cream-cabinetry-and-stainless.webp",
+    "Kitchen with cream painted cabinets and stainless appliances",
+    "Kitchen Cabinet Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Cabinets",
+    "modern-stainless-steel-kitchen-interior.webp",
+    "Kitchen with painted cream cabinets and stainless steel refrigerator",
+    "Cabinet Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "painting-station-with-door-panels.webp",
+    "Door panels staged for painting in a protected work area",
+    "Door Painting Prep",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Exterior",
+    "two-story-garage-in-suburban-daylight.webp",
+    "Two-story garage exterior with fresh blue siding and white trim",
+    "Garage Exterior Painting",
+    "Charlotte Area",
+  ),
+];
 
 const galleryImageGroups: Record<string, GalleryImage[]> = {
   all: galleryImages,
@@ -2491,8 +2578,14 @@ function galleryContent() {
         image: "/img/gallery/kitchen-cabinets.webp",
       }),
       rich("", [
-        "We are refreshing this gallery with cleaned-up real project photos from 593 EC Painting jobs across Charlotte and the surrounding Carolinas.",
+        "Every photo on this page is a real 593 EC Painting project — no stock images, no Pinterest screenshots. We update this gallery regularly as we complete new work across Charlotte and the surrounding Carolinas.",
       ]),
+      galleryBlock(
+        "Browse Our Work",
+        "Real project photos from cabinet painting, interior painting, and exterior painting work.",
+        galleryImages,
+        galleryImages.length,
+      ),
       cta(
         "Want Your Home in This Gallery?",
         "Get a free quote and let us add your project to the next batch of before-and-afters.",
