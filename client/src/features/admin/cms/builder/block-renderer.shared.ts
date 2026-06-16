@@ -68,7 +68,7 @@ const LEGACY_CMS_ASSET_MAP: Record<string, string> = {
   "/images/hero-therapy-session.png": "/images/hero-therapy-session-1920w.webp",
 };
 
-const SERVICE_HERO_ASSET_VERSION = "20260616-service-heroes-2";
+const SERVICE_HERO_ASSET_VERSION = "20260616-service-heroes-3";
 
 function versionServiceHeroAssetUrl(url: string): string {
   if (!url.startsWith("/img/services/")) {
