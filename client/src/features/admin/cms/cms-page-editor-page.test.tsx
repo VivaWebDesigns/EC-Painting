@@ -216,6 +216,7 @@ describe("CmsPageEditorPage", () => {
     navigateMock.mockReset();
     lockGuardMock.mockReset();
     editorLockState.isReadOnly = true;
+    mockPage.seoDescription = "";
     mutationStates = [];
     useQueryMock.mockImplementation(({ queryKey }: { queryKey: unknown[] }) => {
       if (queryKey[0] === "/api/admin/cms/sidebars") {
@@ -338,6 +339,48 @@ describe("CmsPageEditorPage", () => {
       expect.objectContaining({
         title: "Updated Join the Network",
         slug: "join",
+        content: {
+          blocks: [
+            expect.objectContaining({
+              id: "cta-1",
+              type: "call-to-action",
+            }),
+          ],
+        },
+      })
+    );
+  });
+
+  it("saves builder-only changes when the existing SEO description is over the recommendation", async () => {
+    editorLockState.isReadOnly = false;
+    mockPage.seoDescription =
+      "Professional drywall repair in Charlotte, NC. Patches, holes, water damage, settling cracks, and texture matching. Family-owned, free quotes, paired with interior painting or standalone.";
+    root = createRoot(container);
+
+    await act(async () => {
+      root!.render(React.createElement(CmsPageEditorPage));
+    });
+
+    const builderChangeButton = container.querySelector(
+      '[data-testid="button-builder-change"]'
+    ) as HTMLButtonElement | null;
+    expect(builderChangeButton).not.toBeNull();
+
+    await act(async () => {
+      builderChangeButton?.click();
+    });
+
+    const saveButton = container.querySelector('[data-testid="button-save"]') as HTMLButtonElement | null;
+    expect(saveButton).not.toBeNull();
+
+    await act(async () => {
+      saveButton?.click();
+    });
+
+    const updatePayload = mutationStates.flatMap((state) => state.mutate.mock.calls).at(-1)?.[0];
+    expect(updatePayload).toEqual(
+      expect.objectContaining({
+        seoDescription: mockPage.seoDescription,
         content: {
           blocks: [
             expect.objectContaining({

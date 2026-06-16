@@ -84,7 +84,7 @@ const editorSchema = z.object({
   sidebarId: z.string().default(""),
   status: z.enum(["draft", "published", "scheduled", "archived"]),
   seoTitle: z.string().optional(),
-  seoDescription: z.string().max(160, "Max 160 characters").optional(),
+  seoDescription: z.string().optional(),
   seoKeywords: z.string().optional(),
   ogImageUrl: z.string().optional(),
   canonicalUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
