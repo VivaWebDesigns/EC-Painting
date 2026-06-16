@@ -706,7 +706,11 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
       const slideNodes = carouselApi.slideNodes?.() ?? [];
       const visibleIndexes = carouselApi.slidesInView?.() ?? [carouselApi.selectedScrollSnap?.() ?? 0];
       const visibleHeights = visibleIndexes
-        .map((index: number) => slideNodes[index]?.offsetHeight ?? 0)
+        .map((index: number) => {
+          const slide = slideNodes[index] as HTMLElement | undefined;
+          const card = slide?.firstElementChild as HTMLElement | null | undefined;
+          return Math.ceil(card?.getBoundingClientRect().height ?? slide?.getBoundingClientRect().height ?? 0);
+        })
         .filter((height: number) => height > 0);
       setActiveSlideHeight(visibleHeights.length ? Math.max(...visibleHeights) : null);
     };
@@ -766,7 +770,7 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
 
   const renderCard = (item: TestimonialItem, i: number) =>
     isGoogleCarousel ? (
-      <Card key={i} className="h-full rounded-lg border-none bg-white shadow-lg">
+      <Card key={i} className="rounded-lg border-none bg-white shadow-lg">
         <CardContent className="pt-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex text-yellow-400">
