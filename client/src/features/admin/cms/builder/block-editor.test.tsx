@@ -62,4 +62,36 @@ describe("ResilientBlockEditor", () => {
       expect(container.textContent?.length ?? 0).toBeGreaterThan(0);
     }
   });
+
+  it("shows the hero background image media picker in the contextual page inspector", async () => {
+    const client = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    const heroBlock = ALL_BLOCKS.find((block) => block.type === "hero");
+
+    expect(heroBlock).toBeTruthy();
+    root = createRoot(container);
+
+    await act(async () => {
+      root!.render(
+        React.createElement(
+          QueryClientProvider,
+          { client },
+          React.createElement(ResilientBlockEditor, {
+            blockDef: heroBlock!,
+            blockType: heroBlock!.type,
+            props: { ...heroBlock!.defaultProps },
+            onChange: vi.fn(),
+            mode: "contextual",
+          }),
+        ),
+      );
+    });
+
+    expect(container.querySelector('[data-testid="prop-image-backgroundImageUrl-pick-library"]')).not.toBeNull();
+  });
 });

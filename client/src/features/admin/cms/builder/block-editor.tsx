@@ -400,11 +400,11 @@ function orderPropDefs(propDefs: PropDef[]) {
 function inferInspectorGroup(propDef: PropDef): InspectorGroup {
   const normalizedKey = propDef.key.toLowerCase();
 
-  if (SECTION_SETTING_KEYS.has(propDef.key)) return "settings";
   if (propDef.key.endsWith("Action") || getActionControllerKey(propDef.key)) return "content";
   if (propDef.type === "image-url") return "media";
   if (POSITION_PICKER_KEYS.has(propDef.key)) return "media";
   if (MEDIA_KEY_FRAGMENTS.some((fragment) => normalizedKey.includes(fragment))) return "media";
+  if (SECTION_SETTING_KEYS.has(propDef.key)) return "settings";
   if (LAYOUT_KEYS.has(propDef.key)) return "layout";
   if (SETTINGS_KEY_FRAGMENTS.some((fragment) => normalizedKey.includes(fragment))) return "settings";
   if (propDef.type === "color" || propDef.type === "boolean") return "settings";
@@ -416,11 +416,11 @@ function getContextualPropDefs(propDefs: PropDef[]) {
   const filtered = propDefs.filter((propDef) => {
     const key = propDef.key.toLowerCase();
 
+    if (propDef.type === "image-url") return true;
     if (SECTION_SETTING_KEYS.has(propDef.key)) return false;
     if (propDef.type === "color") return false;
     if (key.includes("overlay") || key.includes("padding")) return false;
 
-    if (propDef.type === "image-url") return true;
     if (propDef.type === "richtext") return true;
     if (propDef.type === "array-items") return true;
     if (Object.prototype.hasOwnProperty.call(CONTEXTUAL_PRIORITY, propDef.key)) return true;
@@ -437,7 +437,13 @@ function getContextualPropDefs(propDefs: PropDef[]) {
   });
 
   if (sorted.length > 0) {
-    return sorted.slice(0, 8);
+    const compactPropDefs = sorted.slice(0, 8);
+    const compactKeys = new Set(compactPropDefs.map((propDef) => propDef.key));
+    const missingMediaPropDefs = sorted.filter(
+      (propDef) => propDef.type === "image-url" && !compactKeys.has(propDef.key)
+    );
+
+    return [...compactPropDefs, ...missingMediaPropDefs];
   }
 
   return propDefs.filter((propDef) => !SECTION_SETTING_KEYS.has(propDef.key)).slice(0, 6);
