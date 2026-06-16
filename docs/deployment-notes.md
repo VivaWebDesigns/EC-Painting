@@ -28,6 +28,18 @@
 
 ## Migration Notes
 
+### Running Database-Backed Scripts
+
+- This project is linked to Railway project `EC-Painting` in the production environment.
+- To run seed/update scripts that connect to Postgres, execute them inside the Railway app service:
+
+  ```sh
+  railway ssh --service EC-Painting -- npx tsx server/scripts/seed-ec-painting-public-site.ts
+  ```
+
+- `railway run --service EC-Painting -- <command>` injects `DATABASE_URL`, but local execution cannot resolve Railway's private `postgres.railway.internal` hostname.
+- Plain local commands such as `npx tsx server/scripts/seed-ec-painting-public-site.ts` will fail unless a separate locally reachable `DATABASE_URL` is exported.
+
 ### Database Schema
 
 - Migrations are managed by Drizzle ORM and stored in `migrations/` directory (with journal metadata in `migrations/meta/`)
