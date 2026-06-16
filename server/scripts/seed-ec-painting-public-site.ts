@@ -2327,19 +2327,15 @@ const reviews = [
     name: "Vaddi V Jaya Prasad",
     reviewCount: "6 reviews",
     date: "a week ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Cabinet painting"],
   },
   {
     quote:
       "Esau and his team painted our kitchen cabinets and exterior stair rails and arbor and did a fantastic job on both. We appreciated Esau's texts that kept us informed on their start date, arrival time and any questions he had. He and his team were prompt, did a great job of covering and protecting all surfaces, cleaned up well and the cabinets came out beautifully. We were also very happy with the finished stair rails and arbor. We highly recommend Esau and his team for excellent work and reasonable prices.",
     name: "Jeannie Carney",
-    reviewCount: "2 reviews · 3 photos",
+    reviewCount: "2 reviews",
     date: "3 weeks ago",
-    badge: "Reasonable price",
     source: "Google review",
-    services: ["Cabinet painting", "Exterior painting"],
   },
   {
     quote:
@@ -2347,27 +2343,15 @@ const reviews = [
     name: "Katherine Williams",
     reviewCount: "9 reviews",
     date: "2 months ago",
-    badge: "Reasonable price",
     source: "Google review",
-    services: ["Interior painting"],
   },
   {
     quote:
       "Esau is incredible. He has done work on both homes I've owned in Charlotte. He painted the cabinets in my first house, did an incredible job, took down popcorn ceilings and painted the entire exterior of my new home as well as staining the deck, and now as I am selling the home his crew came back and patched holes and touched up paint as well as repainted my current cabinets. He does an incredible job, is very nice, and I have and will continue to recommend him to everyone who needs a painter or any type of work needed on their home!",
     name: "Kevin Moss",
-    reviewCount: "11 reviews · 3 photos",
+    reviewCount: "11 reviews",
     date: "4 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: [
-      "Drywall painting",
-      "Cabinet painting",
-      "Door painting",
-      "Interior painting",
-      "Exterior painting",
-      "Drywall repair",
-      "Deck painting",
-    ],
   },
   {
     quote:
@@ -2375,35 +2359,29 @@ const reviews = [
     name: "porter burkett",
     reviewCount: "1 review",
     date: "4 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Drywall painting", "Cabinet painting"],
   },
   {
     quote:
       "Esau and his team are wonderful, pleasant, prompt, professional and detailed minded. They did an amazing job on an investment property I am setting up for a Client. Both, my client and I are very pleased with his work. It’s beautiful. I highly recommend Esau and his company.",
     name: "Kemet Shetty",
-    reviewCount: "Local Guide · 11 reviews · 10 photos",
+    reviewCount: "11 reviews",
     date: "5 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Interior painting"],
   },
   {
     quote:
       "Esaú and his team are simply the best. The quality of his work is outstanding. He handled every detail with care and professionalism. What truly set him apart is his HONESTY and character. During the job, he found my diamond ring that I thought was lost forever and returned to me inmediately. That level of integrity is rare and deserve recognition!",
     name: "Diana Paola Castro",
-    reviewCount: "Local Guide · 13 reviews · 6 photos",
+    reviewCount: "13 reviews",
     date: "6 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Drywall painting", "Cabinet painting"],
   },
   {
     quote:
       "Day and crew do a wonderful job. We are thrilled with the result. I am a Realtoe and I recommend them every chance I get",
     name: "jody hoffman",
-    reviewCount: "3 reviews · 1 photo",
+    reviewCount: "3 reviews",
     date: "6 months ago",
     source: "Google review",
   },
@@ -2421,9 +2399,7 @@ const reviews = [
     name: "Rebecca Wills",
     reviewCount: "1 review",
     date: "7 months ago",
-    badge: "Reasonable price",
     source: "Google review",
-    services: ["Cabinet painting", "Interior painting"],
   },
   {
     quote:
@@ -2439,33 +2415,28 @@ const reviews = [
     name: "alexei gt3rs4.0",
     reviewCount: "3 reviews",
     date: "7 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Drywall painting", "Cabinet painting", "Door painting", "Interior painting", "Exterior painting"],
   },
   {
     quote: "Very professional, communicative and affordable. :)",
     name: "Allison Ray",
-    reviewCount: "Local Guide · 17 reviews · 7 photos",
+    reviewCount: "17 reviews",
     date: "8 months ago",
     source: "Google review",
-    services: ["Cabinet painting"],
   },
   {
     quote:
       "Esau and his team recently painted the interior and exterior of our new construction home. They did an awesome job and were reasonably priced. Highly recommend!",
     name: "Anthony Welker",
-    reviewCount: "1 review · 5 photos",
+    reviewCount: "1 review",
     date: "9 months ago",
-    badge: "Reasonable price",
     source: "Google review",
-    services: ["Drywall painting", "Door painting", "Interior painting", "Exterior painting"],
   },
   {
     quote:
       "My neighbor recommended Esau after their house exterior was painted and I am so thankful. Not only was he by far the best for the money, but his entire team was professional and courteous. He did an incredible job. If you need any painting done you must get a quote from Esau first. You will thank me.",
     name: "Greg Hankinson",
-    reviewCount: "4 reviews · 3 photos",
+    reviewCount: "4 reviews",
     date: "9 months ago",
     source: "Google review",
   },
@@ -2473,7 +2444,7 @@ const reviews = [
     quote:
       "We couldn’t be happier with our experience! From start to finish, the 593 EC Painting was professional, friendly, and incredibly detail-oriented. They painted our entire house, refinished all our cabinets, and even did epoxy coating on our garage floors — and everything looks absolutely stunning. The quality of their work is top-notch, with flawless lines, smooth finishes, and an attention to detail you just don’t see every day. They showed up on time, kept the workspace clean, and treated our home with the utmost respect. The transformation is unbelievable, and we’ve already received so many compliments. If you want beautiful, high-quality results and a stress-free experience, this is the company to call!",
     name: "Holli Reed",
-    reviewCount: "Local Guide · 13 reviews · 8 photos",
+    reviewCount: "13 reviews",
     date: "10 months ago",
     source: "Google review",
   },
@@ -2489,17 +2460,15 @@ const reviews = [
     quote:
       "Esau did an amazing job painting the entire inside of my house. He did walls, ceilings and woodwork. He painted my bathroom cabinet and outside he painted my shutters and mail box. He was the most polite and kind. He texted me pictures every day as to what he did. He came back and completed all touch ups after I had paid him. His free quote was very reasonable. I will always call him for any future painting needs.",
     name: "Laura Hasian",
-    reviewCount: "5 reviews · 1 photo",
+    reviewCount: "5 reviews",
     date: "10 months ago",
-    badge: "Great price",
     source: "Google review",
-    services: ["Interior painting"],
   },
   {
     quote:
       "I have known Esau for years. He started by doing our foyer in 2019 and ever since I have used him multiple times. Prices are super reasonable, very professional and does a great job. More importantly, cleans up well after job and is very nice to customers. If you have an issue, he ensures he comes back and fixes it. There were times when I would ask for estimates but would then decide to do the painting myself, yet when I call him the next time for a job, he would show up. I highly recommend him and very thankful for his work.",
     name: "Pradeep Sridhar",
-    reviewCount: "11 reviews · 5 photos",
+    reviewCount: "11 reviews",
     date: "10 months ago",
     source: "Google review",
   },
@@ -2515,7 +2484,7 @@ const reviews = [
     quote:
       "Excellent service all around. Great price, excellent response time. Very helpful, friendly, and knowledgeable. Did one bedroom and two bathrooms. My walls were in pretty bad shape before they did patch work and paint, making them nice rooms again! I will be using this service again. Thanks again to the team.",
     name: "Kelly Allen",
-    reviewCount: "10 reviews · 2 photos",
+    reviewCount: "10 reviews",
     date: "10 months ago",
     source: "Google review",
   },

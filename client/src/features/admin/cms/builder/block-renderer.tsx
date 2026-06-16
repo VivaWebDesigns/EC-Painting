@@ -674,9 +674,7 @@ type TestimonialItem = {
   location?: string;
   date?: string;
   reviewCount?: string;
-  badge?: string;
   source?: string;
-  services?: string[] | string;
 };
 
 function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
@@ -693,61 +691,50 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   );
 
   const GoogleMark = () => (
-    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-base font-bold text-[#4285F4] shadow-sm ring-1 ring-border">
+    <span
+      className="inline-flex text-base font-black leading-none"
+      style={{
+        background: "linear-gradient(90deg, #4285F4 0 32%, #34A853 32% 50%, #FBBC05 50% 68%, #EA4335 68% 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+      }}
+    >
       G
     </span>
   );
 
-  const renderGoogleCard = (item: TestimonialItem, i: number) => (
-    <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
-      <CardContent className="flex h-full flex-col px-5 py-6 sm:px-7">
-        <div className="mb-4 flex items-start justify-between gap-4">
-          {renderStars()}
-          <div className="flex items-center gap-2 text-xs font-medium text-primary">
-            <GoogleMark />
-            {item.date && <span>{item.date}</span>}
-          </div>
-        </div>
-        {item.badge && (
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
-            {item.badge}
-          </p>
-        )}
-        <p className="mb-5 flex-1 text-sm italic leading-relaxed text-slate-700">"{item.quote}"</p>
-        {(() => {
-          const services = Array.isArray(item.services)
-            ? item.services
-            : str(item.services)
-                .split(",")
-                .map((service) => service.trim())
-                .filter(Boolean);
-          return services.length > 0 ? (
-            <div className="mb-5 flex flex-wrap gap-2">
-              {services.map((service) => (
-                <span
-                  key={service}
-                  className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
-                >
-                  {service}
-                </span>
-              ))}
+  const renderGoogleCard = (item: TestimonialItem, i: number) => {
+    const footerMeta = [item.reviewCount, "Customer", item.source || "Google review"].filter(Boolean);
+
+    return (
+      <Card key={i} className="h-full rounded-md border-border bg-white shadow-sm">
+        <CardContent className="flex h-full flex-col px-6 py-7 sm:px-8">
+          <div className="mb-5 flex items-start justify-between gap-4">
+            {renderStars()}
+            <div className="flex items-center gap-2 text-xs font-medium text-primary">
+              <GoogleMark />
+              {item.date && (
+                <>
+                  <span className="text-muted-foreground">·</span>
+                  <span>{item.date}</span>
+                </>
+              )}
             </div>
-          ) : null;
-        })()}
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
-            <span className="text-xs font-bold text-primary">{item.name?.[0] ?? "?"}</span>
           </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
-            <p className="text-xs text-muted-foreground">
-              {[item.reviewCount, item.source || "Google review"].filter(Boolean).join(" · ")}
-            </p>
+          <p className="mb-7 flex-1 text-[15px] italic leading-8 text-slate-800">"{item.quote}"</p>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <span className="text-sm font-medium text-primary">{item.name?.[0] ?? "?"}</span>
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-slate-900">{item.name}</p>
+              <p className="text-xs text-muted-foreground">{footerMeta.join(" · ")}</p>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </CardContent>
+      </Card>
+    );
+  };
 
   const renderCard = (item: TestimonialItem, i: number) =>
     isGoogleReviews ? (
