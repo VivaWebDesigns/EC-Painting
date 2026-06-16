@@ -1610,7 +1610,7 @@ const spokePages: SpokePage[] = [
     heroTitle: "Drywall Repair in Charlotte, NC",
     heroSubtitle:
       "Cracks, holes, water damage, doorknob dents — fixed by Charlotte's family-owned painting team. As a standalone service or as part of a larger interior project.",
-    heroImage: "/img/gallery/domina/ChatGPT_Image_Feb_20__2026__08_49_54_AM_1771595655139-EUdnvQPG.webp",
+    heroImage: "/img/services/drywall-repair.webp",
     sections: [
       {
         type: "intro",
