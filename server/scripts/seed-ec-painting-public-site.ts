@@ -2472,6 +2472,21 @@ function aboutContent() {
         "So Esau and Sandra decided to build a painting business that solved those problems. One where homeowners could call the owner directly. One where the prep work got done before the paint went on. One where the family who painted your home actually cared whether you'd recommend them to your neighbor.",
         "Five years later, that's still how we run 593 EC Painting. We've painted hundreds of homes across Charlotte and the surrounding Carolinas, and we've built a business almost entirely on referrals and repeat customers — because the work speaks for itself.",
       ]),
+      block("text-image", {
+        heading: "The Family Behind the Work",
+        body: [
+          p(
+            "593 EC Painting is run by Esau and Sandra, a husband-and-wife team painting homes across Charlotte and the surrounding Carolinas with honest pricing, careful prep, and clear communication.",
+          ),
+          p(
+            "When you call us, you reach the owners directly. When we paint your home, we treat it like our own.",
+          ),
+        ].join(""),
+        imageUrl: "/img/about-family.webp",
+        imageAlt: "Esau and Sandra with their family outdoors",
+        imageCaption: "",
+        imagePosition: "right",
+      }),
       featureList(
         "What You Get When You Hire 593 EC Painting",
         "The differences are small but they add up to a completely different experience than hiring a faceless crew.",
