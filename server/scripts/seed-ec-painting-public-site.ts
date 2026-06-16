@@ -2652,7 +2652,7 @@ function galleryContent() {
       ]),
       galleryBlock(
         "Browse Our Work",
-        "Real project photos from cabinet painting, interior painting, and exterior painting work.",
+        "Real project photos from cabinet painting, interior painting, exterior painting, deck work, and project prep.",
         galleryImages,
         galleryImages.length,
       ),
