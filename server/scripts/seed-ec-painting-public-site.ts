@@ -2637,7 +2637,7 @@ function reviewsContent() {
         headline: "What Charlotte Homeowners Say About 593 EC Painting",
         subheadline:
           "Real reviews from real customers. We've built this business on word of mouth — here's the word.",
-        image: "/img/gallery/living-room.webp",
+        image: "/img/services/reviews.webp",
       }),
       block("stats-bar", {
         items: [
