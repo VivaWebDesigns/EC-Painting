@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { FormModalButton } from "@/components/forms/form-modal-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Carousel,
   CarouselContent,
@@ -683,6 +684,9 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   const variant = str(props.variant);
   const items = arr<TestimonialItem>(props.items);
   const shouldCarousel = items.length > 2;
+  const [expandedReview, setExpandedReview] = useState<TestimonialItem | null>(null);
+  const shouldClampReview = (item: TestimonialItem) =>
+    variant === "google-carousel" && item.quote.length > 600;
 
   const GoogleMark = () => (
     <svg viewBox="0 0 48 48" aria-hidden="true" className="h-5 w-5 shrink-0">
@@ -740,7 +744,24 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
         ) : (
           <Quote className="h-5 w-5 text-primary/30 mb-3" />
         )}
-        <p className="text-sm leading-relaxed mb-4 italic">"{item.quote}"</p>
+        <p
+          className={
+            shouldClampReview(item)
+              ? "text-sm leading-relaxed mb-3 italic max-md:line-clamp-[13]"
+              : "text-sm leading-relaxed mb-4 italic"
+          }
+        >
+          "{item.quote}"
+        </p>
+        {shouldClampReview(item) ? (
+          <button
+            type="button"
+            className="mb-4 hidden h-auto p-0 text-xs font-semibold text-primary underline-offset-4 hover:underline max-md:inline-flex"
+            onClick={() => setExpandedReview(item)}
+          >
+            Read more
+          </button>
+        ) : null}
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
             <span className="text-xs font-semibold text-primary">{item.name?.[0] ?? "?"}</span>
@@ -789,6 +810,18 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
           {items.map((item, i) => renderCard(item, i))}
         </div>
       )}
+      <Dialog open={Boolean(expandedReview)} onOpenChange={(open) => !open && setExpandedReview(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{expandedReview?.name}</DialogTitle>
+            <DialogDescription>
+              {expandedReview?.role || "Customer"}
+              {expandedReview?.location ? ` · ${expandedReview.location}` : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <p className="text-sm leading-relaxed italic text-slate-800">"{expandedReview?.quote}"</p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
