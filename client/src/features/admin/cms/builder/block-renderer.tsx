@@ -681,6 +681,7 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
   const items = arr<TestimonialItem>(props.items);
   const isGoogleReviews = str(props.variant) === "google-reviews";
   const shouldCarousel = items.length > (isGoogleReviews ? 2 : 3);
+  const [googleReviewIndex, setGoogleReviewIndex] = useState(0);
 
   const renderStars = (sizeClass = "h-4 w-4") => (
     <div className="flex gap-0.5 text-amber-400" aria-label="5 star review">
@@ -774,6 +775,40 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
       <SectionHeading props={props} defaultAlignment="center" className="mb-8" />
       {items.length === 0 ? (
         <p className="text-muted-foreground">Add testimonials to display here.</p>
+      ) : isGoogleReviews && shouldCarousel ? (
+        <div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {items.slice(googleReviewIndex, googleReviewIndex + 2).map((item, i) => (
+              <div key={`${googleReviewIndex}-${i}`} className={i === 1 ? "hidden md:block" : ""}>
+                {renderCard(item, googleReviewIndex + i)}
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 rounded-full border-border/70 bg-background/95"
+              disabled={googleReviewIndex === 0}
+              onClick={() => setGoogleReviewIndex((index) => Math.max(0, index - 1))}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Previous review</span>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 rounded-full border-border/70 bg-background/95"
+              disabled={googleReviewIndex >= items.length - 1}
+              onClick={() => setGoogleReviewIndex((index) => Math.min(items.length - 1, index + 1))}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Next review</span>
+            </Button>
+          </div>
+        </div>
       ) : shouldCarousel ? (
         <div>
           <Carousel
