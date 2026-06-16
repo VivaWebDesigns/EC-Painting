@@ -1974,7 +1974,7 @@ const spokePages: SpokePage[] = [
     heroTitle: "Pressure Washing in Charlotte, NC",
     heroSubtitle:
       "Siding, brick, concrete, decks, and patios — cleaned by Charlotte's family-owned painting team. Available as a standalone service or paired with exterior painting.",
-    heroImage: "/img/gallery/domina/image_1771599160031-DGhi3ZGx.webp",
+    heroImage: "/img/services/pressure-washing.webp",
     sections: [
       {
         type: "intro",
