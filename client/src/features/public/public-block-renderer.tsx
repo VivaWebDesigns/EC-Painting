@@ -1145,12 +1145,36 @@ function ButtonGroupBlock({ props }: { props: Record<string, unknown> }) {
 }
 
 function RawHtmlBlock({ props }: { props: Record<string, unknown> }) {
+  const html = str(props.html) || "";
+
+  useEffect(() => {
+    if (!html.includes("instagram-media") || typeof document === "undefined") return;
+
+    const processEmbeds = () => {
+      const instagram = (window as Window & { instgrm?: { Embeds?: { process: () => void } } }).instgrm;
+      instagram?.Embeds?.process();
+    };
+
+    const existingScript = document.getElementById("instagram-embed-script") as HTMLScriptElement | null;
+    if (existingScript) {
+      processEmbeds();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "instagram-embed-script";
+    script.async = true;
+    script.src = "https://www.instagram.com/embed.js";
+    script.onload = processEmbeds;
+    document.body.appendChild(script);
+  }, [html]);
+
   return (
     <div className="py-4">
       <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
       <div
         className="prose prose-sm max-w-none text-foreground"
-        dangerouslySetInnerHTML={{ __html: str(props.html) || "" }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
   );

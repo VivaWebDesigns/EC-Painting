@@ -15,6 +15,24 @@ const LAUNCH_DATE = "June 14, 2026";
 const GOOGLE_BUSINESS_URL = "https://share.google/u57kJ9pAzlWBYogu8";
 const FACEBOOK_URL = "https://www.facebook.com/ec.painting.3/";
 const INSTAGRAM_URL = "https://www.instagram.com/593ecpainting/";
+const INSTAGRAM_EMBED_HTML = `
+<div class="flex justify-center">
+  <blockquote
+    class="instagram-media"
+    data-instgrm-permalink="https://www.instagram.com/593ecpainting/?utm_source=ig_embed&amp;utm_campaign=loading"
+    data-instgrm-version="14"
+    style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:99.375%;width:-webkit-calc(100% - 2px);width:calc(100% - 2px);"
+  >
+    <div style="padding:16px;text-align:center;">
+      <a href="https://www.instagram.com/593ecpainting/?utm_source=ig_embed&amp;utm_campaign=loading" target="_blank" rel="noopener" style="color:#3897f0;font-family:Arial,sans-serif;font-size:14px;font-weight:550;line-height:18px;text-decoration:none;">
+        View this profile on Instagram
+      </a>
+      <p style="color:#c9c8cd;font-family:Arial,sans-serif;font-size:14px;line-height:17px;margin:8px 0 0;overflow:hidden;padding:8px 0 7px;text-align:center;text-overflow:ellipsis;white-space:nowrap;">
+        EC Painting (@593ecpainting) • Instagram photos and videos
+      </p>
+    </div>
+  </blockquote>
+</div>`;
 const LOGO_URL = "/img/593-ec-painting-logo-full-color.png";
 const OG_IMAGE_URL = "/img/593-ec-painting-og.jpg";
 const FAVICON_URL = "/favicon.ico";
@@ -2789,6 +2807,11 @@ function galleryContent() {
         galleryImages,
         galleryImages.length,
       ),
+      block("raw-html", {
+        title: "Follow 593 EC Painting on Instagram",
+        subtitle: "See more recent project photos, cabinet transformations, and in-progress updates from the team.",
+        html: INSTAGRAM_EMBED_HTML,
+      }),
       cta(
         "Want Your Home in This Gallery?",
         "Get a free quote and let us add your project to the next batch of before-and-afters.",
