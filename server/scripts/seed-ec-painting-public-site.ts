@@ -1164,6 +1164,13 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Interior",
+    "dining-room-trim-and-wall-painting-20260617.webp",
+    "Dining room with fresh wall paint, white trim, wainscoting, and chandelier",
+    "Dining Room Trim and Wall Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
     "ceiling-renovation-room-painting-gallery-20260616.webp",
     "Ceiling renovation and interior painting progress photos in a bright room",
     "Ceiling and Room Painting",
@@ -1174,6 +1181,13 @@ const galleryImages: GalleryImage[] = [
     "bright-and-minimalist-bedroom-interior.webp",
     "Minimal bedroom with freshly painted neutral walls and trim",
     "Bedroom Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "primary-bedroom-interior-painting-20260617.webp",
+    "Primary bedroom with fresh interior paint, tray ceiling, and bright window light",
+    "Primary Bedroom Painting",
     "Charlotte Area",
   ),
   galleryItem(
@@ -1227,6 +1241,13 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Interior",
+    "dark-vanity-bathroom-painting-20260617.webp",
+    "Bathroom with dark painted vanity, brass fixtures, and fresh wall paint",
+    "Bathroom Vanity Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
     "foyer-staircase-entry-door-renovation-20260616.webp",
     "Foyer, staircase, railing, and entry door renovation project collage",
     "Foyer and Staircase Painting",
@@ -1258,6 +1279,13 @@ const galleryImages: GalleryImage[] = [
     "cleaned-bright-modern-kitchen-and-dining-space.webp",
     "Bright modern kitchen and dining space with fresh walls and trim",
     "Kitchen and Dining Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "double-vanity-bathroom-painting-20260617.webp",
+    "Double vanity bathroom with fresh paint, wood cabinetry, and bright finishes",
+    "Bathroom Painting",
     "Charlotte Area",
   ),
   galleryItem(
@@ -1304,6 +1332,13 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Interior",
+    "luxury-bathroom-interior-painting-20260617.webp",
+    "Luxury bathroom with freestanding tub, fresh walls, trim, and bright window",
+    "Luxury Bathroom Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
     "cleaned-modern-home-office-with-dark-accents.webp",
     "Modern home office with dark accent walls and white trim",
     "Home Office Painting",
@@ -1325,6 +1360,13 @@ const galleryImages: GalleryImage[] = [
   ),
   galleryItem(
     "Interior",
+    "guest-bathroom-shower-painting-20260617.webp",
+    "Guest bathroom with fresh paint, dark shower tile, and painted vanity",
+    "Guest Bathroom Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
     "cleaned-modern-living-room-with-tray-ceiling.webp",
     "Modern living room with dark walls, tray ceiling, and recessed lighting",
     "Living Room Painting",
@@ -1335,6 +1377,13 @@ const galleryImages: GalleryImage[] = [
     "whole-home-renovation-before-and-after-20260616.webp",
     "Whole home renovation before and after with interior painting and ceiling work",
     "Whole Home Interior Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "finished-attic-interior-painting-20260617.webp",
+    "Finished attic with fresh white walls, ceiling, trim, and carpet",
+    "Finished Attic Painting",
     "Charlotte Area",
   ),
   galleryItem(
@@ -1363,6 +1412,13 @@ const galleryImages: GalleryImage[] = [
     "claude-02-mudroom.webp",
     "Bright mudroom with built-in bench, white trim, and fresh paint",
     "Mudroom Painting",
+    "Charlotte Area",
+  ),
+  galleryItem(
+    "Interior",
+    "secondary-bedroom-interior-painting-20260617.webp",
+    "Secondary bedroom with fresh wall paint, ceiling, trim, and natural light",
+    "Bedroom Painting",
     "Charlotte Area",
   ),
   galleryItem(
