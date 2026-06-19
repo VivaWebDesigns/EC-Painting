@@ -589,13 +589,11 @@ function ArrayItemsField({
                     <SelectValue placeholder="Select form…" />
                   </SelectTrigger>
                   <SelectContent>
-                    {forms
-                      .filter((form) => form.kind !== "application")
-                      .map((form) => (
-                        <SelectItem key={form.slug} value={form.slug} className="text-xs">
-                          {form.name}
-                        </SelectItem>
-                      ))}
+                    {forms.map((form) => (
+                      <SelectItem key={form.slug} value={form.slug} className="text-xs">
+                        {form.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               ) : field.type === "url" && isButtonLinkFieldKey(field.key) && normalizeButtonActionValue(field.key, item) === "internal-link" ? (
@@ -766,9 +764,7 @@ function PropField({
           </SelectTrigger>
           <SelectContent>
             {(propDef.type === "form-select"
-              ? forms
-                  .filter((form) => form.kind !== "application")
-                  .map((form) => ({ label: form.name, value: form.slug }))
+              ? forms.map((form) => ({ label: form.name, value: form.slug }))
               : propDef.options ?? []
             ).map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>

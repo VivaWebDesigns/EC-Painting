@@ -181,13 +181,11 @@ function WidgetSettings({
                 <SelectValue placeholder="Select a form" />
               </SelectTrigger>
               <SelectContent>
-                {forms
-                  .filter((form) => form.kind !== "application")
-                  .map((form) => (
-                    <SelectItem key={form.id} value={form.slug}>
-                      {form.name}
-                    </SelectItem>
-                  ))}
+                {forms.map((form) => (
+                  <SelectItem key={form.id} value={form.slug}>
+                    {form.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

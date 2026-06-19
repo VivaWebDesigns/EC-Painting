@@ -532,7 +532,7 @@ export default function CmsMediaPage() {
                   </div>
                 ) : (
                   <p className="text-sm text-muted-foreground">
-                    No page, post, event, or global SEO references were found for this media item.
+                    No page, section, form, or global SEO references were found for this media item.
                   </p>
                 )}
               </div>

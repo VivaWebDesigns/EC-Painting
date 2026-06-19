@@ -30,9 +30,7 @@ export class FormsStorage {
       .from(cmsForms)
       .where(eq(cmsForms.isActive, true))
       .orderBy(cmsForms.name);
-    return rows
-      .map((row) => normalizeForm(row))
-      .filter((row): row is CmsForm => Boolean(row && row.kind !== "application"));
+    return rows.map((row) => normalizeForm(row));
   }
 
   async getById(id: string): Promise<CmsForm | undefined> {
@@ -52,7 +50,6 @@ export class FormsStorage {
       .where(and(eq(cmsForms.slug, slug), eq(cmsForms.isActive, true)))
       .limit(1);
     const normalized = normalizeForm(form);
-    if (!normalized || normalized.kind === "application") return undefined;
     return normalized;
   }
 
