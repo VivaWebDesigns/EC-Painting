@@ -69,6 +69,10 @@ const WIDGET_ICONS: Record<SidebarWidgetType, ElementType> = {
   "custom-html": Type,
 };
 
+const ACTIVE_WIDGET_TYPES = SIDEBAR_WIDGET_TYPES.filter(
+  (type) => type !== "recent-posts" && type !== "newsletter",
+) as SidebarWidgetType[];
+
 function generateId() {
   return Math.random().toString(36).substring(2, 10);
 }
@@ -133,6 +137,9 @@ function WidgetSettings({
   const updateSetting = (key: string, value: unknown) => {
     onChange({ settings: { ...widget.settings, [key]: value } });
   };
+  const widgetTypeOptions = ACTIVE_WIDGET_TYPES.includes(widget.type)
+    ? ACTIVE_WIDGET_TYPES
+    : [widget.type, ...ACTIVE_WIDGET_TYPES];
 
   return (
     <div className="space-y-3">
@@ -159,7 +166,7 @@ function WidgetSettings({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {SIDEBAR_WIDGET_TYPES.map((type) => (
+              {widgetTypeOptions.map((type) => (
                 <SelectItem key={type} value={type}>{WIDGET_LABELS[type]}</SelectItem>
               ))}
             </SelectContent>
@@ -402,8 +409,8 @@ function SidebarEditor({ sidebar, onClose }: { sidebar: CmsSidebar | null; onClo
             </div>
             <div className="flex items-center justify-between rounded-lg border px-4 py-3">
               <div>
-                <Label>Default Blog Sidebar</Label>
-                <p className="text-xs text-muted-foreground mt-0.5">Used automatically by blog posts.</p>
+                <Label>Default Sidebar</Label>
+                <p className="text-xs text-muted-foreground mt-0.5">Used automatically by pages that select a sidebar.</p>
               </div>
               <Switch checked={isDefault} onCheckedChange={setIsDefault} data-testid="switch-sidebar-default" />
             </div>
@@ -427,7 +434,7 @@ function SidebarEditor({ sidebar, onClose }: { sidebar: CmsSidebar | null; onClo
                 <SelectValue placeholder="Add widget..." />
               </SelectTrigger>
               <SelectContent>
-                {SIDEBAR_WIDGET_TYPES.map((type) => (
+                {ACTIVE_WIDGET_TYPES.map((type) => (
                   <SelectItem key={type} value={type}>{WIDGET_LABELS[type]}</SelectItem>
                 ))}
               </SelectContent>
@@ -517,7 +524,7 @@ export default function CmsSidebarsPage() {
           <div>
             <h1 className="text-2xl font-heading font-semibold" data-testid="text-sidebars-title">Sidebars & Widgets</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Create reusable right-side sidebars for pages and blog posts.
+              Create reusable right-side sidebars for CMS pages.
             </p>
           </div>
           <Button onClick={() => setEditingSidebar("new")} data-testid="button-create-sidebar">
@@ -536,7 +543,7 @@ export default function CmsSidebarsPage() {
               <PanelRight className="mx-auto mb-3 h-12 w-12 text-muted-foreground opacity-50" />
               <h2 className="text-lg font-medium">No sidebars yet</h2>
               <p className="text-sm text-muted-foreground mt-1 mb-4">
-                Create a default blog sidebar or page-specific sidebar to get started.
+                Create a page-specific sidebar to get started.
               </p>
               <Button onClick={() => setEditingSidebar("new")}>
                 <Plus className="mr-2 h-4 w-4" />

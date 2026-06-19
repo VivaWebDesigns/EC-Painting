@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
+import type { ElementType } from "react";
 import { AdminSidebar } from "@/features/admin/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { SeoSettings } from "@shared/schema";
+import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 import { CmsSeoAuditTab } from "./cms-seo-audit-tab";
 import { CmsRedirectsTab } from "./cms-redirects-tab";
 import { CmsSitemapTab } from "./cms-sitemap-tab";
@@ -79,7 +81,15 @@ const seoFormSchema = z.object({
 
 type SeoFormValues = z.infer<typeof seoFormSchema>;
 
-const ROADMAP_ITEMS = [
+type RoadmapItem = {
+  icon: ElementType;
+  title: string;
+  description: string;
+  status: "available" | "planned";
+  feature?: keyof SiteFeatures;
+};
+
+const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     icon: Globe,
     title: "Per-Page SEO",
@@ -91,17 +101,18 @@ const ROADMAP_ITEMS = [
     title: "Per-Post SEO",
     description: "Blog posts already support seoTitle, seoDescription, and ogImageUrl. Fields are editable in the blog post editor.",
     status: "available",
+    feature: "blogEnabled",
   },
   {
     icon: Code2,
     title: "Structured Data / JSON-LD",
-    description: "Organization, WebSite, BreadcrumbList, Article (blog posts), Event (event detail), VideoObject (events with recordings), and FAQPage (CMS pages with FAQ blocks) are generated automatically from real content using JSON-LD.",
+    description: "Organization, WebSite, BreadcrumbList, and FAQPage structured data are generated automatically from current site content.",
     status: "available",
   },
   {
     icon: Map,
     title: "Sitemap Generation",
-    description: "Auto-generated /sitemap.xml from all published CMS pages, blog posts, and public events. Draft and noindex content is automatically excluded. Preview available in the Sitemap tab.",
+    description: "Auto-generated /sitemap.xml from all published CMS pages. Draft, noindex, and retired inherited routes are automatically excluded.",
     status: "available",
   },
   {
@@ -113,7 +124,7 @@ const ROADMAP_ITEMS = [
   {
     icon: BarChart2,
     title: "SEO Audit",
-    description: "Scans all CMS pages, blog posts, and events for missing SEO title, meta description, social image, noindex flags, and publication status. Includes direct edit links.",
+    description: "Scans CMS pages for missing SEO title, meta description, social image, noindex flags, and publication status. Includes direct edit links.",
     status: "available",
   },
 ];
@@ -140,6 +151,12 @@ export default function CmsSeoPage() {
   const { data: settings, isLoading } = useQuery<SeoSettings>({
     queryKey: ["/api/admin/cms/seo"],
   });
+  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
+    queryKey: ["/api/site-config"],
+    staleTime: 60_000,
+  });
+  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
+  const roadmapItems = ROADMAP_ITEMS.filter((item) => !item.feature || siteFeatures[item.feature]);
 
   const form = useForm<SeoFormValues>({
     resolver: zodResolver(seoFormSchema),
@@ -583,7 +600,7 @@ export default function CmsSeoPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-1">
-                {ROADMAP_ITEMS.map((item, i) => (
+                {roadmapItems.map((item, i) => (
                   <div key={item.title}>
                     <div className="flex items-start gap-3 py-3">
                       <div className="h-8 w-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center shrink-0 mt-0.5">
@@ -597,7 +614,7 @@ export default function CmsSeoPage() {
                         <p className="text-xs text-muted-foreground">{item.description}</p>
                       </div>
                     </div>
-                    {i < ROADMAP_ITEMS.length - 1 && <Separator />}
+                    {i < roadmapItems.length - 1 && <Separator />}
                   </div>
                 ))}
               </CardContent>

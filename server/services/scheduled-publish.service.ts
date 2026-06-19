@@ -3,13 +3,18 @@ import { logger } from "../utils/logger";
 
 const HEARTBEAT_MS = 5 * 60_000;
 
-export function startScheduledPublishService() {
+interface ScheduledPublishOptions {
+  includeBlog?: boolean;
+}
+
+export function startScheduledPublishService(options: ScheduledPublishOptions = {}) {
+  const includeBlog = options.includeBlog ?? true;
   let timer: ReturnType<typeof setTimeout> | null = null;
 
   async function getNextScheduledTime(): Promise<Date | null> {
     const [pageTime, postTime] = await Promise.all([
       storage.cmsPages.getNextScheduledTime(),
-      storage.blog.getNextScheduledTime(),
+      includeBlog ? storage.blog.getNextScheduledTime() : Promise.resolve(null),
     ]);
     if (!pageTime && !postTime) return null;
     if (!pageTime) return postTime;
@@ -21,7 +26,7 @@ export function startScheduledPublishService() {
     timer = null;
     try {
       const pages = await storage.cmsPages.publishScheduledPages();
-      const posts = await storage.blog.publishScheduledPosts();
+      const posts = includeBlog ? await storage.blog.publishScheduledPosts() : 0;
       if (pages > 0 || posts > 0) {
         logger.app.info(`[scheduler] Auto-published ${pages} page(s) and ${posts} post(s)`);
       }
@@ -54,5 +59,9 @@ export function startScheduledPublishService() {
   }
 
   run();
-  logger.app.info("[scheduler] Scheduled publishing service started");
+  logger.app.info(
+    includeBlog
+      ? "[scheduler] Scheduled publishing service started"
+      : "[scheduler] Scheduled publishing service started with blog publishing disabled",
+  );
 }

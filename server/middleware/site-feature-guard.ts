@@ -3,21 +3,32 @@ import { DEFAULT_SITE_FEATURES, normalizeBooleanSetting, type SiteFeatures } fro
 import { storage } from "../storage";
 import { logger } from "../utils/logger";
 
-const FEATURE_SETTING_KEYS: Record<keyof SiteFeatures, string> = {
-  directoryEnabled: "enable_directory",
-  blogEnabled: "enable_blog",
-  eventsEnabled: "enable_events",
-  crmEnabled: "enable_crm",
-};
+export async function getSiteFeatures(): Promise<SiteFeatures> {
+  const settings = await storage.settings.getDecryptedCategory("system_configuration");
+  return {
+    directoryEnabled: normalizeBooleanSetting(
+      settings.enable_directory,
+      DEFAULT_SITE_FEATURES.directoryEnabled,
+    ),
+    blogEnabled: normalizeBooleanSetting(
+      settings.enable_blog,
+      DEFAULT_SITE_FEATURES.blogEnabled,
+    ),
+    eventsEnabled: normalizeBooleanSetting(
+      settings.enable_events,
+      DEFAULT_SITE_FEATURES.eventsEnabled,
+    ),
+    crmEnabled: normalizeBooleanSetting(
+      settings.enable_crm,
+      DEFAULT_SITE_FEATURES.crmEnabled,
+    ),
+  };
+}
 
 export function requireSiteFeature(feature: keyof SiteFeatures) {
   return async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const settings = await storage.settings.getDecryptedCategory("system_configuration");
-      const enabled = normalizeBooleanSetting(
-        settings[FEATURE_SETTING_KEYS[feature]],
-        DEFAULT_SITE_FEATURES[feature],
-      );
+      const enabled = (await getSiteFeatures())[feature];
 
       if (!enabled) {
         return res.status(404).json({ message: "Not found" });

@@ -17,6 +17,7 @@ import {
   Blocks,
 } from "lucide-react";
 import type { CmsPage, BlogPost } from "@shared/schema";
+import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 import { format } from "date-fns";
 
 export default function CmsOverviewPage() {
@@ -26,17 +27,23 @@ export default function CmsOverviewPage() {
     queryKey: ["/api/admin/cms/pages"],
   });
 
+  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
+    queryKey: ["/api/site-config"],
+    staleTime: 60_000,
+  });
+  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
+  const blogEnabled = siteFeatures.blogEnabled;
+
   const { data: posts = [], isLoading: postsLoading } = useQuery<BlogPost[]>({
     queryKey: ["/api/admin/blog"],
+    enabled: blogEnabled,
   });
 
-  const isLoading = pagesLoading || postsLoading;
+  const isLoading = pagesLoading || (blogEnabled && postsLoading);
 
   const totalPages = pages.length;
   const publishedPages = pages.filter((p) => p.status === "published").length;
-  const draftPages = pages.filter((p) => p.status === "draft").length;
   const recentPages = pages.slice(0, 5);
-
   const totalPosts = posts.length;
   const publishedPosts = posts.filter((p) => p.isPublished).length;
 
@@ -50,15 +57,19 @@ export default function CmsOverviewPage() {
       bg: "bg-violet-50 dark:bg-violet-950/30",
       available: true,
     },
-    {
-      title: "Blog",
-      description: "Write and publish articles at /insights with SEO controls",
-      icon: BookOpen,
-      href: "/admin/cms/blog",
-      color: "text-purple-600",
-      bg: "bg-purple-50 dark:bg-purple-950/30",
-      available: true,
-    },
+    ...(blogEnabled
+      ? [
+          {
+            title: "Blog",
+            description: "Write and publish articles with SEO controls",
+            icon: BookOpen,
+            href: "/admin/cms/blog",
+            color: "text-purple-600",
+            bg: "bg-purple-50 dark:bg-purple-950/30",
+            available: true,
+          },
+        ]
+      : []),
     {
       title: "Media Library",
       description: "Upload and manage images and files via Cloudflare R2",
@@ -97,7 +108,7 @@ export default function CmsOverviewPage() {
               Content Management System
             </h1>
             <p className="text-muted-foreground mt-1">
-              Manage your public-facing website pages, blog, and media
+              Manage your public-facing website pages, media, and reusable sections
             </p>
           </div>
           <Button onClick={() => navigate("/admin/cms/pages/new")} data-testid="button-create-page">
@@ -106,7 +117,7 @@ export default function CmsOverviewPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className={blogEnabled ? "grid grid-cols-2 sm:grid-cols-4 gap-4" : "grid grid-cols-2 gap-4"}>
           <Card data-testid="card-stat-total">
             <CardContent className="pt-5">
               <div className="flex items-center gap-3">
@@ -142,42 +153,45 @@ export default function CmsOverviewPage() {
               </div>
             </CardContent>
           </Card>
+          {blogEnabled && (
+            <>
+              <Card data-testid="card-stat-blog-total">
+                <CardContent className="pt-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                      <BookOpen className="h-4.5 w-4.5 text-purple-600" />
+                    </div>
+                    <div>
+                      {isLoading ? (
+                        <Skeleton className="h-6 w-10" />
+                      ) : (
+                        <p className="text-xl font-bold" data-testid="text-stat-blog-total">{totalPosts}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">Blog Posts</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card data-testid="card-stat-blog-total">
-            <CardContent className="pt-5">
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                  <BookOpen className="h-4.5 w-4.5 text-purple-600" />
-                </div>
-                <div>
-                  {isLoading ? (
-                    <Skeleton className="h-6 w-10" />
-                  ) : (
-                    <p className="text-xl font-bold" data-testid="text-stat-blog-total">{totalPosts}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground">Blog Posts</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card data-testid="card-stat-blog-published">
-            <CardContent className="pt-5">
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                  <BookOpen className="h-4.5 w-4.5 text-emerald-500" />
-                </div>
-                <div>
-                  {isLoading ? (
-                    <Skeleton className="h-6 w-10" />
-                  ) : (
-                    <p className="text-xl font-bold" data-testid="text-stat-blog-published">{publishedPosts}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground">Posts Live</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Card data-testid="card-stat-blog-published">
+                <CardContent className="pt-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                      <BookOpen className="h-4.5 w-4.5 text-emerald-500" />
+                    </div>
+                    <div>
+                      {isLoading ? (
+                        <Skeleton className="h-6 w-10" />
+                      ) : (
+                        <p className="text-xl font-bold" data-testid="text-stat-blog-published">{publishedPosts}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">Posts Live</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">

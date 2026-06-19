@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { storage } from "../../storage/index";
+import { getSiteFeatures } from "../../middleware/site-feature-guard";
+import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 
 const router = Router();
 
@@ -36,10 +38,17 @@ function eventIssues(event: any): string[] {
 
 router.get("/seo-audit", async (_req, res) => {
   try {
+    let siteFeatures = DEFAULT_SITE_FEATURES;
+    try {
+      siteFeatures = await getSiteFeatures();
+    } catch {
+      siteFeatures = DEFAULT_SITE_FEATURES;
+    }
+
     const [pages, posts, events] = await Promise.all([
       storage.cmsPages.getAllPages(),
-      storage.blog.getAllPosts(),
-      storage.events.getAllEvents(),
+      siteFeatures.blogEnabled ? storage.blog.getAllPosts() : Promise.resolve([]),
+      siteFeatures.eventsEnabled ? storage.events.getAllEvents() : Promise.resolve([]),
     ]);
 
     res.json({

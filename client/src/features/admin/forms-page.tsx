@@ -115,9 +115,6 @@ const FIELD_LIBRARY_GROUPS: Array<{ key: "standard" | "advanced"; label: string 
 
 const KIND_OPTIONS: Array<{ value: CmsFormKind; label: string }> = [
   { value: "contact", label: "Contact" },
-  { value: "newsletter", label: "Newsletter" },
-  { value: "interest", label: "Interest" },
-  { value: "application", label: "Application / System" },
   { value: "custom", label: "Custom" },
 ];
 
@@ -1020,7 +1017,7 @@ function FormsPageContent() {
         <Card className="h-fit">
           <CardHeader>
             <CardTitle className="text-base">Form Library</CardTitle>
-            <CardDescription>System forms, newsletter forms, and reusable embeds all live here.</CardDescription>
+            <CardDescription>Contact forms and reusable embeds all live here.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {isLoading ? (

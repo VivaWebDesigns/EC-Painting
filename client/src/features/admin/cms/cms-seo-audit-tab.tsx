@@ -19,6 +19,7 @@ import {
   User,
   Link2Off,
 } from "lucide-react";
+import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 
 interface AuditItem {
   id: string;
@@ -179,6 +180,11 @@ export function CmsSeoAuditTab() {
     queryKey: ["/api/admin/cms/seo-audit"],
     staleTime: 2 * 60 * 1000,
   });
+  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
+    queryKey: ["/api/site-config"],
+    staleTime: 60_000,
+  });
+  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
 
   if (isLoading) {
     return (
@@ -207,8 +213,8 @@ export function CmsSeoAuditTab() {
 
   const allItems = [
     ...data.pages.map((p) => ({ ...p, _type: "page" as const })),
-    ...data.posts.map((p) => ({ ...p, _type: "post" as const })),
-    ...data.events.map((e) => ({ ...e, _type: "event" as const })),
+    ...(siteFeatures.blogEnabled ? data.posts.map((p) => ({ ...p, _type: "post" as const })) : []),
+    ...(siteFeatures.eventsEnabled ? data.events.map((e) => ({ ...e, _type: "event" as const })) : []),
   ];
   const itemsWithIssues = allItems.filter((i) => i.issues.length > 0);
   const totalIssues = allItems.reduce((sum, i) => sum + i.issues.length, 0);
@@ -217,8 +223,12 @@ export function CmsSeoAuditTab() {
     <div className="space-y-5 mt-5">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <SummaryCard label="CMS Pages" total={data.pages.length} issues={pagesWithIssues} icon={FileText} color="bg-violet-500" />
-        <SummaryCard label="Blog Posts" total={data.posts.length} issues={postsWithIssues} icon={BookOpen} color="bg-purple-500" />
-        <SummaryCard label="Events" total={data.events.length} issues={eventsWithIssues} icon={CalendarDays} color="bg-indigo-500" />
+        {siteFeatures.blogEnabled && (
+          <SummaryCard label="Blog Posts" total={data.posts.length} issues={postsWithIssues} icon={BookOpen} color="bg-purple-500" />
+        )}
+        {siteFeatures.eventsEnabled && (
+          <SummaryCard label="Events" total={data.events.length} issues={eventsWithIssues} icon={CalendarDays} color="bg-indigo-500" />
+        )}
       </div>
 
       {totalIssues === 0 ? (
@@ -262,7 +272,7 @@ export function CmsSeoAuditTab() {
               </div>
             )}
 
-            {itemsWithIssues.filter((i) => i._type === "post").length > 0 && (
+            {siteFeatures.blogEnabled && itemsWithIssues.filter((i) => i._type === "post").length > 0 && (
               <div className="mb-4">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
                   <BookOpen className="h-3 w-3" /> Blog Posts
@@ -281,7 +291,7 @@ export function CmsSeoAuditTab() {
               </div>
             )}
 
-            {itemsWithIssues.filter((i) => i._type === "event").length > 0 && (
+            {siteFeatures.eventsEnabled && itemsWithIssues.filter((i) => i._type === "event").length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
                   <CalendarDays className="h-3 w-3" /> Events

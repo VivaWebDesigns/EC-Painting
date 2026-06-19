@@ -8,6 +8,8 @@ import type {
   Event,
   SeoSettings,
 } from "@shared/schema";
+import { getSiteFeatures } from "../middleware/site-feature-guard";
+import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 
 function isImageMimeType(mimeType: string) {
   return mimeType.startsWith("image/");
@@ -141,10 +143,17 @@ function eventStatusLabel(event: Event) {
 export async function buildCmsMediaLibraryAssets(
   assets: CmsMediaAsset[]
 ): Promise<CmsMediaLibraryAsset[]> {
+  let siteFeatures = DEFAULT_SITE_FEATURES;
+  try {
+    siteFeatures = await getSiteFeatures();
+  } catch {
+    siteFeatures = DEFAULT_SITE_FEATURES;
+  }
+
   const [pages, posts, events, seoSettings] = await Promise.all([
     storage.cmsPages.getAllPages(),
-    storage.blog.getAllPosts(),
-    storage.events.getAllEvents(),
+    siteFeatures.blogEnabled ? storage.blog.getAllPosts() : Promise.resolve([]),
+    siteFeatures.eventsEnabled ? storage.events.getAllEvents() : Promise.resolve([]),
     storage.seoSettings.get(),
   ]);
 

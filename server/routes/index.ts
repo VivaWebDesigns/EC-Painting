@@ -23,11 +23,11 @@ import applicationRoutes from "./application.routes";
 import referenceRoutes from "./reference.routes";
 import formsRoutes from "./forms.routes";
 import crmRoutes from "./crm.routes";
-import { requireSiteFeature } from "../middleware/site-feature-guard";
+import { getSiteFeatures, requireSiteFeature } from "../middleware/site-feature-guard";
 import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
-import { DEFAULT_SITE_FEATURES, normalizeBooleanSetting } from "@shared/site-features";
+import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 import {
   DEFAULT_DIRECTORY_SETTINGS,
   getDirectorySettings,
@@ -155,25 +155,7 @@ export function registerApiRoutes(app: Express) {
 
   app.get("/api/site-config", async (_req, res) => {
     try {
-      const settings = await storage.settings.getDecryptedCategory("system_configuration");
-      res.json({
-        directoryEnabled: normalizeBooleanSetting(
-          settings.enable_directory,
-          DEFAULT_SITE_FEATURES.directoryEnabled,
-        ),
-        blogEnabled: normalizeBooleanSetting(
-          settings.enable_blog,
-          DEFAULT_SITE_FEATURES.blogEnabled,
-        ),
-        eventsEnabled: normalizeBooleanSetting(
-          settings.enable_events,
-          DEFAULT_SITE_FEATURES.eventsEnabled,
-        ),
-        crmEnabled: normalizeBooleanSetting(
-          settings.enable_crm,
-          DEFAULT_SITE_FEATURES.crmEnabled,
-        ),
-      });
+      res.json(await getSiteFeatures());
     } catch (err) {
       logger.app.warn("Failed to retrieve system configuration, returning defaults", {
         error: err instanceof Error ? err.message : String(err),
