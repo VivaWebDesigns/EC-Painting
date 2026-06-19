@@ -1,26 +1,15 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
 import authRoutes from "./auth.routes";
-import directoryRoutes from "./directory.routes";
-import therapistRoutes from "./therapist.routes";
-import stripeRoutes from "./stripe.routes";
 import adminRoutes from "./admin/index";
 import settingsRoutes from "./settings.routes";
-import eventsRoutes from "./events.routes";
 import contactRoutes from "./contact.routes";
 import docsRoutes from "./docs.routes";
 import uploadRoutes from "./upload.routes";
 import notificationsRoutes from "./notifications.routes";
-import specializationsRoutes from "./specializations.routes";
-import blogRoutes from "./blog.routes";
-import registrationRoutes from "./registration.routes";
-import guestRegistrationRoutes from "./guest-registration.routes";
 import cmsPublicRoutes from "./cms-public.routes";
 import r2PublicRoutes from "./r2-public.routes";
-import contactProfessionalRoutes from "./contact-professional.routes";
 import setupRoutes from "./setup.routes";
-import applicationRoutes from "./application.routes";
-import referenceRoutes from "./reference.routes";
 import formsRoutes from "./forms.routes";
 import crmRoutes from "./crm.routes";
 import { getSiteFeatures, requireSiteFeature } from "../middleware/site-feature-guard";
@@ -28,10 +17,6 @@ import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
 import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
-import {
-  DEFAULT_DIRECTORY_SETTINGS,
-  getDirectorySettings,
-} from "../services/directory-settings.service";
 
 function escapeXml(str: string): string {
   return str
@@ -53,27 +38,16 @@ const SPOKE_SERVICE_SLUGS = new Set([
 export function registerApiRoutes(app: Express) {
   app.use("/r2", r2PublicRoutes);
   app.use("/api/auth", authRoutes);
-  app.use("/api/therapists", requireSiteFeature("directoryEnabled"), directoryRoutes);
-  app.use("/api/therapist", requireSiteFeature("directoryEnabled"), therapistRoutes);
-  app.use("/api/stripe", requireSiteFeature("directoryEnabled"), stripeRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/admin", settingsRoutes);
-  app.use("/api/events", requireSiteFeature("eventsEnabled"), eventsRoutes);
   app.use("/api/contact", contactRoutes);
   app.use("/api/forms", formsRoutes);
   app.use("/api/crm", requireSiteFeature("crmEnabled"), crmRoutes);
   app.use("/api/admin/docs", docsRoutes);
   app.use("/api/uploads", uploadRoutes);
   app.use("/api/notifications", notificationsRoutes);
-  app.use("/api/specializations", requireSiteFeature("directoryEnabled"), specializationsRoutes);
-  app.use("/api/blog", requireSiteFeature("blogEnabled"), blogRoutes);
-  app.use("/api/events", requireSiteFeature("eventsEnabled"), guestRegistrationRoutes);
-  app.use("/api/events", requireSiteFeature("eventsEnabled"), registrationRoutes);
   app.use("/api/cms", cmsPublicRoutes);
-  app.use("/api/contact-professional", requireSiteFeature("directoryEnabled"), contactProfessionalRoutes);
   app.use("/api/setup", setupRoutes);
-  app.use("/api/therapist/application", requireSiteFeature("directoryEnabled"), applicationRoutes);
-  app.use("/api/reference", requireSiteFeature("directoryEnabled"), referenceRoutes);
 
   app.get("/api/search", async (req, res) => {
     try {
@@ -177,22 +151,6 @@ export function registerApiRoutes(app: Express) {
       res.json({
         ga4MeasurementId: null,
       });
-    }
-  });
-
-  app.get("/api/membership-tiers", requireSiteFeature("directoryEnabled"), async (_req, res) => {
-    const tiers = await storage.tiers.getActiveTiers();
-    res.json(tiers);
-  });
-
-  app.get("/api/directory-settings", requireSiteFeature("directoryEnabled"), async (_req, res) => {
-    try {
-      res.json(await getDirectorySettings());
-    } catch (err) {
-      logger.app.warn("Failed to retrieve directory settings, returning defaults", {
-        error: err instanceof Error ? err.message : String(err),
-      });
-      res.json(DEFAULT_DIRECTORY_SETTINGS);
     }
   });
 

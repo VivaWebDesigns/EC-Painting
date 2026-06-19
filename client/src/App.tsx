@@ -59,11 +59,6 @@ function PageLoader() {
 
 function AdminIndexRoute() {
   const { user, hasAdminPermission } = useAuth();
-  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
-    queryKey: ["/api/site-config"],
-    staleTime: 60_000,
-  });
-  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
 
   if (!user) {
     return <Redirect to="/auth/login" replace />;
@@ -74,9 +69,6 @@ function AdminIndexRoute() {
   }
 
   if (user.role === "editor") {
-    if (siteFeatures.directoryEnabled && hasAdminPermission("directory")) {
-      return <Redirect to="/admin/therapists" replace />;
-    }
     if (hasAdminPermission("content")) {
       return <Redirect to="/admin/cms" replace />;
     }

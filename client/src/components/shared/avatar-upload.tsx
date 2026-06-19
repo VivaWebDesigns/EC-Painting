@@ -55,7 +55,6 @@ export function AvatarUpload({
     },
     onSuccess: (data: { url: string }) => {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/therapist/profile"] });
       toast({ title: "Photo updated" });
       onUploadComplete?.(data.url);
     },

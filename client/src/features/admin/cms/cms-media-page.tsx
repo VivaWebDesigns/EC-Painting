@@ -731,7 +731,7 @@ export default function CmsMediaPage() {
             <AlertDialogTitle>Delete this media item?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently remove the file from your media library and from Cloudflare R2.
-              Any pages, posts, events, or blocks that reference this URL will show a broken file link or missing image.
+              Any pages or blocks that reference this URL will show a broken file link or missing image.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

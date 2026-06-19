@@ -93,7 +93,7 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
   useEffect(() => {
     const prevTitle = document.title;
     const effectiveTitle = page.seoTitle || page.title;
-    const titleSuffix = globalSeo?.titleSuffix ?? " | Core Platform";
+    const titleSuffix = globalSeo?.titleSuffix ?? " | 593 EC Painting";
     const effectiveDescription =
       page.seoDescription || globalSeo?.defaultMetaDescription || "";
     const effectiveOgImage = page.ogImageUrl || globalSeo?.defaultOgImageUrl || "";
@@ -203,8 +203,8 @@ function CmsLoadingPage() {
 
 export function CmsPageView({ page, globalSeo, previewLabel }: CmsPageViewProps) {
   const blocks = parseCmsContent(page.content);
-  const showSidebar = page.template === "with-sidebar" && Boolean(page.sidebarId || page.slug === "insights");
-  const useDefaultSidebar = !page.sidebarId && page.slug === "insights";
+  const showSidebar = page.template === "with-sidebar" && Boolean(page.sidebarId);
+  const useDefaultSidebar = false;
   const heroBlocks = showSidebar && blocks[0] && /hero/i.test(blocks[0].type) ? [blocks[0]] : [];
   const contentBlocks = heroBlocks.length > 0 ? blocks.slice(1) : blocks;
 

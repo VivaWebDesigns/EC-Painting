@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { inArray, eq } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { db } from "../../db";
-import { users, therapistProfiles } from "@shared/schema";
+import { users } from "@shared/schema";
 import { AdminPermission } from "@shared/types";
 import { storage } from "../../storage/index";
 import { asyncHandler } from "../../middleware/error-handler";
@@ -15,7 +15,6 @@ import * as r2Service from "../../services/r2.service";
 
 const router = Router();
 const permissionSchema = z.enum([
-  AdminPermission.DIRECTORY,
   AdminPermission.CONTENT,
   AdminPermission.DESIGN,
   AdminPermission.CRM,
@@ -133,10 +132,8 @@ router.get(
         lastLoginAt: users.lastLoginAt,
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
-        country: therapistProfiles.country,
       })
       .from(users)
-      .leftJoin(therapistProfiles, eq(therapistProfiles.userId, users.id))
       .where(inArray(users.role, ["admin", "editor"]));
 
     res.json(await Promise.all(rows.map((row) => toSafeUser(row))));

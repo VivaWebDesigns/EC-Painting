@@ -20,7 +20,7 @@ import {
   type CrmLeadNote,
   type CrmLeadStage,
   type CrmLeadTask,
-} from "@shared/schema";
+} from "@shared/schema/crm";
 import { AdminSidebar } from "./admin-sidebar";
 import { ProtectedRoute } from "@/components/shared/protected-route";
 import { apiRequest, queryClient } from "@/lib/queryClient";

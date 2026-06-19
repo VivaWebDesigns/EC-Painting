@@ -1,20 +1,15 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Search, Tag, ArrowRight } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import { PublicFormRenderer } from "@/components/forms/public-form-renderer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { BlogPost, CmsSidebar, SidebarWidget } from "@shared/schema";
+import type { CmsSidebar, SidebarWidget } from "@shared/schema";
 
 function text(value: unknown, fallback = "") {
   return typeof value === "string" ? value : fallback;
-}
-
-function numberValue(value: unknown, fallback: number) {
-  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
 function WidgetCard({ title, children }: { title?: string; children: React.ReactNode }) {
@@ -27,73 +22,6 @@ function WidgetCard({ title, children }: { title?: string; children: React.React
       )}
       <CardContent className={title ? "pt-0" : "pt-5"}>{children}</CardContent>
     </Card>
-  );
-}
-
-function RecentPostsWidget({ widget }: { widget: SidebarWidget }) {
-  const limit = numberValue(widget.settings.limit, 5);
-  const { data: posts = [] } = useQuery<BlogPost[]>({
-    queryKey: ["/api/blog"],
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const visiblePosts = posts.slice(0, limit);
-
-  return (
-    <WidgetCard title={widget.title || "Recent Posts"}>
-      <div className="space-y-4">
-        {visiblePosts.length === 0 ? (
-          <p className="text-sm public-helper-text">Recent posts will appear here.</p>
-        ) : (
-          visiblePosts.map((post) => (
-            post.postType === "external" && post.externalUrl ? (
-              <a
-                key={post.id}
-                href={post.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-sm font-medium leading-relaxed public-link-text hover:text-[var(--public-text-link-hover)] transition-colors"
-                data-testid={`sidebar-recent-post-${post.id}`}
-              >
-                {post.title}
-              </a>
-            ) : (
-              <Link key={post.id} href={`/insights/${post.slug}`}>
-                <span
-                  className="block text-sm font-medium leading-relaxed public-link-text hover:text-[var(--public-text-link-hover)] transition-colors"
-                  data-testid={`sidebar-recent-post-${post.id}`}
-                >
-                  {post.title}
-                </span>
-              </Link>
-            )
-          ))
-        )}
-      </div>
-    </WidgetCard>
-  );
-}
-
-function NewsletterWidget({ widget }: { widget: SidebarWidget }) {
-  const heading = widget.title || "Stay Connected";
-  const description = text(
-    widget.settings.description,
-    "Get Core Platform-informed articles, events, and resources in your inbox."
-  );
-  const buttonText = text(widget.settings.buttonText, "Sign Up");
-  const formSlug = text(widget.settings.formSlug, "newsletter-signup");
-
-  return (
-    <WidgetCard title={heading}>
-      <PublicFormRenderer
-        slug={formSlug}
-        showHeader={false}
-        descriptionOverride={description}
-        buttonTextOverride={buttonText}
-        compact
-        className="space-y-3"
-      />
-    </WidgetCard>
   );
 }
 
@@ -153,76 +81,11 @@ function SearchWidget({ widget }: { widget: SidebarWidget }) {
         }}
         data-testid="sidebar-search-form"
       >
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search articles and site content..." />
+        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search site content..." />
         <Button type="submit" size="icon" aria-label="Search">
           <Search className="h-4 w-4" />
         </Button>
       </form>
-    </WidgetCard>
-  );
-}
-
-function CategoriesWidget({ widget }: { widget: SidebarWidget }) {
-  const { data: posts = [] } = useQuery<BlogPost[]>({
-    queryKey: ["/api/blog"],
-    staleTime: 5 * 60 * 1000,
-  });
-  const categories = useMemo(() => {
-    const counts = new Map<string, number>();
-    posts.forEach((post) => {
-      if (!post.category) return;
-      counts.set(post.category, (counts.get(post.category) ?? 0) + 1);
-    });
-    return Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [posts]);
-
-  return (
-    <WidgetCard title={widget.title || "Categories"}>
-      <div className="space-y-2">
-        {categories.length === 0 ? (
-          <p className="text-sm public-helper-text">Categories will appear as posts are published.</p>
-        ) : (
-          categories.map(([category, count]) => (
-            <Link key={category} href={`/insights?category=${encodeURIComponent(category)}`}>
-              <span className="flex items-center justify-between rounded-md px-2 py-1.5 text-sm hover:bg-muted/50 transition-colors">
-                <span>{category}</span>
-                <Badge variant="secondary">{count}</Badge>
-              </span>
-            </Link>
-          ))
-        )}
-      </div>
-    </WidgetCard>
-  );
-}
-
-function TagsWidget({ widget }: { widget: SidebarWidget }) {
-  const { data: posts = [] } = useQuery<BlogPost[]>({
-    queryKey: ["/api/blog"],
-    staleTime: 5 * 60 * 1000,
-  });
-  const tags = useMemo(() => {
-    const unique = new Set<string>();
-    posts.forEach((post) => post.tags?.forEach((tag) => unique.add(tag)));
-    return Array.from(unique).sort((a, b) => a.localeCompare(b));
-  }, [posts]);
-
-  return (
-    <WidgetCard title={widget.title || "Popular Topics"}>
-      <div className="flex flex-wrap gap-2">
-        {tags.length === 0 ? (
-          <p className="text-sm public-helper-text">Tags will appear as posts are published.</p>
-        ) : (
-          tags.map((tag) => (
-            <Link key={tag} href={`/insights?tag=${encodeURIComponent(tag)}`}>
-              <Badge variant="outline" className="cursor-pointer">
-                <Tag className="mr-1 h-3 w-3" />
-                {tag}
-              </Badge>
-            </Link>
-          ))
-        )}
-      </div>
     </WidgetCard>
   );
 }
@@ -239,13 +102,9 @@ function HtmlWidget({ widget }: { widget: SidebarWidget }) {
 }
 
 function SidebarWidgetRenderer({ widget }: { widget: SidebarWidget }) {
-  if (widget.type === "recent-posts") return <RecentPostsWidget widget={widget} />;
-  if (widget.type === "newsletter") return <NewsletterWidget widget={widget} />;
   if (widget.type === "form") return <FormWidget widget={widget} />;
   if (widget.type === "callout") return <CalloutWidget widget={widget} />;
   if (widget.type === "search") return <SearchWidget widget={widget} />;
-  if (widget.type === "categories") return <CategoriesWidget widget={widget} />;
-  if (widget.type === "tag-cloud") return <TagsWidget widget={widget} />;
   if (widget.type === "custom-html") return <HtmlWidget widget={widget} />;
   return null;
 }

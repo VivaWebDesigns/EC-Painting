@@ -3,10 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard,
-  Users,
   UserCheck,
-  CreditCard,
-  CalendarDays,
+  Users,
   FileText,
   Settings,
   LogOut,
@@ -14,20 +12,17 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  BookOpen,
   Globe,
   FileCode,
   Image,
   SearchIcon,
   SquarePen,
   Blocks,
-  ClipboardList,
   Menu as MenuIcon,
   PanelRight,
   Database,
   Palette,
   Type,
-  Tag,
   Handshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -77,62 +72,6 @@ function buildNavGroups(
           : []),
       ],
     },
-    ...(siteFeatures.directoryEnabled && hasAdminPermission("directory")
-      ? ([
-          {
-            label: "Directory System",
-            items: [
-              {
-                title: "Directory",
-                href: "/admin/therapists",
-                icon: UserCheck,
-                iconColor: "text-emerald-600",
-                children: [
-                  {
-                    title: "Profiles",
-                    href: "/admin/therapists",
-                    icon: UserCheck,
-                    iconColor: "text-emerald-600",
-                  },
-                  {
-                    title: "Specializations",
-                    href: "/admin/therapists/specializations",
-                    icon: Tag,
-                    iconColor: "text-emerald-500",
-                  },
-                  {
-                    title: "Settings",
-                    href: "/admin/directory/settings",
-                    icon: CreditCard,
-                    iconColor: "text-amber-600",
-                  },
-                ],
-              },
-              {
-                title: "Applications",
-                href: "/admin/applications",
-                icon: ClipboardList,
-                iconColor: "text-orange-600",
-              },
-            ],
-          },
-        ] satisfies NavGroup[])
-      : []),
-    ...(siteFeatures.eventsEnabled && hasAdminPermission("content")
-      ? ([
-          {
-            label: "Event Management",
-            items: [
-              {
-                title: "Events",
-                href: "/admin/events",
-                icon: CalendarDays,
-                iconColor: "text-purple-600",
-              },
-            ],
-          },
-        ] satisfies NavGroup[])
-      : []),
     ...(siteFeatures.crmEnabled && hasAdminPermission("crm")
       ? ([
           {
@@ -177,16 +116,6 @@ function buildNavGroups(
                 icon: SquarePen,
                 iconColor: "text-violet-500",
               },
-              ...(siteFeatures.blogEnabled
-                ? [
-                    {
-                      title: "Blog",
-                      href: "/admin/cms/blog",
-                      icon: BookOpen,
-                      iconColor: "text-purple-600",
-                    } satisfies NavItem,
-                  ]
-                : []),
               {
                 title: "Media",
                 href: "/admin/cms/media",
@@ -321,13 +250,6 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
   );
   const isChildRouteActive = (child: NavItem) => {
     if (!child.href) return false;
-    if (child.href === "/admin/cms/blog") {
-      return (
-        location === child.href ||
-        location === "/admin/cms/blog/new" ||
-        /^\/admin\/cms\/blog\/[^/]+$/.test(location)
-      );
-    }
     return isRouteActive(child.href);
   };
   const isNavItemActive = (item: NavItem) =>

@@ -4,7 +4,6 @@ import path from "path";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
-import { WebhookHandlers } from "./webhooks/stripe.handler";
 import {
   enforceRequiredSecrets,
   securityHeaders,
@@ -14,11 +13,7 @@ import {
 import { logger, requestIdMiddleware } from "./utils/logger";
 import { recordRequest, getMetricsSnapshot } from "./utils/metrics";
 import { startScheduledPublishService } from "./services/scheduled-publish.service";
-import { startEventReminderService } from "./services/event-reminder.service";
 import { startSystemBackupService } from "./services/system-backup.service";
-import { startDirectoryMembershipLifecycleService } from "./services/directory-membership-lifecycle.service";
-import { getSiteFeatures } from "./middleware/site-feature-guard";
-import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 
 declare const __APP_VERSION__: string;
 const pkgVersion = typeof __APP_VERSION__ === "string" ? __APP_VERSION__ : "unknown";
@@ -37,22 +32,6 @@ declare module "http" {
     rawBody: unknown;
   }
 }
-
-app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-  try {
-    const features = await resolveSiteFeatures();
-    if (!features.directoryEnabled && !features.eventsEnabled) {
-      return res.status(404).json({ message: "Not found" });
-    }
-
-    const signature = req.headers["stripe-signature"] as string;
-    await WebhookHandlers.processWebhook(req.body, signature);
-    res.json({ received: true });
-  } catch (err) {
-    logger.stripe.error("Webhook endpoint error", err, { requestId: req.requestId });
-    res.status(400).json({ error: "Webhook processing failed" });
-  }
-});
 
 app.use(
   express.json({
@@ -151,17 +130,6 @@ function truncateBody(body: string): string {
   return body;
 }
 
-async function resolveSiteFeatures(): Promise<SiteFeatures> {
-  try {
-    return await getSiteFeatures();
-  } catch (err) {
-    logger.app.warn("Failed to resolve site feature flags, using defaults", {
-      error: err instanceof Error ? err.message : String(err),
-    });
-    return DEFAULT_SITE_FEATURES;
-  }
-}
-
 app.use((req, res, next) => {
   const start = Date.now();
   const reqPath = req.path;
@@ -241,19 +209,8 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  const siteFeatures = await resolveSiteFeatures();
-  startScheduledPublishService({ includeBlog: siteFeatures.blogEnabled });
-  if (siteFeatures.eventsEnabled) {
-    startEventReminderService();
-  } else {
-    logger.app.info("Event reminder service disabled by site feature flag");
-  }
+  startScheduledPublishService({ includeBlog: false });
   startSystemBackupService();
-  if (siteFeatures.directoryEnabled) {
-    startDirectoryMembershipLifecycleService();
-  } else {
-    logger.app.info("Directory membership lifecycle service disabled by site feature flag");
-  }
 
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen(

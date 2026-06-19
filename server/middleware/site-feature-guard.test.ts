@@ -36,15 +36,16 @@ describe("requireSiteFeature", () => {
     vi.clearAllMocks();
   });
 
-  it("continues when a disabled-by-default feature is enabled in settings", async () => {
+  it("keeps retired platform features disabled even when enabled in settings", async () => {
     mocks.getDecryptedCategory.mockResolvedValue({ enable_blog: "true" });
     const next = vi.fn();
     const res = createResponse();
 
     await requireSiteFeature("blogEnabled")({} as never, res as never, next);
 
-    expect(next).toHaveBeenCalledOnce();
-    expect(res.status).not.toHaveBeenCalled();
+    expect(next).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Not found" });
   });
 
   it("returns 404 when a disabled-by-default feature is not enabled", async () => {

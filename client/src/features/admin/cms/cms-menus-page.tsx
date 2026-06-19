@@ -48,7 +48,7 @@ import {
   type CmsMenu,
   type MenuItem,
   type MenuLocation,
-} from "@shared/schema";
+} from "@shared/schema/cms-menus";
 import { useEditorLock } from "@/hooks/use-editor-lock";
 import { useLockConflictGuard } from "@/hooks/use-lock-conflict-guard";
 

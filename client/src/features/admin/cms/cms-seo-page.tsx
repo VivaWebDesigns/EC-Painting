@@ -39,7 +39,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { SeoSettings } from "@shared/schema";
-import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 import { CmsSeoAuditTab } from "./cms-seo-audit-tab";
 import { CmsRedirectsTab } from "./cms-redirects-tab";
 import { CmsSitemapTab } from "./cms-sitemap-tab";
@@ -86,7 +85,6 @@ type RoadmapItem = {
   title: string;
   description: string;
   status: "available" | "planned";
-  feature?: keyof SiteFeatures;
 };
 
 const ROADMAP_ITEMS: RoadmapItem[] = [
@@ -95,13 +93,6 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
     title: "Per-Page SEO",
     description: "CMS pages already support per-page seoTitle, seoDescription, seoKeywords, and ogImageUrl. Full edit UI exists in the page editor.",
     status: "available",
-  },
-  {
-    icon: SearchIcon,
-    title: "Per-Post SEO",
-    description: "Blog posts already support seoTitle, seoDescription, and ogImageUrl. Fields are editable in the blog post editor.",
-    status: "available",
-    feature: "blogEnabled",
   },
   {
     icon: Code2,
@@ -151,12 +142,7 @@ export default function CmsSeoPage() {
   const { data: settings, isLoading } = useQuery<SeoSettings>({
     queryKey: ["/api/admin/cms/seo"],
   });
-  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
-    queryKey: ["/api/site-config"],
-    staleTime: 60_000,
-  });
-  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
-  const roadmapItems = ROADMAP_ITEMS.filter((item) => !item.feature || siteFeatures[item.feature]);
+  const roadmapItems = ROADMAP_ITEMS;
 
   const form = useForm<SeoFormValues>({
     resolver: zodResolver(seoFormSchema),
@@ -226,7 +212,7 @@ export default function CmsSeoPage() {
               SEO Settings
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              Global SEO defaults for the public-facing site and blog
+              Global SEO defaults for the public-facing site
             </p>
           </div>
           {lastUpdated && (

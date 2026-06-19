@@ -62,7 +62,7 @@ export function SeoPreview({
   description,
   url,
   ogImage,
-  siteName = "Core Platform",
+  siteName = "593 EC Painting",
   className,
   source,
 }: SeoPreviewProps) {

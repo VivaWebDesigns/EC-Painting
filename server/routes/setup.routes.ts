@@ -6,7 +6,6 @@ import { validateBody } from "../middleware/validation";
 import { asyncHandler } from "../middleware/error-handler";
 import { logger } from "../utils/logger";
 import { db } from "../db";
-import { users } from "@shared/schema";
 import { sql } from "drizzle-orm";
 
 const router = Router();
@@ -33,7 +32,7 @@ async function ensureUsersTable(): Promise<void> {
         password TEXT NOT NULL,
         first_name TEXT,
         last_name TEXT,
-        role TEXT NOT NULL DEFAULT 'therapist',
+        role TEXT NOT NULL DEFAULT 'editor',
         profile_image_url TEXT,
         is_suspended BOOLEAN NOT NULL DEFAULT false,
         last_login_at TIMESTAMP,

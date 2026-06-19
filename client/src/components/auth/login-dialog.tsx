@@ -56,7 +56,6 @@ export function LoginDialog({
         toast({ title: "Welcome back!", description: "You have been logged in." });
         onOpenChange(false);
         if (data.role === "admin") setLocation("/admin");
-        else if (data.role === "therapist") setLocation("/therapist");
         else setLocation("/");
       },
       onError: (error: Error) => {
@@ -75,8 +74,8 @@ export function LoginDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Member Login</DialogTitle>
-          <DialogDescription>Sign in to your mental health professional account</DialogDescription>
+          <DialogTitle>Login</DialogTitle>
+          <DialogDescription>Sign in to your account</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

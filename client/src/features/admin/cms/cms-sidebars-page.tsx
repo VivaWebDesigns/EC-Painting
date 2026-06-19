@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import type { ElementType } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -39,22 +39,29 @@ import {
   Plus,
   Search,
   Star,
-  Tag,
   Trash2,
   Type,
 } from "lucide-react";
-import { SIDEBAR_WIDGET_TYPES, type CmsForm, type CmsSidebar, type SidebarWidget, type SidebarWidgetType } from "@shared/schema";
+import type { CmsForm } from "@shared/schema/forms";
+import { SIDEBAR_WIDGET_TYPES, type CmsSidebar, type SidebarWidget, type SidebarWidgetType } from "@shared/schema/cms-sidebars";
 import { useEditorLock } from "@/hooks/use-editor-lock";
 import { useLockConflictGuard } from "@/hooks/use-lock-conflict-guard";
 
+const RETIRED_WIDGET_TYPES = new Set<SidebarWidgetType>([
+  "recent-posts",
+  "newsletter",
+  "categories",
+  "tag-cloud",
+]);
+
 const WIDGET_LABELS: Record<SidebarWidgetType, string> = {
-  "recent-posts": "Recent Blog Posts",
-  newsletter: "Newsletter Signup",
+  "recent-posts": "Retired Widget",
+  newsletter: "Retired Widget",
   form: "Form",
   callout: "Callout / CTA",
   search: "Search",
-  categories: "Categories",
-  "tag-cloud": "Tag Cloud",
+  categories: "Retired Widget",
+  "tag-cloud": "Retired Widget",
   "custom-html": "Custom HTML",
 };
 
@@ -65,12 +72,12 @@ const WIDGET_ICONS: Record<SidebarWidgetType, ElementType> = {
   callout: Star,
   search: Search,
   categories: Type,
-  "tag-cloud": Tag,
+  "tag-cloud": Type,
   "custom-html": Type,
 };
 
 const ACTIVE_WIDGET_TYPES = SIDEBAR_WIDGET_TYPES.filter(
-  (type) => type !== "recent-posts" && type !== "newsletter",
+  (type) => !RETIRED_WIDGET_TYPES.has(type),
 ) as SidebarWidgetType[];
 
 function generateId() {
@@ -78,21 +85,6 @@ function generateId() {
 }
 
 function defaultWidget(type: SidebarWidgetType): SidebarWidget {
-  if (type === "recent-posts") {
-    return { id: generateId(), type, title: "Recent Posts", settings: { limit: 5 } };
-  }
-  if (type === "newsletter") {
-    return {
-      id: generateId(),
-      type,
-      title: "Stay Connected",
-      settings: {
-        description: "Send a question or request a painting quote.",
-        buttonText: "Contact Us",
-        formSlug: "contact-form",
-      },
-    };
-  }
   if (type === "form") {
     return {
       id: generateId(),
@@ -119,8 +111,13 @@ function defaultWidget(type: SidebarWidgetType): SidebarWidget {
   return { id: generateId(), type, title: WIDGET_LABELS[type], settings: {} };
 }
 
+function activeSidebarWidgets(widgets: unknown): SidebarWidget[] {
+  if (!Array.isArray(widgets)) return [];
+  return (widgets as SidebarWidget[]).filter((widget) => !RETIRED_WIDGET_TYPES.has(widget.type));
+}
+
 function widgetCount(sidebar: CmsSidebar) {
-  return Array.isArray(sidebar.widgets) ? sidebar.widgets.length : 0;
+  return activeSidebarWidgets(sidebar.widgets).length;
 }
 
 function WidgetSettings({
@@ -137,9 +134,7 @@ function WidgetSettings({
   const updateSetting = (key: string, value: unknown) => {
     onChange({ settings: { ...widget.settings, [key]: value } });
   };
-  const widgetTypeOptions = ACTIVE_WIDGET_TYPES.includes(widget.type)
-    ? ACTIVE_WIDGET_TYPES
-    : [widget.type, ...ACTIVE_WIDGET_TYPES];
+  const widgetTypeOptions = ACTIVE_WIDGET_TYPES;
 
   return (
     <div className="space-y-3">
@@ -173,63 +168,6 @@ function WidgetSettings({
           </Select>
         </div>
       </div>
-
-      {widget.type === "recent-posts" && (
-        <div className="space-y-1.5">
-          <Label>Number of posts</Label>
-          <Input
-            type="number"
-            min={1}
-            max={10}
-            value={String(widget.settings.limit ?? 5)}
-            onChange={(event) => updateSetting("limit", Number(event.target.value))}
-            data-testid={`input-widget-limit-${widget.id}`}
-          />
-        </div>
-      )}
-
-      {widget.type === "newsletter" && (
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <Label>Description</Label>
-            <Textarea
-              value={String(widget.settings.description ?? "")}
-              onChange={(event) => updateSetting("description", event.target.value)}
-              rows={2}
-              data-testid={`textarea-newsletter-description-${widget.id}`}
-            />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label>Button Text</Label>
-              <Input
-                value={String(widget.settings.buttonText ?? "")}
-                onChange={(event) => updateSetting("buttonText", event.target.value)}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Assigned Form</Label>
-              <Select
-                value={String(widget.settings.formSlug ?? "contact-form")}
-                onValueChange={(value) => updateSetting("formSlug", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a form" />
-                </SelectTrigger>
-                <SelectContent>
-                  {forms
-                    .filter((form) => form.slug === "contact-form")
-                    .map((form) => (
-                      <SelectItem key={form.id} value={form.slug}>
-                        {form.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      )}
 
       {widget.type === "form" && (
         <div className="space-y-3">
@@ -319,7 +257,7 @@ function SidebarEditor({ sidebar, onClose }: { sidebar: CmsSidebar | null; onClo
   const [description, setDescription] = useState(sidebar?.description ?? "");
   const [isDefault, setIsDefault] = useState(Boolean(sidebar?.isDefault));
   const [widgets, setWidgets] = useState<SidebarWidget[]>(
-    Array.isArray(sidebar?.widgets) ? (sidebar!.widgets as SidebarWidget[]) : []
+    activeSidebarWidgets(sidebar?.widgets)
   );
   const editorLock = useEditorLock({
     resourceType: "cms_sidebar",
@@ -329,7 +267,7 @@ function SidebarEditor({ sidebar, onClose }: { sidebar: CmsSidebar | null; onClo
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const body = { name, description: description || null, isDefault, widgets };
+      const body = { name, description: description || null, isDefault, widgets: activeSidebarWidgets(widgets) };
       if (isNew) return apiRequest("POST", "/api/admin/cms/sidebars", body);
       return apiRequest("PUT", `/api/admin/cms/sidebars/${sidebar!.id}`, body);
     },
@@ -405,7 +343,7 @@ function SidebarEditor({ sidebar, onClose }: { sidebar: CmsSidebar | null; onClo
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Name</Label>
-              <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Blog Sidebar" data-testid="input-sidebar-name" />
+              <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Page Sidebar" data-testid="input-sidebar-name" />
             </div>
             <div className="flex items-center justify-between rounded-lg border px-4 py-3">
               <div>
@@ -560,7 +498,7 @@ export default function CmsSidebarsPage() {
                     <div>
                       <CardTitle className="text-base flex items-center gap-2">
                         {sidebar.name}
-                        {sidebar.isDefault && <Badge className="bg-emerald-600 text-white">Default Blog</Badge>}
+                        {sidebar.isDefault && <Badge className="bg-emerald-600 text-white">Default</Badge>}
                       </CardTitle>
                       <CardDescription className="mt-1">
                         {sidebar.description || "No description"} · {widgetCount(sidebar)} widget{widgetCount(sidebar) === 1 ? "" : "s"}

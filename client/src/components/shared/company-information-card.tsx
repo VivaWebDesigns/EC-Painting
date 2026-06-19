@@ -54,7 +54,7 @@ export function CompanyInformationCard({
                   ) : null}
                 </div>
               ) : (
-                <p className={cn("text-sm text-muted-foreground", bodyClassName)}>Global — serving Core Platforms worldwide</p>
+                <p className={cn("text-sm text-muted-foreground", bodyClassName)}>Charlotte, NC and surrounding areas</p>
               )}
             </div>
 

@@ -1,7 +1,5 @@
 import { Router } from "express";
 import { storage } from "../../storage/index";
-import { getSiteFeatures } from "../../middleware/site-feature-guard";
-import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 
 const router = Router();
 
@@ -16,40 +14,9 @@ function pageIssues(page: any): string[] {
   return issues;
 }
 
-function postIssues(post: any): string[] {
-  const issues: string[] = [];
-  if (!post.seoTitle) issues.push("missing_seo_title");
-  if (!post.seoDescription) issues.push("missing_seo_description");
-  if (!post.ogImageUrl && !post.coverImageUrl) issues.push("missing_og_image");
-  if (post.noindex) issues.push("noindex");
-  if (!post.isPublished) issues.push("not_published");
-  if (!post.authorName) issues.push("missing_author");
-  return issues;
-}
-
-function eventIssues(event: any): string[] {
-  const issues: string[] = [];
-  if (!event.description) issues.push("missing_description");
-  if (!event.imageUrl) issues.push("missing_og_image");
-  if (event.status === "draft") issues.push("not_published");
-  if (event.visibility !== "public") issues.push("non_public");
-  return issues;
-}
-
 router.get("/seo-audit", async (_req, res) => {
   try {
-    let siteFeatures = DEFAULT_SITE_FEATURES;
-    try {
-      siteFeatures = await getSiteFeatures();
-    } catch {
-      siteFeatures = DEFAULT_SITE_FEATURES;
-    }
-
-    const [pages, posts, events] = await Promise.all([
-      storage.cmsPages.getAllPages(),
-      siteFeatures.blogEnabled ? storage.blog.getAllPosts() : Promise.resolve([]),
-      siteFeatures.eventsEnabled ? storage.events.getAllEvents() : Promise.resolve([]),
-    ]);
+    const pages = await storage.cmsPages.getAllPages();
 
     res.json({
       pages: pages.map((p) => ({
@@ -64,30 +31,6 @@ router.get("/seo-audit", async (_req, res) => {
         canonicalUrl: p.canonicalUrl,
         updatedAt: p.updatedAt,
         issues: pageIssues(p),
-      })),
-      posts: posts.map((p) => ({
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        isPublished: p.isPublished,
-        noindex: p.noindex,
-        seoTitle: p.seoTitle,
-        seoDescription: p.seoDescription,
-        ogImageUrl: p.ogImageUrl,
-        coverImageUrl: p.coverImageUrl,
-        authorName: p.authorName,
-        updatedAt: p.updatedAt,
-        issues: postIssues(p),
-      })),
-      events: events.map((e) => ({
-        id: e.id,
-        title: e.title,
-        slug: e.slug,
-        status: e.status,
-        visibility: e.visibility,
-        date: e.date,
-        imageUrl: e.imageUrl,
-        issues: eventIssues(e),
       })),
     });
   } catch (err) {

@@ -35,8 +35,6 @@ export default function LoginPage() {
   function redirectByRole(role: string) {
     if (role === "admin") {
       setLocation("/admin");
-    } else if (role === "therapist") {
-      setLocation("/therapist");
     } else {
       setLocation("/");
     }
@@ -69,7 +67,7 @@ export default function LoginPage() {
               Welcome Back
             </h1>
             <p className="text-muted-foreground mt-2" data-testid="text-login-subtitle">
-              Sign in to your Core Platform account
+              Sign in to your account
             </p>
           </div>
 
@@ -141,9 +139,6 @@ export default function LoginPage() {
                 </form>
               </Form>
 
-              <div className="mt-4 text-center text-sm text-muted-foreground" data-testid="text-applications-notice">
-                Applications open in June.
-              </div>
             </CardContent>
           </Card>
 
@@ -166,18 +161,6 @@ export default function LoginPage() {
                 >
                   <span className="font-medium text-amber-800 dark:text-amber-300">Customer</span>
                   <span className="ml-2 text-muted-foreground">client@test.com / Client123!</span>
-                </button>
-                <button
-                  type="button"
-                  className="w-full rounded-md border border-amber-200 dark:border-amber-800 bg-white dark:bg-amber-950/30 px-3 py-2 text-left text-sm hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
-                  data-testid="button-fill-therapist"
-                  onClick={() => {
-                    form.setValue("email", "therapist@test.com");
-                    form.setValue("password", "Therapist123!");
-                  }}
-                >
-                  <span className="font-medium text-amber-800 dark:text-amber-300">Therapist</span>
-                  <span className="ml-2 text-muted-foreground">therapist@test.com / Therapist123!</span>
                 </button>
                 <button
                   type="button"

@@ -93,11 +93,6 @@ router.put(
       data.isSecret
     );
 
-    if (data.category === "stripe") {
-      const { resetStripeClient } = await import("../config/stripe");
-      resetStripeClient();
-    }
-
     if (data.category === "cloudflare_r2") {
       r2Service.resetClient();
     }
@@ -174,25 +169,13 @@ router.delete(
 );
 
 const testConnectionSchema = z.object({
-  integration: z.enum(["stripe", "mailgun", "mailchimp", "cloudflare_r2"]),
+  integration: z.enum(["mailgun", "mailchimp", "cloudflare_r2"]),
 });
 
 router.post(
   "/settings/test-connection",
   asyncHandler(async (req, res) => {
     const { integration } = testConnectionSchema.parse(req.body);
-
-    if (integration === "stripe") {
-      try {
-        const { getStripeClient } = await import("../config/stripe");
-        const stripe = await getStripeClient();
-        await stripe.accounts.retrieve();
-        res.json({ success: true, message: "Stripe connection successful" });
-      } catch (err: any) {
-        res.json({ success: false, message: err.message || "Stripe connection failed" });
-      }
-      return;
-    }
 
     if (integration === "mailgun") {
       const result = await testMailgunConnection();
@@ -276,16 +259,15 @@ router.post(
     const sampleVars: Record<string, string> = {};
     for (const v of template.variables) {
       if (v === "firstName") sampleVars[v] = "Jane";
-      else if (v === "loginUrl" || v === "resetUrl" || v === "dashboardUrl")
-        sampleVars[v] = "https://coreplatform.com/example-link";
-      else if (v === "reason") sampleVars[v] = "Additional credentials required.";
+      else if (v === "loginUrl" || v === "resetUrl")
+        sampleVars[v] = "https://ecpaintingcharlotte.com/example-link";
       else if (v === "tempPassword") sampleVars[v] = "Temp1234!";
-      else if (v === "therapistName" || v === "clientName" || v === "senderName")
-        sampleVars[v] = "Jane Doe";
-      else if (v === "therapistEmail" || v === "clientEmail" || v === "senderEmail")
-        sampleVars[v] = "jane@example.com";
+      else if (v === "senderName") sampleVars[v] = "Jane Doe";
+      else if (v === "senderEmail") sampleVars[v] = "jane@example.com";
       else if (v === "messageBody")
         sampleVars[v] = "Hello, I would like to learn more about your services.";
+      else if (v === "formName") sampleVars[v] = "Estimate Request";
+      else if (v === "submissionSummary") sampleVars[v] = "Name: Jane Doe\nProject: Interior painting";
       else sampleVars[v] = `[${v}]`;
     }
 
@@ -312,16 +294,15 @@ router.post(
     const sampleVars: Record<string, string> = {};
     for (const v of template.variables) {
       if (v === "firstName") sampleVars[v] = "Test User";
-      else if (v === "loginUrl" || v === "resetUrl" || v === "dashboardUrl")
+      else if (v === "loginUrl" || v === "resetUrl")
         sampleVars[v] = `${req.protocol}://${req.get("host")}`;
-      else if (v === "reason") sampleVars[v] = "This is a test rejection reason.";
       else if (v === "tempPassword") sampleVars[v] = "TestPass123!";
-      else if (v === "therapistName" || v === "clientName" || v === "senderName")
-        sampleVars[v] = "Test Person";
-      else if (v === "therapistEmail" || v === "clientEmail" || v === "senderEmail")
-        sampleVars[v] = "test@example.com";
+      else if (v === "senderName") sampleVars[v] = "Test Person";
+      else if (v === "senderEmail") sampleVars[v] = "test@example.com";
       else if (v === "messageBody")
         sampleVars[v] = "This is a test message from the email template tester.";
+      else if (v === "formName") sampleVars[v] = "Estimate Request";
+      else if (v === "submissionSummary") sampleVars[v] = "Name: Test Person\nProject: Exterior painting";
       else sampleVars[v] = `[${v}]`;
     }
 

@@ -1,15 +1,11 @@
 import { storage } from "../storage";
 import type {
-  BlogPost,
   CmsMediaAsset,
   CmsMediaLibraryAsset,
   CmsMediaUsageReference,
   CmsPage,
-  Event,
   SeoSettings,
 } from "@shared/schema";
-import { getSiteFeatures } from "../middleware/site-feature-guard";
-import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 
 function isImageMimeType(mimeType: string) {
   return mimeType.startsWith("image/");
@@ -128,32 +124,11 @@ function pageStatusLabel(page: CmsPage) {
   return page.status === "published" ? "Published page" : `${page.status[0].toUpperCase()}${page.status.slice(1)} page`;
 }
 
-function postStatusLabel(post: BlogPost) {
-  return post.isPublished ? "Published post" : "Draft post";
-}
-
-function eventStatusLabel(event: Event) {
-  if (event.status === "published" && event.visibility === "public") {
-    return "Published event";
-  }
-  const visibility = event.visibility ? ` (${event.visibility})` : "";
-  return `${event.status ?? "Draft"} event${visibility}`;
-}
-
 export async function buildCmsMediaLibraryAssets(
   assets: CmsMediaAsset[]
 ): Promise<CmsMediaLibraryAsset[]> {
-  let siteFeatures = DEFAULT_SITE_FEATURES;
-  try {
-    siteFeatures = await getSiteFeatures();
-  } catch {
-    siteFeatures = DEFAULT_SITE_FEATURES;
-  }
-
-  const [pages, posts, events, seoSettings] = await Promise.all([
+  const [pages, seoSettings] = await Promise.all([
     storage.cmsPages.getAllPages(),
-    siteFeatures.blogEnabled ? storage.blog.getAllPosts() : Promise.resolve([]),
-    siteFeatures.eventsEnabled ? storage.events.getAllEvents() : Promise.resolve([]),
     storage.seoSettings.get(),
   ]);
 
@@ -165,22 +140,6 @@ export async function buildCmsMediaLibraryAssets(
     const path = page.slug ? `/${page.slug}` : undefined;
     addDirectFieldUsage(assets, usageMap, dedupe, page, "page", page.title, path, "ogImageUrl", page.ogImageUrl, isLive, pageStatusLabel(page));
     addContentUsage(assets, usageMap, dedupe, page, "page", page.title, path, page.content, isLive, pageStatusLabel(page));
-  }
-
-  for (const post of posts) {
-    const isLive = Boolean(post.isPublished);
-    const path = post.slug ? `/insights/${post.slug}` : undefined;
-    addDirectFieldUsage(assets, usageMap, dedupe, post, "blog_post", post.title, path, "coverImageUrl", post.coverImageUrl, isLive, postStatusLabel(post));
-    addDirectFieldUsage(assets, usageMap, dedupe, post, "blog_post", post.title, path, "ogImageUrl", post.ogImageUrl, isLive, postStatusLabel(post));
-    addContentUsage(assets, usageMap, dedupe, post, "blog_post", post.title, path, post.content, isLive, postStatusLabel(post));
-  }
-
-  for (const event of events) {
-    const isLive = event.status === "published" && event.visibility === "public";
-    const path = `/events`;
-    addDirectFieldUsage(assets, usageMap, dedupe, event, "event", event.title, path, "imageUrl", event.imageUrl, isLive, eventStatusLabel(event));
-    addDirectFieldUsage(assets, usageMap, dedupe, event, "event", event.title, path, "speakerImageUrl", event.speakerImageUrl, isLive, eventStatusLabel(event));
-    addContentUsage(assets, usageMap, dedupe, event, "event", event.title, path, event.description, isLive, eventStatusLabel(event));
   }
 
   if (seoSettings) {

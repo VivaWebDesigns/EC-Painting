@@ -39,7 +39,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
 import type { User } from "@shared/schema";
 import { AdminPermission } from "@shared/types";
 import {
@@ -55,7 +54,6 @@ import {
   ShieldCheck,
   AlertTriangle,
   Shield,
-  PanelsTopLeft,
   Palette,
   FolderKanban,
 } from "lucide-react";
@@ -76,15 +74,9 @@ const ROLE_COLORS: Record<string, string> = {
 
 const EDITOR_PERMISSION_OPTIONS = [
   {
-    value: AdminPermission.DIRECTORY,
-    label: "Directory",
-    description: "Profiles, applications, specializations, and directory settings.",
-    icon: PanelsTopLeft,
-  },
-  {
     value: AdminPermission.CONTENT,
     label: "Content",
-    description: "Pages, media, forms, events, blog, and SEO tools.",
+    description: "Pages, media, forms, reusable sections, and SEO tools.",
     icon: FolderKanban,
   },
   {
@@ -111,7 +103,7 @@ const SYSTEM_ROLE_OPTIONS = [
   {
     value: "editor" as const,
     label: "Editor",
-    description: "Access only to the Directory, Content, and Design areas you assign.",
+    description: "Access only to the active tool groups you assign.",
     icon: FolderKanban,
   },
 ] as const;

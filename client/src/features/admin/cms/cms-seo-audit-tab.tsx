@@ -9,41 +9,29 @@ import {
   CheckCircle2,
   ExternalLink,
   FileText,
-  BookOpen,
-  CalendarDays,
   ShieldOff,
   EyeOff,
   ImageOff,
   AlignLeft,
   Type,
-  User,
   Link2Off,
 } from "lucide-react";
-import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 
 interface AuditItem {
   id: string;
   title: string;
   slug?: string;
   status?: string;
-  isPublished?: boolean;
   noindex?: boolean;
   seoTitle?: string | null;
   seoDescription?: string | null;
   ogImageUrl?: string | null;
-  coverImageUrl?: string | null;
   canonicalUrl?: string | null;
-  authorName?: string | null;
-  visibility?: string;
-  date?: string;
-  imageUrl?: string | null;
   issues: string[];
 }
 
 interface AuditData {
   pages: AuditItem[];
-  posts: AuditItem[];
-  events: AuditItem[];
 }
 
 const ISSUE_META: Record<string, { label: string; icon: React.ElementType; severity: "high" | "medium" | "low" }> = {
@@ -53,9 +41,6 @@ const ISSUE_META: Record<string, { label: string; icon: React.ElementType; sever
   noindex: { label: "Noindex", icon: EyeOff, severity: "high" },
   not_published: { label: "Not published", icon: ShieldOff, severity: "low" },
   no_canonical: { label: "No canonical URL", icon: Link2Off, severity: "low" },
-  non_public: { label: "Non-public", icon: ShieldOff, severity: "low" },
-  missing_author: { label: "No author", icon: User, severity: "medium" },
-  missing_description: { label: "No description", icon: AlignLeft, severity: "medium" },
 };
 
 function IssueBadge({ issue }: { issue: string }) {
@@ -85,7 +70,7 @@ function AuditRow({
   item: AuditItem;
   editPath: string;
   previewPath?: string;
-  type: "page" | "post" | "event";
+  type: "page";
 }) {
   const clean = item.issues.length === 0;
   return (
@@ -180,11 +165,6 @@ export function CmsSeoAuditTab() {
     queryKey: ["/api/admin/cms/seo-audit"],
     staleTime: 2 * 60 * 1000,
   });
-  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
-    queryKey: ["/api/site-config"],
-    staleTime: 60_000,
-  });
-  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
 
   if (isLoading) {
     return (
@@ -208,13 +188,9 @@ export function CmsSeoAuditTab() {
   }
 
   const pagesWithIssues = data.pages.filter((p) => p.issues.length > 0).length;
-  const postsWithIssues = data.posts.filter((p) => p.issues.length > 0).length;
-  const eventsWithIssues = data.events.filter((e) => e.issues.length > 0).length;
 
   const allItems = [
     ...data.pages.map((p) => ({ ...p, _type: "page" as const })),
-    ...(siteFeatures.blogEnabled ? data.posts.map((p) => ({ ...p, _type: "post" as const })) : []),
-    ...(siteFeatures.eventsEnabled ? data.events.map((e) => ({ ...e, _type: "event" as const })) : []),
   ];
   const itemsWithIssues = allItems.filter((i) => i.issues.length > 0);
   const totalIssues = allItems.reduce((sum, i) => sum + i.issues.length, 0);
@@ -223,12 +199,6 @@ export function CmsSeoAuditTab() {
     <div className="space-y-5 mt-5">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <SummaryCard label="CMS Pages" total={data.pages.length} issues={pagesWithIssues} icon={FileText} color="bg-violet-500" />
-        {siteFeatures.blogEnabled && (
-          <SummaryCard label="Blog Posts" total={data.posts.length} issues={postsWithIssues} icon={BookOpen} color="bg-purple-500" />
-        )}
-        {siteFeatures.eventsEnabled && (
-          <SummaryCard label="Events" total={data.events.length} issues={eventsWithIssues} icon={CalendarDays} color="bg-indigo-500" />
-        )}
       </div>
 
       {totalIssues === 0 ? (
@@ -271,44 +241,6 @@ export function CmsSeoAuditTab() {
                   ))}
               </div>
             )}
-
-            {siteFeatures.blogEnabled && itemsWithIssues.filter((i) => i._type === "post").length > 0 && (
-              <div className="mb-4">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                  <BookOpen className="h-3 w-3" /> Blog Posts
-                </p>
-                {itemsWithIssues
-                  .filter((i) => i._type === "post")
-                  .map((item) => (
-                    <AuditRow
-                      key={item.id}
-                      item={item}
-                      type="post"
-                      editPath={`/admin/cms/blog/${item.id}`}
-                      previewPath={item.slug && item.isPublished ? `/insights/${item.slug}` : undefined}
-                    />
-                  ))}
-              </div>
-            )}
-
-            {siteFeatures.eventsEnabled && itemsWithIssues.filter((i) => i._type === "event").length > 0 && (
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                  <CalendarDays className="h-3 w-3" /> Events
-                </p>
-                {itemsWithIssues
-                  .filter((i) => i._type === "event")
-                  .map((item) => (
-                    <AuditRow
-                      key={item.id}
-                      item={item}
-                      type="event"
-                      editPath={`/admin/events/${item.id}`}
-                      previewPath={item.status !== "draft" ? `/events/${item.slug || item.id}` : undefined}
-                    />
-                  ))}
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
@@ -328,15 +260,12 @@ export function CmsSeoAuditTab() {
                   <div>
                     <p className="text-xs font-medium">{meta.label}</p>
                     <p className="text-xs text-muted-foreground">
-                      {key === "missing_seo_title" && "Set a custom SEO Title in the page/post SEO tab."}
+                      {key === "missing_seo_title" && "Set a custom SEO Title in the page SEO tab."}
                       {key === "missing_seo_description" && "Add a Meta Description for better click-through rates."}
                       {key === "missing_og_image" && "Upload a social sharing image for rich link previews."}
                       {key === "noindex" && "This content is marked as noindex and won't appear in search results."}
                       {key === "not_published" && "Content is in draft state and not publicly visible."}
                       {key === "no_canonical" && "Published pages benefit from an explicit canonical URL."}
-                      {key === "non_public" && "Event visibility is restricted — not crawlable by search engines."}
-                      {key === "missing_author" && "Add an author name to blog posts for Article structured data."}
-                      {key === "missing_description" && "Events should include a description for rich search results."}
                     </p>
                   </div>
                 </div>

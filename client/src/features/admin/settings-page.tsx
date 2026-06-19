@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ElementType } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -30,7 +30,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import {
-  CreditCard,
   Mail,
   Cloud,
   Eye,
@@ -44,8 +43,6 @@ import {
   FileText,
   Pencil,
   AlertCircle,
-  Plus,
-  Trash2,
   Tag,
   Link2,
   ExternalLink,
@@ -107,7 +104,7 @@ type BrandingColorSettingKey =
   | "text_secondary_foreground_color"
   | "text_tertiary_foreground_color";
 
-type SystemConfigurationSettingKey = "enable_directory" | "enable_blog" | "enable_events" | "enable_crm";
+type SystemConfigurationSettingKey = "enable_crm";
 
 const BRANDING_CORE_COLOR_FIELDS: Array<{
   key: BrandingColorSettingKey;
@@ -228,24 +225,6 @@ const SYSTEM_CONFIGURATION_FIELDS: Array<{
   description: string;
 }> = [
   {
-    key: "enable_directory",
-    label: "Enable Directory",
-    description:
-      "Turns the directory app on or off for this site, including admin navigation and directory routes.",
-  },
-  {
-    key: "enable_blog",
-    label: "Enable Blog",
-    description:
-      "Controls blog and insights entry points so sites can ship without the publishing app when needed.",
-  },
-  {
-    key: "enable_events",
-    label: "Enable Events",
-    description:
-      "Controls events administration and public events routes for sites that do not run an events program.",
-  },
-  {
     key: "enable_crm",
     label: "Enable CRM",
     description:
@@ -276,7 +255,7 @@ interface IntegrationConfig {
   category: string;
   title: string;
   description: string;
-  icon: typeof CreditCard;
+  icon: ElementType;
   accountUrl: string;
   docsUrl?: string;
   instructions: string[];
@@ -286,40 +265,6 @@ interface IntegrationConfig {
 }
 
 const INTEGRATIONS: IntegrationConfig[] = [
-  {
-    category: "stripe",
-    title: "Stripe",
-    description: "Payment processing for enabled checkout workflows",
-    icon: CreditCard,
-    accountUrl: "https://dashboard.stripe.com/apikeys",
-    docsUrl: "https://docs.stripe.com/keys",
-    instructions: [
-      "Open Stripe API keys and confirm you are in the correct test or live mode.",
-      "Copy the Publishable key and Secret key into this card.",
-      "Create or open the webhook endpoint in Stripe, then copy its signing secret into Webhook Secret.",
-    ],
-    replitConnected: false,
-    fields: [
-      {
-        key: "stripe_secret_key",
-        label: "Secret Key",
-        isSecret: true,
-        placeholder: "sk_live_...",
-      },
-      {
-        key: "stripe_publishable_key",
-        label: "Publishable Key",
-        isSecret: false,
-        placeholder: "pk_live_...",
-      },
-      {
-        key: "stripe_webhook_secret",
-        label: "Webhook Secret",
-        isSecret: true,
-        placeholder: "whsec_...",
-      },
-    ],
-  },
   {
     category: "mailgun",
     title: "Mailgun",
@@ -759,49 +704,20 @@ function SystemConfigurationTab({ settings }: { settings: SettingsData }) {
   const { toast } = useToast();
   const systemConfig = settings.system_configuration || {};
   const getStoredValue = (key: SystemConfigurationSettingKey) => {
-    if (key === "enable_directory") {
-      return normalizeBooleanSetting(
-        systemConfig.enable_directory?.value,
-        DEFAULT_SITE_FEATURES.directoryEnabled,
-      );
-    }
-    if (key === "enable_blog") {
-      return normalizeBooleanSetting(
-        systemConfig.enable_blog?.value,
-        DEFAULT_SITE_FEATURES.blogEnabled,
-      );
-    }
-    if (key === "enable_crm") {
-      return normalizeBooleanSetting(
-        systemConfig.enable_crm?.value,
-        DEFAULT_SITE_FEATURES.crmEnabled,
-      );
-    }
     return normalizeBooleanSetting(
-      systemConfig.enable_events?.value,
-      DEFAULT_SITE_FEATURES.eventsEnabled,
+      systemConfig[key]?.value,
+      DEFAULT_SITE_FEATURES.crmEnabled,
     );
   };
   const [values, setValues] = useState<Record<SystemConfigurationSettingKey, boolean>>({
-    enable_directory: getStoredValue("enable_directory"),
-    enable_blog: getStoredValue("enable_blog"),
-    enable_events: getStoredValue("enable_events"),
     enable_crm: getStoredValue("enable_crm"),
   });
 
   useEffect(() => {
     setValues({
-      enable_directory: getStoredValue("enable_directory"),
-      enable_blog: getStoredValue("enable_blog"),
-      enable_events: getStoredValue("enable_events"),
       enable_crm: getStoredValue("enable_crm"),
     });
-  }, [
-    systemConfig.enable_directory?.value,
-    systemConfig.enable_blog?.value,
-    systemConfig.enable_events?.value,
-    systemConfig.enable_crm?.value,
-  ]);
+  }, [systemConfig.enable_crm?.value]);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -843,17 +759,16 @@ function SystemConfigurationTab({ settings }: { settings: SettingsData }) {
           System Configuration
         </h3>
         <p className="text-sm text-muted-foreground">
-          Control which major site apps are active so this platform can be reused across projects
-          without carrying unnecessary features.
+          Control active operational tools for this site.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Feature Apps</CardTitle>
+          <CardTitle className="text-base">Operational Apps</CardTitle>
           <CardDescription>
-            These toggles hide or reveal major admin navigation and public entry routes. Existing
-            data is preserved when an app is turned off.
+            These toggles hide or reveal active admin tools. Existing data is preserved when an app
+            is turned off.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -1736,7 +1651,7 @@ export function BrandingTab({
                     className="text-sm"
                     style={{ ...previewBodyStyle, color: colorValues.text_body_color || undefined }}
                   >
-                    Paragraph text preview for reading content, blog excerpts, and general body copy
+                    Paragraph text preview for reading content, page excerpts, and general body copy
                     throughout the site.
                   </p>
                   <p
@@ -2581,264 +2496,6 @@ function EmailTemplatesTab() {
         />
       )}
     </div>
-  );
-}
-
-type Specialization = { id: number; name: string; sortOrder: number };
-
-export function SpecializationsTab({ showHeader = true }: { showHeader?: boolean } = {}) {
-  const { toast } = useToast();
-  const [addName, setAddName] = useState("");
-  const [addOpen, setAddOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<Specialization | null>(null);
-  const [editName, setEditName] = useState("");
-  const [deleteTarget, setDeleteTarget] = useState<Specialization | null>(null);
-
-  const { data: specs, isLoading } = useQuery<Specialization[]>({
-    queryKey: ["/api/specializations"],
-  });
-
-  const addMutation = useMutation({
-    mutationFn: (name: string) => apiRequest("POST", "/api/specializations", { name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/specializations"] });
-      setAddName("");
-      setAddOpen(false);
-      toast({ title: "Specialization added" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
-  });
-
-  const editMutation = useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) =>
-      apiRequest("PUT", `/api/specializations/${id}`, { name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/specializations"] });
-      setEditTarget(null);
-      toast({ title: "Specialization updated" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => apiRequest("DELETE", `/api/specializations/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/specializations"] });
-      setDeleteTarget(null);
-      toast({ title: "Specialization deleted" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Error", description: err.message, variant: "destructive" }),
-  });
-
-  function handleStartEdit(spec: Specialization) {
-    setEditTarget(spec);
-    setEditName(spec.name);
-  }
-
-  return (
-    <>
-      <Card>
-        {showHeader ? (
-          <CardHeader>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Tag className="h-4 w-4" />
-                  Specialization Settings
-                </CardTitle>
-                <CardDescription className="mt-1">
-                  Manage the list of specializations available in mental health professional
-                  profiles and the directory filter.
-                </CardDescription>
-              </div>
-              <Button
-                size="sm"
-                onClick={() => setAddOpen(true)}
-                className="bg-accent text-accent-foreground flex-shrink-0"
-                data-testid="button-add-specialization"
-              >
-                <Plus className="h-4 w-4 mr-1.5" />
-                Add
-              </Button>
-            </div>
-          </CardHeader>
-        ) : (
-          <CardContent className="flex items-center justify-end border-b py-4">
-            <Button
-              size="sm"
-              onClick={() => setAddOpen(true)}
-              className="bg-accent text-accent-foreground flex-shrink-0"
-              data-testid="button-add-specialization"
-            >
-              <Plus className="h-4 w-4 mr-1.5" />
-              Add
-            </Button>
-          </CardContent>
-        )}
-        <CardContent>
-          {isLoading ? (
-            <div className="flex justify-center py-10">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-            </div>
-          ) : !specs?.length ? (
-            <div className="text-center py-10 text-muted-foreground text-sm">
-              No specializations yet.
-            </div>
-          ) : (
-            <div className="divide-y rounded-md border">
-              {specs.map((spec) => (
-                <div
-                  key={spec.id}
-                  className="flex items-center justify-between gap-3 px-4 py-2.5"
-                  data-testid={`specialization-row-${spec.id}`}
-                >
-                  <span className="text-sm">{spec.name}</span>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-8 w-8"
-                      onClick={() => handleStartEdit(spec)}
-                      data-testid={`button-edit-specialization-${spec.id}`}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-8 w-8 text-destructive hover:text-destructive"
-                      onClick={() => setDeleteTarget(spec)}
-                      data-testid={`button-delete-specialization-${spec.id}`}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <Sheet open={addOpen} onOpenChange={setAddOpen}>
-        <SheetContent side="right" className="sm:max-w-md z-[1300]">
-          <SheetHeader>
-            <SheetTitle>Add Specialization</SheetTitle>
-            <SheetDescription>Enter a name for the new specialization.</SheetDescription>
-          </SheetHeader>
-          <SheetBody>
-            <div className="space-y-2">
-              <Label htmlFor="add-spec-name">Name</Label>
-              <Input
-                id="add-spec-name"
-                value={addName}
-                onChange={(e) => setAddName(e.target.value)}
-                placeholder="e.g. Parenting Challenges"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && addName.trim()) addMutation.mutate(addName.trim());
-                }}
-                data-testid="input-add-specialization-name"
-                autoFocus
-              />
-            </div>
-          </SheetBody>
-          <SheetFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => addMutation.mutate(addName.trim())}
-              disabled={!addName.trim() || addMutation.isPending}
-              data-testid="button-save-add-specialization"
-            >
-              {addMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Add Specialization
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-
-      <Sheet
-        open={!!editTarget}
-        onOpenChange={(open) => {
-          if (!open) setEditTarget(null);
-        }}
-      >
-        <SheetContent side="right" className="sm:max-w-md z-[1300]">
-          <SheetHeader>
-            <SheetTitle>Edit Specialization</SheetTitle>
-            <SheetDescription>Update the name of this specialization.</SheetDescription>
-          </SheetHeader>
-          <SheetBody>
-            <div className="space-y-2">
-              <Label htmlFor="edit-spec-name">Name</Label>
-              <Input
-                id="edit-spec-name"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && editName.trim() && editTarget) {
-                    editMutation.mutate({ id: editTarget.id, name: editName.trim() });
-                  }
-                }}
-                data-testid="input-edit-specialization-name"
-                autoFocus
-              />
-            </div>
-          </SheetBody>
-          <SheetFooter>
-            <Button variant="outline" onClick={() => setEditTarget(null)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() =>
-                editTarget && editMutation.mutate({ id: editTarget.id, name: editName.trim() })
-              }
-              disabled={!editName.trim() || editMutation.isPending}
-              data-testid="button-save-edit-specialization"
-            >
-              {editMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Save Changes
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-
-      <Sheet
-        open={!!deleteTarget}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
-      >
-        <SheetContent side="right" className="sm:max-w-md z-[1300]">
-          <SheetHeader>
-            <SheetTitle>Delete Specialization</SheetTitle>
-            <SheetDescription>
-              This will remove <strong>{deleteTarget?.name}</strong> from the directory filters and
-              mental health professional profile options. Existing profiles that already have this
-              specialization will retain it until they save changes.
-            </SheetDescription>
-          </SheetHeader>
-          <SheetFooter className="mt-6">
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
-              disabled={deleteMutation.isPending}
-              data-testid="button-confirm-delete-specialization"
-            >
-              {deleteMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Delete
-            </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </>
   );
 }
 

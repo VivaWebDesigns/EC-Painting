@@ -10,7 +10,7 @@ import {
   type CmsFormListColumn,
   type CmsFormSubmission,
   cmsFormFieldConfigSchema,
-} from "@shared/schema";
+} from "@shared/schema/forms";
 import { ProtectedRoute } from "@/components/shared/protected-route";
 import { EditorLockBanner } from "@/components/shared/editor-lock-banner";
 import { EditorSaveIndicator } from "@/components/shared/editor-save-indicator";
@@ -1239,7 +1239,7 @@ function FormsPageContent() {
                               settings: { ...current.settings, mailchimpTag: event.target.value },
                             }))
                           }
-                          placeholder="Core Platform Newsletter"
+                          placeholder="Estimate Request"
                         />
                       </div>
                     </div>

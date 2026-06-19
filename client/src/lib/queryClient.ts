@@ -50,9 +50,9 @@ export const getQueryFn: <T>(options: {
 
 /**
  * Query freshness tiers:
- *  STATIC     – Reference data that rarely changes (specializations, enums). Never refetches automatically.
+ *  STATIC     – Reference data that rarely changes. Never refetches automatically.
  *  SESSION    – User-context data (auth, preferences). Refreshes every 5 min and on window focus.
- *  OPERATIONAL – Admin views that change frequently but don't need real-time polling (therapist lists, user lists, events). ~2 min.
+ *  OPERATIONAL – Admin views that change frequently but don't need real-time polling. ~2 min.
  *  LIVE       – Dashboards and queues that benefit from near-real-time updates. ~1 min, often paired with refetchOnWindowFocus.
  */
 export const STALE_TIMES = {

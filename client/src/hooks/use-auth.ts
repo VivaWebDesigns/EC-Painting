@@ -7,7 +7,6 @@ function getAdminPermissions(user: User | null): AdminPermissionType[] {
   if (!user) return [];
   if (user.role === "admin") {
     return [
-      AdminPermission.DIRECTORY,
       AdminPermission.CONTENT,
       AdminPermission.DESIGN,
       AdminPermission.CRM,
@@ -19,7 +18,6 @@ function getAdminPermissions(user: User | null): AdminPermissionType[] {
   }
 
   return user.adminPermissions.filter((permission): permission is AdminPermissionType =>
-    permission === AdminPermission.DIRECTORY ||
     permission === AdminPermission.CONTENT ||
     permission === AdminPermission.DESIGN ||
     permission === AdminPermission.CRM
@@ -44,23 +42,6 @@ export function useAuth() {
     },
   });
 
-  const register = useMutation({
-    mutationFn: async (data: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      role: string;
-      specializations?: string[];
-    }) => {
-      const res = await apiRequest("POST", "/api/auth/register", data);
-      return await res.json();
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["/api/auth/me"], data);
-    },
-  });
-
   const logout = useMutation({
     mutationFn: async () => {
       await apiRequest("POST", "/api/auth/logout");
@@ -74,11 +55,9 @@ export function useAuth() {
     user: user ?? null,
     isLoading,
     login,
-    register,
     logout,
     isAdmin: user?.role === "admin",
     isEditor: user?.role === "editor",
-    isTherapist: user?.role === "therapist",
     adminPermissions: getAdminPermissions(user ?? null),
     hasAdminPermission: (permission: AdminPermissionType) => getAdminPermissions(user ?? null).includes(permission),
   };

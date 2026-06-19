@@ -15,21 +15,11 @@ import {
   loginLimiter,
   forgotPasswordLimiter,
   resetPasswordLimiter,
-  registerLimiter,
 } from "../middleware/security";
 import { logger } from "../utils/logger";
 import * as r2Service from "../services/r2.service";
 
 const router = Router();
-
-const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  role: z.enum(["therapist"]),
-  specializations: z.array(z.string()).optional(),
-});
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -45,59 +35,9 @@ async function normalizeUserImage<T extends { profileImageUrl?: string | null }>
 
 router.post(
   "/register",
-  registerLimiter,
-  validateBody(registerSchema),
-  asyncHandler(async (req, res) => {
-    const REGISTRATION_OPEN = false;
-    if (!REGISTRATION_OPEN) {
-      res.status(403).json({ message: "Applications open in June. Registration is currently closed." });
-      return;
-    }
-    const { email, password, firstName, lastName, role, specializations } = req.body;
-
-    const existing = await storage.users.getUserByEmail(email);
-    if (existing) {
-      res.status(409).json({ message: "Unable to complete registration. Please try a different email or log in to your existing account." });
-      return;
-    }
-
-    const hashedPassword = await hashPassword(password);
-    const user = await storage.users.createUser({
-      email,
-      password: hashedPassword,
-      firstName,
-      lastName,
-      role,
-    });
-
-    if (role === "therapist") {
-      await storage.therapists.createProfile({
-        userId: user.id,
-        ...(specializations && specializations.length > 0 ? { specializations } : {}),
-      });
-    }
-
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
-    const admins = await storage.users.getUsersByRole("admin");
-    const adminEmails = admins.map((a) => a.email);
-    if (adminEmails.length > 0) {
-      if (role === "therapist") {
-        const { sendNewTherapistRegistrationEmail } = await import("../services/email.service");
-        sendNewTherapistRegistrationEmail(
-          adminEmails,
-          `${firstName} ${lastName}`,
-          email,
-          `${baseUrl}/admin/therapists`
-        ).catch((err) => logger.email.warn("Failed to send therapist registration notification", { error: err.message }));
-      }
-    }
-
-    const token = generateToken(user);
-    setTokenCookie(res, token);
-
-    const { password: _, ...safeUser } = user;
-    res.status(201).json(await normalizeUserImage(safeUser));
-  })
+  (_req, res) => {
+    res.status(404).json({ message: "Not found" });
+  }
 );
 
 router.post(
