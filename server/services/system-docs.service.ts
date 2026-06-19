@@ -65,6 +65,7 @@ const UPDATED_SYSTEM_DOC_SLUGS = new Set([
   "admin-integrations-email-and-storage",
   "admin-media-library-and-assets",
   "admin-navigation-sidebars-and-widgets",
+  "adr-002-jwt-httponly-cookies",
   "system-backups",
 ]);
 
