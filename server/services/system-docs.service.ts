@@ -35,6 +35,7 @@ const OBSOLETE_SYSTEM_DOC_SLUGS = [
   "admin-blog-workflow",
   "admin-events-and-registrations",
   "adr-004-stripe-integration",
+  "adr-database-indexes",
   "architecture-backend-routes",
   "architecture-database-indexing",
   "architecture-directory-filtering",
