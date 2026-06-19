@@ -1,5 +1,4 @@
 import { useState, useEffect, lazy, Suspense, type ReactElement } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { FormModalButton } from "@/components/forms/form-modal-button";
@@ -40,7 +39,6 @@ import {
   str,
 } from "@/features/admin/cms/builder/block-renderer.shared";
 import { SectionHeading } from "@/features/admin/cms/builder/section-heading";
-import { getEventPath } from "@shared/event-url";
 import {
   Globe,
   Heart,
@@ -78,8 +76,6 @@ import {
   Clock,
 } from "lucide-react";
 import type { BlockInstance, BuilderContent } from "@/features/admin/cms/builder/block-registry";
-import { mergeJoinHeroBlocks } from "@shared/cms-blocks";
-import { getImageObjectPositionStyle } from "@/lib/image-focus";
 import { FULL_WIDTH_BLOCK_TYPES } from "@/features/admin/cms/builder/page-builder-constants";
 
 export type { BlockInstance, BuilderContent };
@@ -800,262 +796,6 @@ function TestimonialsBlock({ props }: { props: Record<string, unknown> }) {
           <p className="text-sm leading-relaxed italic text-slate-800">"{expandedReview?.quote}"</p>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-function FeaturedProfessionalsBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: professionals } = useQuery<
-    { id: string; title: string; user?: { firstName?: string; lastName?: string } }[]
-  >({
-    queryKey: ["/api/therapists/featured"],
-  });
-  const limit = num(props.limit, 3);
-  const visible = (professionals ?? []).slice(0, limit);
-  return (
-    <div className="py-4">
-      <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {visible.length === 0 ? (
-          <div className="col-span-3 text-center py-8 text-muted-foreground">
-            <UserCheck className="h-8 w-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">Featured mental health professionals will appear here</p>
-          </div>
-        ) : (
-          visible.map((c) => (
-            <Card key={c.id} className="text-center hover:shadow-md transition-shadow">
-              <CardContent className="pt-6">
-                <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
-                  <UserCheck className="h-6 w-6 text-accent" />
-                </div>
-                <p className="font-semibold text-sm">
-                  {c.user?.firstName} {c.user?.lastName}
-                </p>
-                <p className="text-xs public-meta-text">{c.title}</p>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
-function EventsPreviewBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: events } = useQuery<
-    {
-      id: string;
-      slug?: string | null;
-      title: string;
-      date: string;
-      isVirtual: boolean;
-      imageUrl?: string | null;
-      imagePositionX?: number | null;
-      imagePositionY?: number | null;
-    }[]
-  >({
-    queryKey: ["/api/events"],
-  });
-  const limit = num(props.limit, 4);
-  const ctaText = str(props.ctaText);
-  const ctaLink = str(props.ctaLink);
-  const visible = (events ?? []).filter((e) => new Date(e.date) > new Date()).slice(0, limit);
-  const shouldCarousel = visible.length > 4;
-
-  const renderEventCard = (e: {
-    id: string;
-    slug?: string | null;
-    title: string;
-    date: string;
-    isVirtual: boolean;
-    imageUrl?: string | null;
-    imagePositionX?: number | null;
-    imagePositionY?: number | null;
-  }) => (
-    <Link key={e.id} href={getEventPath(e)} className="w-full max-w-[16.2rem]">
-      <Card
-        className="mx-auto h-full w-full max-w-[16.2rem] overflow-hidden transition-shadow hover:shadow-md cursor-pointer"
-        data-testid={`event-preview-${e.id}`}
-      >
-        {e.imageUrl && (
-          <div className="aspect-[16/10] overflow-hidden" data-testid={`img-event-preview-${e.id}`}>
-            <img
-              src={e.imageUrl}
-              alt={e.title}
-              className="h-full w-full object-cover"
-              style={getImageObjectPositionStyle(e.imagePositionX, e.imagePositionY)}
-            />
-          </div>
-        )}
-        <CardContent className={e.imageUrl ? "p-4" : "pt-4"}>
-          <p className="mb-1 text-xs font-medium text-accent">
-            {new Date(e.date).toLocaleDateString()}
-          </p>
-          <p className="line-clamp-2 text-sm font-semibold public-heading-3">{e.title}</p>
-          <p className="mt-2 text-[11px] leading-relaxed public-meta-text">
-            {e.isVirtual ? "Virtual" : "In Person"}
-          </p>
-        </CardContent>
-      </Card>
-    </Link>
-  );
-
-  return (
-    <div className="py-4">
-      <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
-      {visible.length === 0 ? (
-        <div className="py-8 text-center text-muted-foreground">
-          <CalendarDays className="h-8 w-8 mx-auto mb-2 opacity-30" />
-          <p className="text-sm">Upcoming events will appear here</p>
-        </div>
-      ) : shouldCarousel ? (
-        <div>
-          <Carousel
-            opts={{
-              align: "start",
-              loop: false,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {visible.map((e) => (
-                <CarouselItem
-                  key={e.id}
-                  className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  {renderEventCard(e)}
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="mt-6 flex items-center justify-center gap-3">
-              <CarouselPrevious className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
-              <CarouselNext className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
-            </div>
-          </Carousel>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {visible.map((e) => renderEventCard(e))}
-        </div>
-      )}
-      {ctaText && (
-        <div className="mt-6 flex justify-center">
-          <FormModalButton
-            label={ctaText}
-            action={props.ctaAction}
-            href={ctaLink}
-            openInNewTab={props.ctaOpenInNewTab}
-            formSlug={props.ctaFormSlug}
-            modalTitle={props.ctaModalTitle}
-            modalDescription={props.ctaModalDescription}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
-
-function BlogPreviewBlock({ props }: { props: Record<string, unknown> }) {
-  const { data: posts } = useQuery<
-    {
-      id: string;
-      title: string;
-      excerpt: string;
-      slug: string;
-      coverImageUrl?: string | null;
-      coverImagePositionX?: number | null;
-      coverImagePositionY?: number | null;
-      isPublished: boolean;
-    }[]
-  >({
-    queryKey: ["/api/blog"],
-  });
-  const limit = num(props.limit, 5);
-  const enableHoverMotion = props.enableHoverMotion !== false;
-  const visible = (posts ?? []).filter((p) => p.isPublished).slice(0, limit);
-  const shouldCarousel = visible.length > 5;
-
-  const renderBlogCard = (p: {
-    id: string;
-    title: string;
-    excerpt: string;
-    slug: string;
-    coverImageUrl?: string | null;
-    coverImagePositionX?: number | null;
-    coverImagePositionY?: number | null;
-  }) => (
-    <Link key={p.id} href={`/insights/${p.slug}`} className="w-full max-w-[13.5rem]">
-      <Card
-        className={`mx-auto h-full w-full max-w-[13.5rem] overflow-hidden cursor-pointer ${enableHoverMotion ? "blog-card-motion" : ""}`}
-        data-testid={`blog-preview-${p.id}`}
-      >
-        {p.coverImageUrl && (
-          <div className="aspect-[16/10] overflow-hidden">
-            <img
-              src={p.coverImageUrl}
-              alt={p.title}
-              className="h-full w-full object-cover"
-              style={getImageObjectPositionStyle(p.coverImagePositionX, p.coverImagePositionY)}
-              data-blog-card-image
-              data-testid={`img-blog-preview-${p.id}`}
-            />
-          </div>
-        )}
-        <CardContent className={p.coverImageUrl ? "p-3.5" : "pt-3.5"}>
-          <p className="mb-1 line-clamp-2 text-sm font-semibold public-heading-3">{p.title}</p>
-          <p className="line-clamp-3 text-[11px] leading-relaxed public-body-text">{p.excerpt}</p>
-        </CardContent>
-      </Card>
-    </Link>
-  );
-
-  return (
-    <div className="py-4">
-      <SectionHeading props={props} defaultAlignment="center" className="mb-6" />
-      {visible.length === 0 ? (
-        <div className="py-8 text-center text-muted-foreground">
-          <BookOpen className="mx-auto mb-2 h-8 w-8 opacity-30" />
-          <p className="text-sm">Blog articles will appear here</p>
-        </div>
-      ) : shouldCarousel ? (
-        <div>
-          <Carousel
-            opts={{
-              align: "start",
-              loop: false,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {visible.map((p) => (
-                <CarouselItem
-                  key={p.id}
-                  className="pl-4 basis-[70%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/5"
-                >
-                  {renderBlogCard(p)}
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="mt-6 flex items-center justify-center gap-3">
-              <CarouselPrevious className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
-              <CarouselNext className="static h-9 w-9 translate-x-0 translate-y-0 border-border/70 bg-background/95" />
-            </div>
-          </Carousel>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {visible.map((p) => renderBlogCard(p))}
-        </div>
-      )}
-      {visible.length > 0 && (
-        <div className="mt-6 flex justify-center">
-          <Link href="/insights">
-            <Button variant="outline" size="lg">
-              Read More Articles
-            </Button>
-          </Link>
-        </div>
-      )}
     </div>
   );
 }
@@ -1870,10 +1610,6 @@ const RENDERERS: Record<string, React.ComponentType<{ props: Record<string, unkn
   "cards-grid": CardsGridBlock,
   faq: FaqBlock,
   testimonials: TestimonialsBlock,
-  "featured-professionals": FeaturedProfessionalsBlock,
-  "featured-counselors": FeaturedProfessionalsBlock,
-  "events-preview": EventsPreviewBlock,
-  "blog-preview": BlogPreviewBlock,
   "button-group": ButtonGroupBlock,
   "image-block": ImageBlockRenderer,
   "video-embed": VideoEmbedBlock,
@@ -1989,10 +1725,9 @@ export function PublicBlockRenderer({
 
 export function PublicPageRenderer({ blocks }: { blocks: BlockInstance[] }) {
   let nonFullWidthIndex = 0;
-  const normalizedBlocks = mergeJoinHeroBlocks(blocks);
   return (
     <div>
-      {normalizedBlocks.map((block) => {
+      {blocks.map((block) => {
         if (block.props.isActive === false) {
           return null;
         }

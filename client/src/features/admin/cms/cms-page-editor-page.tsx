@@ -66,7 +66,6 @@ import { format } from "date-fns";
 import { PageBuilder } from "./builder/page-builder";
 import type { BuilderContent } from "./builder/block-registry";
 import { reportBuilderRenderError } from "./builder/builder-diagnostics";
-import { mergeJoinHeroBlocks } from "@shared/cms-blocks";
 import { TemplatePicker } from "./components/template-picker";
 import { analyzeCmsPageQuality } from "@/lib/cms-page-quality";
 import { useEditorLock } from "@/hooks/use-editor-lock";
@@ -106,7 +105,7 @@ function parseBuilderContent(raw: unknown): BuilderContent {
   if (!raw || typeof raw !== "object") return EMPTY_CONTENT;
   const obj = raw as Record<string, unknown>;
   if (Array.isArray(obj.blocks)) {
-    return { blocks: mergeJoinHeroBlocks(obj.blocks as BuilderContent["blocks"]) };
+    return { blocks: obj.blocks as BuilderContent["blocks"] };
   }
   return EMPTY_CONTENT;
 }

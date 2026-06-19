@@ -12,7 +12,6 @@ import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 
-const HomePage = lazy(() => import("@/features/public/home-page"));
 const AboutPage = lazy(() => import("@/features/public/about-page"));
 const ContactPage = lazy(() => import("@/features/public/contact-page"));
 const CmsHybridPage = lazy(() =>
@@ -27,30 +26,15 @@ const ForgotPasswordPage = lazy(() => import("@/features/auth/forgot-password-pa
 const ResetPasswordPage = lazy(() => import("@/features/auth/reset-password-page"));
 const AdminSetupPage = lazy(() => import("@/features/auth/admin-setup-page"));
 
-const TherapistDashboardPage = lazy(() => import("@/features/therapist/dashboard-page"));
-const ProfileEditPage = lazy(() => import("@/features/therapist/profile-edit-page"));
-const SubscriptionPage = lazy(() => import("@/features/therapist/subscription-page"));
-const ApplicationPage = lazy(() => import("@/features/therapist/application-page"));
-const ApplicationStatusPage = lazy(() => import("@/features/therapist/application-status-page"));
-const ReferenceFormPage = lazy(() => import("@/features/public/reference-form-page"));
 const StandaloneFormPage = lazy(() => import("@/features/public/standalone-form-page"));
 const AdminDashboardPage = lazy(() => import("@/features/admin/dashboard-page"));
-const AdminTherapistsPage = lazy(() => import("@/features/admin/therapists-page"));
 const AdminUsersPage = lazy(() => import("@/features/admin/users-page"));
-const AdminDirectorySettingsPage = lazy(() => import("@/features/admin/directory-settings-page"));
 const AdminFormsPage = lazy(() => import("@/features/admin/forms-page"));
 const AdminCrmPage = lazy(() => import("@/features/admin/crm-page"));
 const AdminCrmClientsPage = lazy(() => import("@/features/admin/crm-clients-page"));
-const AdminEventsPage = lazy(() => import("@/features/admin/events-page"));
 const DocsPage = lazy(() => import("@/features/admin/docs-page"));
 const AdminSettingsPage = lazy(() => import("@/features/admin/settings-page"));
 const AdminDesignPage = lazy(() => import("@/features/admin/design-page"));
-const AdminSpecializationsPage = lazy(() => import("@/features/admin/specializations-page"));
-const CmsBlogPage = lazy(() => import("@/features/admin/cms/cms-blog-page"));
-const CmsBlogEditorPage = lazy(() => import("@/features/admin/cms/cms-blog-editor-page"));
-
-const AdminApplicationsPage = lazy(() => import("@/features/admin/applications-page"));
-const AdminApplicationDetailPage = lazy(() => import("@/features/admin/application-detail-page"));
 const CmsOverviewPage = lazy(() => import("@/features/admin/cms/cms-overview-page"));
 const CmsPagesPage = lazy(() => import("@/features/admin/cms/cms-pages-page"));
 const CmsPageEditorPage = lazy(() => import("@/features/admin/cms/cms-page-editor-page"));
@@ -75,6 +59,11 @@ function PageLoader() {
 
 function AdminIndexRoute() {
   const { user, hasAdminPermission } = useAuth();
+  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
+    queryKey: ["/api/site-config"],
+    staleTime: 60_000,
+  });
+  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
 
   if (!user) {
     return <Redirect to="/auth/login" replace />;
@@ -85,7 +74,7 @@ function AdminIndexRoute() {
   }
 
   if (user.role === "editor") {
-    if (hasAdminPermission("directory")) {
+    if (siteFeatures.directoryEnabled && hasAdminPermission("directory")) {
       return <Redirect to="/admin/therapists" replace />;
     }
     if (hasAdminPermission("content")) {
@@ -112,7 +101,7 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={() => <CmsHybridPage slug="home" fallback={<HomePage />} />} />
+        <Route path="/" component={() => <CmsHybridPage slug="home" fallback={<NotFound />} />} />
         <Route path="/about" component={() => <CmsHybridPage slug="about" fallback={<AboutPage />} />} />
         <Route path="/gallery" component={() => <CmsHybridPage slug="gallery" fallback={<NotFound />} />} />
         <Route path="/reviews" component={() => <CmsHybridPage slug="reviews" fallback={<NotFound />} />} />
@@ -149,7 +138,7 @@ function Router() {
         <Route path="/terms-of-service" component={() => <CmsHybridPage slug="terms-of-service" fallback={<LegalFallbackPage title="Terms of Service" subtitle="Review the terms governing use of the 593 EC Painting website and related services." />} />} />
         <Route path="/disclaimer" component={() => <CmsHybridPage slug="disclaimer" fallback={<LegalFallbackPage title="Disclaimer" subtitle="Review important information about using the 593 EC Painting website and related services." />} />} />
         <Route path="/directory/:id" component={NotFound} />
-        <Route path="/reference/:token" component={ReferenceFormPage} />
+        <Route path="/reference/:token" component={NotFound} />
         <Route path="/forms/:slug" component={StandaloneFormPage} />
         <Route path="/auth/login" component={LoginPage} />
         <Route path="/auth/register"><Redirect to="/auth/login" replace /></Route>
@@ -158,29 +147,19 @@ function Router() {
         <Route path="/setup" component={AdminSetupPage} />
 
         <Route path="/therapist">
-          <ProtectedRoute roles={["therapist"]}>
-            <TherapistDashboardPage />
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/therapist/profile">
-          <ProtectedRoute roles={["therapist"]}>
-            <ProfileEditPage />
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/therapist/subscription">
-          <ProtectedRoute roles={["therapist"]}>
-            {siteFeatures.directoryEnabled ? <SubscriptionPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/therapist/apply">
-          <ProtectedRoute roles={["therapist"]}>
-            {siteFeatures.directoryEnabled ? <ApplicationPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/therapist/application/status">
-          <ProtectedRoute roles={["therapist"]}>
-            {siteFeatures.directoryEnabled ? <ApplicationStatusPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
 
         <Route path="/admin">
@@ -189,14 +168,10 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/therapists">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["directory"]}>
-            {siteFeatures.directoryEnabled ? <AdminTherapistsPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/directory/settings">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["directory"]}>
-            {siteFeatures.directoryEnabled ? <AdminDirectorySettingsPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/users">
           <ProtectedRoute roles={["admin"]}>
@@ -204,12 +179,10 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/membership-tiers">
-          <Redirect to="/admin/directory/settings" />
+          <NotFound />
         </Route>
         <Route path="/admin/events">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
-            {siteFeatures.eventsEnabled ? <AdminEventsPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/forms">
           <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
@@ -227,7 +200,7 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/blog">
-          <Redirect to="/admin/cms/blog" />
+          <NotFound />
         </Route>
         <Route path="/admin/docs">
           <ProtectedRoute roles={["admin"]}>
@@ -258,9 +231,7 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/therapists/specializations">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["directory"]}>
-            {siteFeatures.directoryEnabled ? <AdminSpecializationsPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/system/backups">
           <ProtectedRoute roles={["admin"]}>
@@ -268,14 +239,10 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/applications/:id">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["directory"]}>
-            {siteFeatures.directoryEnabled ? <AdminApplicationDetailPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/applications">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["directory"]}>
-            {siteFeatures.directoryEnabled ? <AdminApplicationsPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/cms">
           <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
@@ -303,25 +270,19 @@ function Router() {
           </ProtectedRoute>
         </Route>
         <Route path="/admin/cms/blog/new">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
-            {siteFeatures.blogEnabled ? <CmsBlogEditorPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/cms/blog/settings">
-          <Redirect to="/admin/cms/blog?tab=settings" />
+          <NotFound />
         </Route>
         <Route path="/admin/cms/blog/comments">
-          <Redirect to="/admin/cms/blog?tab=comments" />
+          <NotFound />
         </Route>
         <Route path="/admin/cms/blog/:id">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
-            {siteFeatures.blogEnabled ? <CmsBlogEditorPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/cms/blog">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
-            {siteFeatures.blogEnabled ? <CmsBlogPage /> : <NotFound />}
-          </ProtectedRoute>
+          <NotFound />
         </Route>
         <Route path="/admin/cms/sections/new">
           <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content", "design"]}>

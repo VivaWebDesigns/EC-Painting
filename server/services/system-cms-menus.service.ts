@@ -16,7 +16,7 @@ function item(label: string, url: string, children: MenuItem[] = [], openInNewTa
   };
 }
 
-const obsoleteCorePlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings"]);
+const obsoleteCorePlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings", "/join"]);
 const obsoleteCorePlatformMenuLabels = new Set([
   "browse specializations",
   "events",
