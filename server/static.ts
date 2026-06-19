@@ -46,7 +46,6 @@ export function serveStatic(app: Express) {
     const shouldInjectPublicHead =
       !publicUrl.pathname.startsWith("/admin") &&
       !publicUrl.pathname.startsWith("/auth") &&
-      !publicUrl.pathname.startsWith("/therapist") &&
       !publicUrl.pathname.startsWith("/setup") &&
       !publicUrl.pathname.startsWith("/preview") &&
       !publicUrl.pathname.startsWith("/uploads") &&
@@ -57,7 +56,7 @@ export function serveStatic(app: Express) {
 
     res.setHeader(
       "Cache-Control",
-      publicUrl.pathname.startsWith("/admin") || publicUrl.pathname.startsWith("/auth") || publicUrl.pathname.startsWith("/therapist")
+      publicUrl.pathname.startsWith("/admin") || publicUrl.pathname.startsWith("/auth")
         ? "private, no-store, max-age=0"
         : "no-cache",
     );
