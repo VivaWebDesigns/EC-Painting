@@ -16,8 +16,8 @@ function item(label: string, url: string, children: MenuItem[] = [], openInNewTa
   };
 }
 
-const obsoleteCorePlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings", "/join"]);
-const obsoleteCorePlatformMenuLabels = new Set([
+const obsoleteLegacyPlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings", "/join"]);
+const obsoleteLegacyPlatformMenuLabels = new Set([
   "browse specializations",
   "events",
   "events & workshops",
@@ -31,17 +31,17 @@ const obsoleteCorePlatformMenuLabels = new Set([
   "video archives",
 ]);
 
-function pruneObsoleteCorePlatformItems(items: MenuItem[]): { items: MenuItem[]; changed: boolean } {
+function pruneObsoleteLegacyPlatformItems(items: MenuItem[]): { items: MenuItem[]; changed: boolean } {
   let changed = false;
 
   const nextItems = items.flatMap((entry) => {
     const nextChildren = entry.children?.length
-      ? pruneObsoleteCorePlatformItems(entry.children)
+      ? pruneObsoleteLegacyPlatformItems(entry.children)
       : { items: entry.children ?? [], changed: false };
     const normalizedLabel = entry.label.trim().toLowerCase();
     const shouldRemove =
-      obsoleteCorePlatformMenuUrls.has(entry.url) ||
-      obsoleteCorePlatformMenuLabels.has(normalizedLabel) ||
+      obsoleteLegacyPlatformMenuUrls.has(entry.url) ||
+      obsoleteLegacyPlatformMenuLabels.has(normalizedLabel) ||
       (entry.url === "#" && normalizedLabel === "resources" && nextChildren.items.length === 0);
 
     if (nextChildren.changed || shouldRemove) {
@@ -212,7 +212,7 @@ export async function ensureSystemCmsMenus() {
   }
 
   for (const menu of await storage.cmsMenus.getAll()) {
-    const pruned = pruneObsoleteCorePlatformItems((menu.items as MenuItem[]) || []);
+    const pruned = pruneObsoleteLegacyPlatformItems((menu.items as MenuItem[]) || []);
     if (pruned.changed) {
       await storage.cmsMenus.update(menu.id, {
         items: pruned.items,

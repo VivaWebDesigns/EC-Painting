@@ -917,8 +917,8 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
       title: "Common Questions & Concerns",
       subtitle: "",
       items: [
-        { concern: "Will the professional understand my background?", response: "Every professional in our directory has specific training or lived experience with cross-cultural populations." },
-        { concern: "Is online therapy effective?", response: "Research consistently shows that online therapy can be as effective as in-person sessions for many conditions." },
+        { concern: "Will the estimate be clear?", response: "Each estimate outlines the recommended scope, surface preparation, materials, and next steps before work begins." },
+        { concern: "How will my home be protected?", response: "Floors, fixtures, landscaping, and nearby surfaces are covered before painting starts." },
       ],
     },
     propDefs: [
@@ -945,9 +945,9 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
       title: "Your Journey",
       subtitle: "",
       items: [
-        { before: "Feeling isolated and misunderstood", after: "Connected with a professional who gets it", milestone: "Week 1" },
-        { before: "Struggling to articulate cross-cultural grief", after: "Learning frameworks to process your experience", milestone: "Month 1" },
-        { before: "Navigating identity confusion alone", after: "Building confidence in your multicultural identity", milestone: "Month 3" },
+        { before: "Peeling, faded, or dated surfaces", after: "A clear project plan and color direction", milestone: "Estimate" },
+        { before: "Repairs and prep work unfinished", after: "Clean, protected, paint-ready surfaces", milestone: "Prep" },
+        { before: "A tired finish", after: "A refreshed space with crisp lines and durable coverage", milestone: "Completion" },
       ],
     },
     propDefs: [
@@ -1170,9 +1170,9 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
       subtitle: "",
       layout: "stack",
       items: [
-        { icon: "CheckCircle", title: "Expert Guidance", description: "Work with professionals who specialize in cross-cultural challenges." },
-        { icon: "Globe", title: "Global Accessibility", description: "Find support no matter where you are in the world." },
-        { icon: "Heart", title: "Cultural Understanding", description: "Be understood without having to explain your background." },
+        { icon: "CheckCircle", title: "Detailed Preparation", description: "Surfaces are repaired, cleaned, sanded, and protected before paint goes on." },
+        { icon: "Paintbrush", title: "Professional Finish", description: "Interior and exterior coatings are selected for the surface, sheen, and expected wear." },
+        { icon: "ShieldCheck", title: "Warranty Support", description: "Completed work is backed by clear warranty expectations and responsive follow-up." },
       ],
     },
     propDefs: [
@@ -1370,9 +1370,9 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
       subtitle: "",
       level: "beginner",
       steps: [
-        { title: "Create Your Account", description: "Sign up for free and set your preferences." },
-        { title: "Explore the Directory", description: "Use filters to find professionals matching your needs." },
-        { title: "Schedule a Session", description: "Contact a professional and book your first appointment." },
+        { title: "Request an Estimate", description: "Share the project details, photos, and preferred contact information." },
+        { title: "Review the Scope", description: "Confirm surfaces, prep needs, materials, colors, timing, and warranty details." },
+        { title: "Schedule the Work", description: "Choose a project window and prepare the space for painting day." },
       ],
     },
     propDefs: [

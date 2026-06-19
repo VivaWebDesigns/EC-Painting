@@ -1,14 +1,13 @@
 # Getting Started In The Admin
 
-This documentation area is the operating manual for Core Platform. It combines system reference material, architecture notes, deployment runbooks, and practical admin guides in one searchable library.
+This documentation area is the operating manual for the 593 EC Painting admin. It keeps practical editing and operations notes in one searchable library.
 
 ## Recommended First Pass
 
 1. Review the CMS and visual builder guides before editing public pages.
 2. Review the media library guide before replacing images or documents.
 3. Review the forms guide before publishing, sharing, or embedding managed forms.
-4. Review the blog and events guides before publishing new content.
-5. Review the integrations and backups guides before changing infrastructure or credentials.
+4. Review the integrations and backups guides before changing infrastructure or credentials.
 
 ## Admin Workflow Principles
 
@@ -24,17 +23,9 @@ This documentation area is the operating manual for Core Platform. It combines s
 
 The CMS manages public landing pages, structured sections, menus, sidebars, widget areas, and reusable media.
 
-### Blog
-
-Insights & Articles uses the managed blog system, categories, tags, featured layouts, and sidebar support.
-
 ### Forms
 
 Forms includes both the builder and the stored form-entry inbox. It also controls standalone form links and Mailchimp form tagging.
-
-### Events
-
-The events system powers the public event archive, cards, detail pages, registrations, and date-based publishing workflows.
 
 ### Integrations
 

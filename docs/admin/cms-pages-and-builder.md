@@ -1,6 +1,6 @@
 # CMS Pages And Visual Builder
 
-The Core Platform page builder uses structured content blocks rather than freeform page design. This keeps the site maintainable, consistent, and safer for non-technical editors.
+The page builder uses structured content blocks rather than freeform page design. This keeps the site maintainable, consistent, and safer for non-technical editors.
 
 ## Builder Layout
 
@@ -43,7 +43,7 @@ Any block can be saved as a reusable section from the page builder.
 
 - Keep blocks focused on a single content purpose.
 - Prefer page sections over trying to force unrelated content into one block.
-- Use reusable dynamic blocks for content that already has its own system, such as blog previews or event previews.
+- Use reusable sections for content patterns that appear on more than one page.
 - Review tablet and mobile preview before publishing large layout changes.
 
 ## Draft And Publish

@@ -28,17 +28,44 @@ const CATEGORY_ORDER: Record<string, number> = {
 };
 
 const ROOT_FILE_CATEGORY_MAP: Record<string, string> = {
-  "backend-architecture.md": "Architecture",
-  "changelog.md": "Reference",
-  "deployment-notes.md": "Deployment & Release",
-  "operations.md": "Operations & Recovery",
-  "quality-gates.md": "Engineering Quality",
-  "roadmap.md": "Product & Planning",
-  "stabilization-plan.md": "Engineering Quality",
   "system-backups.md": "Operations & Recovery",
-  "technical-debt.md": "Engineering Quality",
-  "validation-report.md": "Engineering Quality",
 };
+
+const OBSOLETE_SYSTEM_DOC_SLUGS = [
+  "admin-blog-workflow",
+  "admin-events-and-registrations",
+  "adr-004-stripe-integration",
+  "architecture-backend-routes",
+  "architecture-database-indexing",
+  "architecture-directory-filtering",
+  "architecture-frontend-code-splitting",
+  "architecture-overview",
+  "architecture-security-hardening",
+  "architecture-service-layer",
+  "architecture-visual-builder",
+  "backend-architecture",
+  "changelog",
+  "deployment-notes",
+  "operations",
+  "quality-gates",
+  "roadmap",
+  "runbooks-deployment",
+  "runbooks-operations",
+  "runbooks-security",
+  "stabilization-audit-2026-04-19",
+  "stabilization-plan",
+  "technical-debt",
+  "validation-report",
+];
+
+const UPDATED_SYSTEM_DOC_SLUGS = new Set([
+  "admin-cms-pages-and-builder",
+  "admin-getting-started",
+  "admin-integrations-email-and-storage",
+  "admin-media-library-and-assets",
+  "admin-navigation-sidebars-and-widgets",
+  "system-backups",
+]);
 
 function sortSystemDocs(a: SystemDocDefinition, b: SystemDocDefinition) {
   const categoryDiff = (CATEGORY_ORDER[a.category] ?? 999) - (CATEGORY_ORDER[b.category] ?? 999);
@@ -156,6 +183,14 @@ export async function ensureSystemDocs(options: EnsureSystemDocsOptions = {}) {
 
   let created = 0;
   let updated = 0;
+  let removed = 0;
+
+  for (const slug of OBSOLETE_SYSTEM_DOC_SLUGS) {
+    const existing = await storage.docs.getDocBySlug(slug);
+    if (!existing) continue;
+    await storage.docs.deleteDoc(existing.id);
+    removed += 1;
+  }
 
   for (const definition of definitions) {
     const absolutePath = path.join(DOCS_ROOT, definition.relativePath);
@@ -163,7 +198,7 @@ export async function ensureSystemDocs(options: EnsureSystemDocsOptions = {}) {
     const existing = await storage.docs.getDocBySlug(definition.slug);
 
     if (existing) {
-      if (refreshExisting) {
+      if (refreshExisting || UPDATED_SYSTEM_DOC_SLUGS.has(definition.slug)) {
         await storage.docs.updateDoc(existing.id, {
           title: definition.title,
           category: definition.category,
@@ -190,11 +225,13 @@ export async function ensureSystemDocs(options: EnsureSystemDocsOptions = {}) {
     total: definitions.length,
     created,
     updated,
+    removed,
   });
 
   return {
     total: definitions.length,
     created,
     updated,
+    removed,
   };
 }

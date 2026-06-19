@@ -7,8 +7,6 @@ The media library is the shared asset source for images and supported business d
 - page images
 - hero images
 - block background images
-- blog thumbnails
-- event thumbnails
 - documents such as PDFs and common office files
 
 ## Storage Model
@@ -24,7 +22,7 @@ Uploaded assets are stored in Cloudflare R2. The CMS keeps metadata so assets ca
 
 ## Usage Tracking
 
-The media library now distinguishes between assets in use and assets not in use. Before deleting a file, check where it is referenced so you do not break a page, post, or section.
+The media library now distinguishes between assets in use and assets not in use. Before deleting a file, check where it is referenced so you do not break a page or section.
 
 ## Accessibility Rules
 

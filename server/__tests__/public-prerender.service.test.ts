@@ -21,13 +21,13 @@ vi.mock("../storage", () => ({
 
 const seoSettings: SeoSettings = {
   id: "seo-1",
-  siteName: "Core Platform",
-  siteUrl: "https://coreplatform.com",
-  titleSuffix: " | Core Platform",
+  siteName: "593 EC Painting",
+  siteUrl: "https://ecpaintingcharlotte.com",
+  titleSuffix: " | 593 EC Painting",
   defaultMetaDescription: "Default description",
-  defaultOgImageUrl: "https://coreplatform.com/og.jpg",
+  defaultOgImageUrl: "https://ecpaintingcharlotte.com/og.jpg",
   defaultRobotsNoindex: false,
-  organizationName: "Core Platform",
+  organizationName: "593 EC Painting",
   organizationLogoUrl: null,
   facebookUrl: null,
   instagramUrl: null,
@@ -80,7 +80,7 @@ describe("public-prerender.service", () => {
 
     expect(snapshot?.title).toContain("Painting Process");
     expect(snapshot?.bodyHtml).toContain("Our Painting Process");
-    expect(snapshot?.canonicalUrl).toBe("https://coreplatform.com/painting-process");
+    expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process");
   });
 
   it("does not prerender retired inherited public surfaces", async () => {

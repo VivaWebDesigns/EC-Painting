@@ -1,6 +1,6 @@
 # Navigation, Sidebars, And Widgets
 
-Core Platform uses a CMS-managed navigation system and reusable sidebar/widget system instead of hard-coded menu content.
+The site uses a CMS-managed navigation system and reusable sidebar/widget system instead of hard-coded menu content.
 
 ## Menus
 
@@ -14,15 +14,15 @@ Editors should update menus through the Menus area rather than changing links di
 
 ## Sidebars
 
-Sidebars are reusable content areas made from widgets. They can be assigned to pages that use a sidebar template and are used by the blog by default.
+Sidebars are reusable content areas made from widgets. They can be assigned to pages that use a sidebar template.
 
 ## Widget Use Cases
 
 Common widgets include:
 
-- recent posts
-- categories
-- newsletter sign-up
+- form callouts
+- search
+- custom callouts
 - custom text or HTML
 
 ## Recommended Workflow

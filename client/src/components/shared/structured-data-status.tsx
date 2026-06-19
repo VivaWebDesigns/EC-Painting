@@ -1,8 +1,6 @@
 import { CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type ContentType = "page" | "post" | "event";
-
 interface SchemaCheck {
   type: string;
   label: string;
@@ -12,15 +10,11 @@ interface SchemaCheck {
 }
 
 interface StructuredDataStatusProps {
-  contentType: ContentType;
+  contentType: "page";
   fields: {
     hasTitle?: boolean;
     hasDescription?: boolean;
     hasImage?: boolean;
-    hasAuthor?: boolean;
-    hasDate?: boolean;
-    hasLocation?: boolean;
-    hasRecordingUrl?: boolean;
     hasFaqBlocks?: boolean;
     isPublished?: boolean;
     noindex?: boolean;
@@ -28,7 +22,7 @@ interface StructuredDataStatusProps {
   className?: string;
 }
 
-function buildChecks(contentType: ContentType, fields: StructuredDataStatusProps["fields"]): SchemaCheck[] {
+function buildChecks(fields: StructuredDataStatusProps["fields"]): SchemaCheck[] {
   const checks: SchemaCheck[] = [];
 
   checks.push({
@@ -45,62 +39,22 @@ function buildChecks(contentType: ContentType, fields: StructuredDataStatusProps
     missingFields: [],
   });
 
-  if (contentType !== "page" || true) {
-    const breadcrumbMissing: string[] = [];
-    if (!fields.hasTitle) breadcrumbMissing.push("title");
-    checks.push({
-      type: "BreadcrumbList",
-      label: "BreadcrumbList",
-      applies: true,
-      missingFields: breadcrumbMissing,
-    });
-  }
+  const breadcrumbMissing: string[] = [];
+  if (!fields.hasTitle) breadcrumbMissing.push("title");
+  checks.push({
+    type: "BreadcrumbList",
+    label: "BreadcrumbList",
+    applies: true,
+    missingFields: breadcrumbMissing,
+  });
 
-  if (contentType === "post") {
-    const missing: string[] = [];
-    if (!fields.hasTitle) missing.push("title");
-    if (!fields.hasDescription) missing.push("meta description");
-    if (!fields.hasImage) missing.push("cover/OG image");
-    if (!fields.hasAuthor) missing.push("author name");
-    if (!fields.hasDate) missing.push("publish date");
-    checks.push({
-      type: "Article",
-      label: "Article",
-      applies: true,
-      missingFields: missing,
-    });
-  }
-
-  if (contentType === "event") {
-    const missing: string[] = [];
-    if (!fields.hasTitle) missing.push("title");
-    if (!fields.hasDescription) missing.push("description");
-    if (!fields.hasDate) missing.push("event date");
-    checks.push({
-      type: "Event",
-      label: "Event",
-      applies: true,
-      missingFields: missing,
-    });
-
-    checks.push({
-      type: "VideoObject",
-      label: "VideoObject",
-      applies: !!fields.hasRecordingUrl,
-      condition: fields.hasRecordingUrl ? undefined : "Only emitted when a recording URL is set",
-      missingFields: fields.hasRecordingUrl ? [] : [],
-    });
-  }
-
-  if (contentType === "page") {
-    checks.push({
-      type: "FAQPage",
-      label: "FAQPage",
-      applies: !!fields.hasFaqBlocks,
-      condition: fields.hasFaqBlocks ? undefined : "Only emitted when the page contains a FAQ block",
-      missingFields: [],
-    });
-  }
+  checks.push({
+    type: "FAQPage",
+    label: "FAQPage",
+    applies: !!fields.hasFaqBlocks,
+    condition: fields.hasFaqBlocks ? undefined : "Only emitted when the page contains a FAQ block",
+    missingFields: [],
+  });
 
   return checks;
 }
@@ -141,16 +95,15 @@ function SchemaRow({ check }: { check: SchemaCheck }) {
 }
 
 export function StructuredDataStatus({
-  contentType,
   fields,
   className,
 }: StructuredDataStatusProps) {
-  const checks = buildChecks(contentType, fields);
+  const checks = buildChecks(fields);
   const activeChecks = checks.filter((c) => c.applies);
   const hasIssues = activeChecks.some((c) => (c.missingFields?.length ?? 0) > 0);
 
   const noindexWarning = fields.noindex;
-  const unpublishedWarning = contentType !== "event" && fields.isPublished === false;
+  const unpublishedWarning = fields.isPublished === false;
 
   return (
     <div className={cn("rounded-lg border bg-muted/30 p-4", className)}>

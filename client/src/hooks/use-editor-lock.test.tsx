@@ -13,7 +13,7 @@ vi.mock("@/hooks/use-auth", () => ({
       lastName: "Admin",
       email: "alex@example.com",
       role: "admin",
-      adminPermissions: ["content", "design", "directory"],
+      adminPermissions: ["content", "design", "crm"],
     },
   }),
 }));

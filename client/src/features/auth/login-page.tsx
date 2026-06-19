@@ -167,12 +167,12 @@ export default function LoginPage() {
                   className="w-full rounded-md border border-amber-200 dark:border-amber-800 bg-white dark:bg-amber-950/30 px-3 py-2 text-left text-sm hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
                   data-testid="button-fill-admin"
                   onClick={() => {
-                    form.setValue("email", "admin@coreplatform.com");
+                    form.setValue("email", "admin@ecpaintingcharlotte.com");
                     form.setValue("password", "Admin123!");
                   }}
                 >
                   <span className="font-medium text-amber-800 dark:text-amber-300">Admin</span>
-                  <span className="ml-2 text-muted-foreground">admin@coreplatform.com / Admin123!</span>
+                  <span className="ml-2 text-muted-foreground">admin@ecpaintingcharlotte.com / Admin123!</span>
                 </button>
               </CardContent>
             </Card>

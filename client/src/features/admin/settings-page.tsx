@@ -378,8 +378,8 @@ const INTEGRATIONS: IntegrationConfig[] = [
     title: "CRM Inbound API",
     description: "API key used by external lead sources like social ads, Zapier, and landing-page tools",
     icon: Plug,
-    accountUrl: "https://core-platform-production-0848.up.railway.app/admin/settings",
-    docsUrl: "https://core-platform-production-0848.up.railway.app/admin/settings",
+    accountUrl: "/admin/settings",
+    docsUrl: "/admin/settings",
     instructions: [
       "Create a strong shared key for trusted lead sources.",
       "Send inbound leads to /api/crm/leads with the key in the X-CRM-API-Key header.",
@@ -432,7 +432,7 @@ const INTEGRATIONS: IntegrationConfig[] = [
         key: "r2_bucket_name",
         label: "Bucket Name",
         isSecret: false,
-        placeholder: "core-platform-uploads",
+        placeholder: "ec-painting-uploads",
       },
       {
         key: "r2_public_url",

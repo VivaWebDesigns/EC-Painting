@@ -58,7 +58,7 @@ describe("ensureSystemForms", () => {
             submitButtonText: "Send",
             successMessage: "Custom contact success",
             mailchimpEnabled: true,
-            mailchimpTag: "Core Platform General Inquiry",
+            mailchimpTag: "593 EC Painting General Inquiry",
             notifyAdmins: true,
             storeAsContactMessage: true,
           },

@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { storage } from "../storage";
 
-const obsoleteCorePlatformPageSlugs = ["directory", "events", "insights", "recordings", "join"];
+const obsoleteLegacyPlatformPageSlugs = ["directory", "events", "insights", "recordings", "join"];
 
 function id() {
   return randomUUID();
@@ -92,7 +92,7 @@ function buildDisclaimerContent() {
 }
 
 export async function ensureSystemCmsPages() {
-  for (const slug of obsoleteCorePlatformPageSlugs) {
+  for (const slug of obsoleteLegacyPlatformPageSlugs) {
     const existingPage = await storage.cmsPages.getPageBySlug(slug);
     if (existingPage) {
       await storage.cmsPages.deletePage(existingPage.id);

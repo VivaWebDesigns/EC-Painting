@@ -6,9 +6,6 @@ import { logger } from "../utils/logger";
 export async function getSiteFeatures(): Promise<SiteFeatures> {
   const settings = await storage.settings.getDecryptedCategory("system_configuration");
   return {
-    directoryEnabled: false,
-    blogEnabled: false,
-    eventsEnabled: false,
     crmEnabled: normalizeBooleanSetting(
       settings.enable_crm,
       DEFAULT_SITE_FEATURES.crmEnabled,

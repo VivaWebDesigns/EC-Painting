@@ -489,7 +489,7 @@ export default function CmsSeoPage() {
                                 <Input
                                   {...field}
                                   value={field.value ?? ""}
-                                  placeholder="https://facebook.com/coreplatform"
+                                  placeholder="https://facebook.com/your-page"
                                   autoPrependHttps
                                   data-testid="input-facebook-url"
                                 />
@@ -508,7 +508,7 @@ export default function CmsSeoPage() {
                                 <Input
                                   {...field}
                                   value={field.value ?? ""}
-                                  placeholder="@coreplatform"
+                                  placeholder="@yourhandle"
                                   data-testid="input-twitter-handle"
                                 />
                               </FormControl>
@@ -529,7 +529,7 @@ export default function CmsSeoPage() {
                                 <Input
                                   {...field}
                                   value={field.value ?? ""}
-                                  placeholder="https://linkedin.com/company/coreplatform"
+                                  placeholder="https://linkedin.com/company/your-company"
                                   autoPrependHttps
                                   data-testid="input-linkedin-url"
                                 />
@@ -548,7 +548,7 @@ export default function CmsSeoPage() {
                                 <Input
                                   {...field}
                                   value={field.value ?? ""}
-                                  placeholder="https://instagram.com/coreplatform"
+                                  placeholder="https://instagram.com/yourhandle"
                                   autoPrependHttps
                                   data-testid="input-instagram-url"
                                 />

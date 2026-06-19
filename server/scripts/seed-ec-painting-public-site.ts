@@ -3981,12 +3981,7 @@ async function seedSettings() {
   for (const [key, value] of branding)
     await storage.settings.upsertSetting(key, value, "branding", false);
 
-  const features: Array<[string, string]> = [
-    ["enable_directory", "false"],
-    ["enable_blog", "false"],
-    ["enable_events", "false"],
-    ["enable_crm", "true"],
-  ];
+  const features: Array<[string, string]> = [["enable_crm", "true"]];
   for (const [key, value] of features)
     await storage.settings.upsertSetting(key, value, "system_configuration", false);
 }

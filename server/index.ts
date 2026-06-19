@@ -171,9 +171,6 @@ app.use((req, res, next) => {
     await runMigrations();
   }
 
-  const { initSearchIndex } = await import("./lib/search-index");
-  await initSearchIndex();
-
   const { runSystemBootstrap } = await import("./services/system-bootstrap.service");
   await runSystemBootstrap();
 
@@ -209,7 +206,7 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  startScheduledPublishService({ includeBlog: false });
+  startScheduledPublishService();
   startSystemBackupService();
 
   const port = parseInt(process.env.PORT || "5000", 10);

@@ -36,30 +36,6 @@ describe("requireSiteFeature", () => {
     vi.clearAllMocks();
   });
 
-  it("keeps retired platform features disabled even when enabled in settings", async () => {
-    mocks.getDecryptedCategory.mockResolvedValue({ enable_blog: "true" });
-    const next = vi.fn();
-    const res = createResponse();
-
-    await requireSiteFeature("blogEnabled")({} as never, res as never, next);
-
-    expect(next).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Not found" });
-  });
-
-  it("returns 404 when a disabled-by-default feature is not enabled", async () => {
-    mocks.getDecryptedCategory.mockResolvedValue({});
-    const next = vi.fn();
-    const res = createResponse();
-
-    await requireSiteFeature("eventsEnabled")({} as never, res as never, next);
-
-    expect(next).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Not found" });
-  });
-
   it("continues when a default-enabled feature has no stored setting", async () => {
     mocks.getDecryptedCategory.mockResolvedValue({});
     const next = vi.fn();
@@ -71,18 +47,18 @@ describe("requireSiteFeature", () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it("fails closed for disabled-by-default features when settings cannot be read", async () => {
+  it("continues for CRM if settings cannot be read", async () => {
     mocks.getDecryptedCategory.mockRejectedValue(new Error("settings unavailable"));
     const next = vi.fn();
     const res = createResponse();
 
-    await requireSiteFeature("directoryEnabled")({} as never, res as never, next);
+    await requireSiteFeature("crmEnabled")({} as never, res as never, next);
 
-    expect(next).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(next).toHaveBeenCalledOnce();
+    expect(res.status).not.toHaveBeenCalled();
     expect(mocks.warn).toHaveBeenCalledWith(
       "Failed to resolve site feature flag",
-      expect.objectContaining({ feature: "directoryEnabled" }),
+      expect.objectContaining({ feature: "crmEnabled" }),
     );
   });
 });

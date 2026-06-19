@@ -10,7 +10,7 @@ function makeUser(overrides: Partial<User> = {}): User {
     password: "hashed",
     firstName: "Test",
     lastName: "User",
-    role: "therapist",
+    role: "editor",
     profileImageUrl: null,
     isSuspended: false,
     lastLoginAt: null,
@@ -74,7 +74,7 @@ describe("requireRole", () => {
   });
 
   it("returns 403 when user role is not allowed", () => {
-    const { req, res, next } = mockReqRes(makeUser({ role: "therapist" }));
+    const { req, res, next } = mockReqRes(makeUser({ role: "editor" }));
     requireRole("admin")(req, res, next);
     expect(res.status).toHaveBeenCalledWith(403);
     expect(next).not.toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe("requireRole", () => {
 
   it("calls next when user role matches", () => {
     const { req, res, next } = mockReqRes(makeUser({ role: "admin" }));
-    requireRole("admin", "therapist")(req, res, next);
+    requireRole("admin", "editor")(req, res, next);
     expect(next).toHaveBeenCalled();
     expect(res.status).not.toHaveBeenCalled();
   });
