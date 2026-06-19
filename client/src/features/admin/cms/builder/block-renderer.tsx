@@ -2697,6 +2697,33 @@ const RENDERERS: Record<string, React.ComponentType<{ props: Record<string, unkn
   "protocol-builder": ProtocolBuilderBlock,
 };
 
+const RETIRED_LEGACY_BLOCK_TYPES = new Set([
+  "therapist-map",
+  "featured-professionals",
+  "featured-counselors",
+  "events-preview",
+  "blog-preview",
+  "join-hero",
+  "join-registration-form",
+  "blog-post-feed",
+  "blog-featured-post",
+  "standard-blog-page",
+  "events-archive",
+  "video-archives",
+  "directory-browser",
+]);
+
+function RetiredLegacyBlockPlaceholder({ blockType }: { blockType: string }) {
+  return (
+    <div
+      className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-6 text-center text-sm text-muted-foreground"
+      data-testid={`retired-legacy-block-${blockType}`}
+    >
+      Retired legacy block removed: <code>{blockType}</code>
+    </div>
+  );
+}
+
 export function BlockRenderer({
   block,
   isAdminPreview,
@@ -2708,7 +2735,11 @@ export function BlockRenderer({
 }) {
   let renderedBlock: ReactElement | null = null;
 
-  if (isDynamicBlock(block.type)) {
+  if (RETIRED_LEGACY_BLOCK_TYPES.has(block.type)) {
+    renderedBlock = <RetiredLegacyBlockPlaceholder blockType={block.type} />;
+  }
+
+  if (!renderedBlock && isDynamicBlock(block.type)) {
     if (isAdminPreview) {
       renderedBlock = <DynamicPlaceholderAdmin block={block} />;
     }
@@ -2790,11 +2821,6 @@ export function BlockRenderer({
  *  Update this set when adding new full-width block types. */
 const FULL_WIDTH_BLOCKS = new Set([
   "hero",
-  "join-hero",
-  "join-registration-form",
-  "events-archive",
-  "video-archives",
-  "directory-browser",
   "cta",
   "trust-bar",
   "divider",

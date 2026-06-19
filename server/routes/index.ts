@@ -23,6 +23,7 @@ import applicationRoutes from "./application.routes";
 import referenceRoutes from "./reference.routes";
 import formsRoutes from "./forms.routes";
 import crmRoutes from "./crm.routes";
+import { requireSiteFeature } from "../middleware/site-feature-guard";
 import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
@@ -52,27 +53,27 @@ const SPOKE_SERVICE_SLUGS = new Set([
 export function registerApiRoutes(app: Express) {
   app.use("/r2", r2PublicRoutes);
   app.use("/api/auth", authRoutes);
-  app.use("/api/therapists", directoryRoutes);
-  app.use("/api/therapist", therapistRoutes);
-  app.use("/api/stripe", stripeRoutes);
+  app.use("/api/therapists", requireSiteFeature("directoryEnabled"), directoryRoutes);
+  app.use("/api/therapist", requireSiteFeature("directoryEnabled"), therapistRoutes);
+  app.use("/api/stripe", requireSiteFeature("directoryEnabled"), stripeRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/admin", settingsRoutes);
-  app.use("/api/events", eventsRoutes);
+  app.use("/api/events", requireSiteFeature("eventsEnabled"), eventsRoutes);
   app.use("/api/contact", contactRoutes);
   app.use("/api/forms", formsRoutes);
-  app.use("/api/crm", crmRoutes);
+  app.use("/api/crm", requireSiteFeature("crmEnabled"), crmRoutes);
   app.use("/api/admin/docs", docsRoutes);
   app.use("/api/uploads", uploadRoutes);
   app.use("/api/notifications", notificationsRoutes);
-  app.use("/api/specializations", specializationsRoutes);
-  app.use("/api/blog", blogRoutes);
-  app.use("/api/events", guestRegistrationRoutes);
-  app.use("/api/events", registrationRoutes);
+  app.use("/api/specializations", requireSiteFeature("directoryEnabled"), specializationsRoutes);
+  app.use("/api/blog", requireSiteFeature("blogEnabled"), blogRoutes);
+  app.use("/api/events", requireSiteFeature("eventsEnabled"), guestRegistrationRoutes);
+  app.use("/api/events", requireSiteFeature("eventsEnabled"), registrationRoutes);
   app.use("/api/cms", cmsPublicRoutes);
-  app.use("/api/contact-professional", contactProfessionalRoutes);
+  app.use("/api/contact-professional", requireSiteFeature("directoryEnabled"), contactProfessionalRoutes);
   app.use("/api/setup", setupRoutes);
-  app.use("/api/therapist/application", applicationRoutes);
-  app.use("/api/reference", referenceRoutes);
+  app.use("/api/therapist/application", requireSiteFeature("directoryEnabled"), applicationRoutes);
+  app.use("/api/reference", requireSiteFeature("directoryEnabled"), referenceRoutes);
 
   app.get("/api/search", async (req, res) => {
     try {
@@ -197,12 +198,12 @@ export function registerApiRoutes(app: Express) {
     }
   });
 
-  app.get("/api/membership-tiers", async (_req, res) => {
+  app.get("/api/membership-tiers", requireSiteFeature("directoryEnabled"), async (_req, res) => {
     const tiers = await storage.tiers.getActiveTiers();
     res.json(tiers);
   });
 
-  app.get("/api/directory-settings", async (_req, res) => {
+  app.get("/api/directory-settings", requireSiteFeature("directoryEnabled"), async (_req, res) => {
     try {
       res.json(await getDirectorySettings());
     } catch (err) {

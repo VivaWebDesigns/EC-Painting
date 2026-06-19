@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { storage } from "../../storage/index";
 import { asyncHandler } from "../../middleware/error-handler";
+import { requireSiteFeature } from "../../middleware/site-feature-guard";
 import { paramString } from "../../utils/params";
 import { notFound } from "../../utils/route-helpers";
 import { logger } from "../../utils/logger";
@@ -13,6 +14,7 @@ const router = Router();
 
 router.get(
   "/events/:id/registrations",
+  requireSiteFeature("eventsEnabled"),
   asyncHandler(async (req, res) => {
     const eventId = paramString(req.params.id);
     const event = await storage.events.getEvent(eventId);
@@ -26,6 +28,7 @@ router.get(
 
 router.get(
   "/events/:id/registrations/csv",
+  requireSiteFeature("eventsEnabled"),
   asyncHandler(async (req, res) => {
     const eventId = paramString(req.params.id);
     const event = await storage.events.getEvent(eventId);
@@ -65,6 +68,7 @@ function escapeCsv(value: string): string {
 
 router.put(
   "/registrations/:id/checkin",
+  requireSiteFeature("eventsEnabled"),
   asyncHandler(async (req, res) => {
     const id = paramString(req.params.id);
     const { attended } = req.body;
@@ -84,6 +88,7 @@ router.put(
 
 router.put(
   "/registrations/:id/status",
+  requireSiteFeature("eventsEnabled"),
   asyncHandler(async (req, res) => {
     const id = paramString(req.params.id);
     const { status } = req.body;
@@ -153,6 +158,7 @@ router.put(
 
 router.delete(
   "/registrations/:id",
+  requireSiteFeature("eventsEnabled"),
   asyncHandler(async (req, res) => {
     const id = paramString(req.params.id);
     const registration = await storage.eventRegistrations.getRegistration(id);

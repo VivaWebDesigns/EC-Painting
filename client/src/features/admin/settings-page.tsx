@@ -289,7 +289,7 @@ const INTEGRATIONS: IntegrationConfig[] = [
   {
     category: "stripe",
     title: "Stripe",
-    description: "Payment processing for therapist subscriptions",
+    description: "Payment processing for enabled checkout workflows",
     icon: CreditCard,
     accountUrl: "https://dashboard.stripe.com/apikeys",
     docsUrl: "https://docs.stripe.com/keys",
@@ -350,7 +350,7 @@ const INTEGRATIONS: IntegrationConfig[] = [
         key: "mailgun_from_address",
         label: "From Address",
         isSecret: false,
-        placeholder: "Core Platform <noreply@yourdomain.com>",
+        placeholder: "Your Business <noreply@yourdomain.com>",
       },
     ],
   },
@@ -1483,7 +1483,7 @@ export function BrandingTab({
                   onChange={(event) =>
                     setCompanyInfo((current) => ({ ...current, company_name: event.target.value }))
                   }
-                  placeholder="Core Platform"
+                  placeholder="Your Business"
                   data-testid="input-company-name"
                 />
               </div>
@@ -1929,7 +1929,7 @@ export function BrandingTab({
                   Preview
                 </p>
                 <h4 className="mt-3 text-2xl font-semibold" style={previewHeadingStyle}>
-                  Core Platform helps globally mobile families feel understood.
+                  Your public site heading preview appears here.
                 </h4>
                 <p className="mt-3 text-sm text-muted-foreground" style={previewBodyStyle}>
                   Use this preview to compare heading and body combinations before saving. These

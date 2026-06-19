@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticateToken, requireAdminPermission, requireRole } from "../../middleware/auth";
+import { requireSiteFeature } from "../../middleware/site-feature-guard";
 import dashboardRoutes from "./dashboard.routes";
 import therapistsRoutes from "./therapists.routes";
 import usersRoutes from "./users.routes";
@@ -26,11 +27,11 @@ const router = Router();
 router.use(authenticateToken);
 
 router.use("/", requireRole("admin"), dashboardRoutes);
-router.use("/therapists", requireAdminPermission("directory"), therapistsRoutes);
+router.use("/therapists", requireSiteFeature("directoryEnabled"), requireAdminPermission("directory"), therapistsRoutes);
 router.use("/users", requireRole("admin"), usersRoutes);
-router.use("/membership-tiers", requireAdminPermission("directory"), tiersRoutes);
-router.use("/events", requireAdminPermission("content"), eventsRoutes);
-router.use("/blog", requireAdminPermission("content"), blogRoutes);
+router.use("/membership-tiers", requireSiteFeature("directoryEnabled"), requireAdminPermission("directory"), tiersRoutes);
+router.use("/events", requireSiteFeature("eventsEnabled"), requireAdminPermission("content"), eventsRoutes);
+router.use("/blog", requireSiteFeature("blogEnabled"), requireAdminPermission("content"), blogRoutes);
 router.use("/", requireAdminPermission("content"), registrationRoutes);
 router.use("/cms", requireAdminPermission("content"), cmsRoutes);
 router.use("/cms", requireAdminPermission("content"), cmsMediaRoutes);
@@ -41,9 +42,9 @@ router.use("/cms", requireAdminPermission("content"), cmsAuditRoutes);
 router.use("/cms", requireAdminPermission("design"), cmsMenusRoutes);
 router.use("/cms", requireAdminPermission("design"), cmsSidebarsRoutes);
 router.use("/", requireAdminPermission("content"), formsRoutes);
-router.use("/crm", requireAdminPermission("crm"), crmRoutes);
+router.use("/crm", requireSiteFeature("crmEnabled"), requireAdminPermission("crm"), crmRoutes);
 router.use("/editor-locks", requireRole("admin", "editor"), editorLocksRoutes);
 router.use("/", requireRole("admin"), systemBackupsRoutes);
-router.use("/applications", requireAdminPermission("directory"), applicationsRoutes);
+router.use("/applications", requireSiteFeature("directoryEnabled"), requireAdminPermission("directory"), applicationsRoutes);
 
 export default router;
