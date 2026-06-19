@@ -10,22 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   FileText,
-  Sparkles,
-  BookOpen,
-  TrendingUp,
-  Newspaper,
-  Wand2,
+  Paintbrush,
   Check,
 } from "lucide-react";
-import { PAGE_TEMPLATES, type PageTemplate } from "../builder/page-templates";
+import { PAGE_TEMPLATES } from "../builder/page-templates";
 import type { BuilderContent } from "../builder/block-registry";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   FileText,
-  Sparkles,
-  BookOpen,
-  TrendingUp,
-  Newspaper,
+  Paintbrush,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -38,10 +31,9 @@ interface TemplatePickerProps {
   open: boolean;
   onClose: () => void;
   onSelect: (content: BuilderContent, templateName: string) => void;
-  onOpenWizard: () => void;
 }
 
-export function TemplatePicker({ open, onClose, onSelect, onOpenWizard }: TemplatePickerProps) {
+export function TemplatePicker({ open, onClose, onSelect }: TemplatePickerProps) {
   const [selected, setSelected] = useState<string | null>(null);
 
   const handleConfirm = () => {
@@ -59,7 +51,7 @@ export function TemplatePicker({ open, onClose, onSelect, onOpenWizard }: Templa
         <DialogHeader>
           <DialogTitle>Choose a Template</DialogTitle>
           <p className="text-sm text-muted-foreground">
-            Pick a starting point for your new page, or use the landing page wizard for guided creation.
+            Pick a current-site starting point for your new page.
           </p>
         </DialogHeader>
 
@@ -105,25 +97,6 @@ export function TemplatePicker({ open, onClose, onSelect, onOpenWizard }: Templa
             );
           })}
 
-          <button
-            onClick={() => {
-              onClose();
-              onOpenWizard();
-            }}
-            className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed border-violet-300 dark:border-violet-700 text-center transition-all hover:bg-violet-50 dark:hover:bg-violet-950/30 hover:border-violet-400"
-            data-testid="button-open-wizard"
-          >
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/50 dark:to-purple-900/50 flex items-center justify-center">
-              <Wand2 className="h-5 w-5 text-violet-600" />
-            </div>
-            <div>
-              <p className="text-sm font-medium leading-tight">Landing Page Wizard</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Guided 4-step builder for landing pages</p>
-            </div>
-            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">
-              guided
-            </Badge>
-          </button>
         </div>
 
         <DialogFooter>

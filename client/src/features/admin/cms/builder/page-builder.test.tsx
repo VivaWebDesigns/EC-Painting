@@ -67,7 +67,7 @@ describe("PageBuilder", () => {
     expect(container.textContent).toContain("0 block");
   });
 
-  it("renders a realistic mixed block fixture and keeps legacy aliases visible in the builder", async () => {
+  it("renders a realistic mixed block fixture and keeps safe legacy aliases visible in the builder", async () => {
     root = createRoot(container);
 
     await act(async () => {
@@ -79,15 +79,14 @@ describe("PageBuilder", () => {
       );
     });
 
-    expect(container.textContent).toContain("6 block");
+    expect(container.textContent).toContain("5 block");
     expect(container.textContent).toContain("Hero");
     expect(container.textContent).toContain("Call to Action");
-    expect(container.textContent).toContain("Blog Post Feed (Live)");
-    expect(container.textContent).toContain("Events Preview");
+    expect(container.textContent).toContain("Cards Grid");
     expect(container.textContent).toContain("FAQ");
-    expect(container.textContent).toContain("Professional Directory (Live)");
+    expect(container.textContent).toContain("Contact Info");
     expect(container.querySelector('[data-testid="mock-block-preview-cta-legacy-block"]')).not.toBeNull();
-    expect(container.querySelector('[data-testid="mock-block-preview-blog-legacy-block"]')).not.toBeNull();
+    expect(container.querySelector('[data-testid="mock-block-preview-cards-block"]')).not.toBeNull();
   });
 
   it("isolates a single broken preview while leaving the rest of the builder interactive", async () => {
@@ -104,7 +103,7 @@ describe("PageBuilder", () => {
 
     expect(container.textContent).toContain("This block preview could not be rendered in the builder.");
     expect(container.textContent).toContain("Block ID: broken-preview-block");
-    expect(container.textContent).toContain("Type: Blog Preview");
+    expect(container.textContent).toContain("Type: Cards Grid");
     expect(container.querySelector('[data-testid="mock-block-preview-hero-block"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="select-canvas-block-broken-preview-block"]')).not.toBeNull();
   });

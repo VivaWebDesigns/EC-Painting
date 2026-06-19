@@ -1,6 +1,5 @@
-import type { BlogPost, CmsPage, Event } from "@shared/schema";
+import type { CmsPage } from "@shared/schema";
 import type { PublicSearchResult } from "@shared/types/public-search";
-import { getEventPath } from "@shared/event-url";
 import { storage } from "../storage";
 
 interface SearchDocument {
@@ -339,6 +338,14 @@ const FALLBACK_PAGE_DOCUMENTS_BY_SLUG = new Map(
   FALLBACK_PAGE_DOCUMENTS.map((document) => [document.slug, document] as const),
 );
 
+const RETIRED_PUBLIC_SEARCH_SLUGS = new Set([
+  "join",
+  "insights",
+  "events",
+  "recordings",
+  "directory",
+]);
+
 function buildPageText(page: CmsPage) {
   const fallbackDocument = FALLBACK_PAGE_DOCUMENTS_BY_SLUG.get(page.slug);
   return [
@@ -349,33 +356,6 @@ function buildPageText(page: CmsPage) {
     page.seoKeywords,
     collectContentText(page.content),
     fallbackDocument?.searchableText,
-  ]
-    .filter(Boolean)
-    .join(" ");
-}
-
-function buildPostText(post: BlogPost) {
-  return [
-    post.title,
-    post.excerpt,
-    post.content,
-    post.authorName,
-    post.category,
-    ...(post.categories ?? []),
-    ...(post.tags ?? []),
-  ]
-    .filter(Boolean)
-    .join(" ");
-}
-
-function buildEventText(event: Event) {
-  return [
-    event.title,
-    event.description,
-    event.speakerName,
-    event.location,
-    event.locationName,
-    event.locationAddress,
   ]
     .filter(Boolean)
     .join(" ");
@@ -399,13 +379,14 @@ export async function searchPublicSite(query: string): Promise<PublicSearchResul
   const normalized = normalizeQuery(query);
   if (!normalized.raw) return [];
 
-  const [pages, posts, events] = await Promise.all([
-    storage.cmsPages.getAllPages(),
-    storage.blog.getPublishedPosts(),
-    storage.events.getPublishedEvents(),
-  ]);
+  const pages = await storage.cmsPages.getAllPages();
 
-  const publishedPages = pages.filter((page) => page.status === "published" && !page.noindex);
+  const publishedPages = pages.filter(
+    (page) =>
+      page.status === "published" &&
+      !page.noindex &&
+      !RETIRED_PUBLIC_SEARCH_SLUGS.has(page.slug),
+  );
   const publishedPageSlugs = new Set(publishedPages.map((page) => page.slug));
 
   const documents: SearchDocument[] = [
@@ -423,26 +404,6 @@ export async function searchPublicSite(query: string): Promise<PublicSearchResul
       ]),
     })),
     ...buildFallbackPageDocuments(publishedPageSlugs),
-    ...posts
-      .filter((post) => !post.noindex)
-      .map((post) => ({
-      type: "post" as const,
-      id: post.id,
-      title: post.title,
-      url: `/insights/${post.slug}`,
-      metadata: post.category || post.authorName || "Article",
-      searchableText: buildPostText(post),
-      excerptSource: post.excerpt || post.content,
-      })),
-    ...events.map((event) => ({
-      type: "event" as const,
-      id: event.id,
-      title: event.title,
-      url: getEventPath(event),
-      metadata: event.locationName || event.location || "Event",
-      searchableText: buildEventText(event),
-      excerptSource: event.description || buildEventText(event),
-    })),
   ];
 
   return documents

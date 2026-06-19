@@ -65,59 +65,15 @@ describe("ensureSystemForms", () => {
         };
       }
 
-      if (slug === "corePlatform-interest") {
-        return {
-          id: "interest-form-id",
-          name: "Core Platform Interest Form",
-          slug: "corePlatform-interest",
-          description: "Custom description",
-          kind: "interest",
-          isSystem: true,
-          isActive: true,
-          fields: [
-            {
-              id: "name",
-              key: "name",
-              label: "Name",
-              type: "name",
-              placeholder: "",
-              helpText: "",
-              required: true,
-              width: "full",
-              options: [],
-              config: { nameFormat: "split" },
-            },
-          ],
-          settings: {
-            submitButtonText: "Keep Me Informed",
-            successMessage: "Custom success",
-            mailchimpEnabled: true,
-            mailchimpTag: "Core Platform Interest",
-            notifyAdmins: false,
-            storeAsContactMessage: false,
-          },
-        };
-      }
-
       return undefined;
     });
 
     const mod = await import("../services/system-forms.service");
     await mod.ensureSystemForms();
 
-    const corePlatformInterestUpdate = mockUpdate.mock.calls.find(
-      ([id]: [string]) => id === "interest-form-id"
-    );
     const contactUpdate = mockUpdate.mock.calls.find(
       ([id]: [string]) => id === "contact-form-id"
     );
-
-    expect(corePlatformInterestUpdate).toBeTruthy();
-    expect(corePlatformInterestUpdate[1].fields).toHaveLength(1);
-    expect(corePlatformInterestUpdate[1].fields[0].label).toBe("Name");
-    expect(
-      corePlatformInterestUpdate[1].fields.some((field: { label: string }) => field.label === "Introduction")
-    ).toBe(false);
 
     expect(contactUpdate).toBeTruthy();
     expect(contactUpdate[1].name).toBe("Custom Contact Form");
@@ -132,15 +88,8 @@ describe("ensureSystemForms", () => {
     const mod = await import("../services/system-forms.service");
     await mod.ensureSystemForms();
 
-    expect(mockCreate).toHaveBeenCalledTimes(4);
+    expect(mockCreate).toHaveBeenCalledTimes(1);
     const createdSlugs = mockCreate.mock.calls.map(([form]) => form.slug);
-    expect(createdSlugs).toEqual(
-      expect.arrayContaining([
-        "contact-form",
-        "newsletter-signup",
-        "corePlatform-interest",
-        "directory-application-start",
-      ])
-    );
+    expect(createdSlugs).toEqual(["contact-form"]);
   });
 });

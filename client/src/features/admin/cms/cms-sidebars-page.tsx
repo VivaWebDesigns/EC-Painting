@@ -83,9 +83,9 @@ function defaultWidget(type: SidebarWidgetType): SidebarWidget {
       type,
       title: "Stay Connected",
       settings: {
-        description: "Get Core Platform-informed articles, events, and resources in your inbox.",
-        buttonText: "Sign Up",
-        formSlug: "newsletter-signup",
+        description: "Send a question or request a painting quote.",
+        buttonText: "Contact Us",
+        formSlug: "contact-form",
       },
     };
   }
@@ -203,7 +203,7 @@ function WidgetSettings({
             <div className="space-y-1.5">
               <Label>Assigned Form</Label>
               <Select
-                value={String(widget.settings.formSlug ?? "newsletter-signup")}
+                value={String(widget.settings.formSlug ?? "contact-form")}
                 onValueChange={(value) => updateSetting("formSlug", value)}
               >
                 <SelectTrigger>
@@ -211,7 +211,7 @@ function WidgetSettings({
                 </SelectTrigger>
                 <SelectContent>
                   {forms
-                    .filter((form) => form.kind === "newsletter" || form.slug === "newsletter-signup")
+                    .filter((form) => form.slug === "contact-form")
                     .map((form) => (
                       <SelectItem key={form.id} value={form.slug}>
                         {form.name}

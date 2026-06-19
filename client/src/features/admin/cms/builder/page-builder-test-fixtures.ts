@@ -6,8 +6,8 @@ export const mixedBuilderFixture: BuilderContent = {
       id: "hero-block",
       type: "hero",
       props: {
-        heading: "Support Third Culture Kids",
-        subheading: "<p>Helping families find the right care and community.</p>",
+        heading: "Charlotte House Painters",
+        subheading: "<p>Interior, exterior, cabinet, deck, and fence painting.</p>",
         layout: "stacked",
       },
     },
@@ -15,25 +15,20 @@ export const mixedBuilderFixture: BuilderContent = {
       id: "cta-legacy-block",
       type: "call-to-action",
       props: {
-        heading: "Join the Network",
-        body: "<p>Apply to be part of the Core Platform-informed network.</p>",
-        ctaText: "Apply Now",
+        heading: "Request a Free Quote",
+        body: "<p>Tell us about your next painting project.</p>",
+        ctaText: "Contact Us",
       },
     },
     {
-      id: "blog-legacy-block",
-      type: "blog-feed",
+      id: "cards-block",
+      type: "cards-grid",
       props: {
-        heading: "Latest Insights",
-        limit: 5,
-      },
-    },
-    {
-      id: "events-block",
-      type: "events-preview",
-      props: {
-        heading: "Upcoming Trainings",
-        limit: 4,
+        heading: "Popular Services",
+        cards: [
+          { title: "Interior Painting", description: "Walls, ceilings, trim, and doors." },
+          { title: "Exterior Painting", description: "Siding, brick, stucco, and trim." },
+        ],
       },
     },
     {
@@ -42,15 +37,15 @@ export const mixedBuilderFixture: BuilderContent = {
       props: {
         heading: "Common Questions",
         items: [
-          { question: "How do I apply?", answer: "<p>Use the application form.</p>" },
+          { question: "Do you offer free quotes?", answer: "<p>Yes, quotes are free.</p>" },
         ],
       },
     },
     {
-      id: "directory-block",
-      type: "directory-browser",
+      id: "contact-info-block",
+      type: "contact-info",
       props: {
-        heading: "Find a Mental Health Professional",
+        heading: "Contact 593 EC Painting",
       },
     },
   ],
@@ -61,9 +56,9 @@ export const fixtureWithBrokenPreview: BuilderContent = {
     ...mixedBuilderFixture.blocks,
     {
       id: "broken-preview-block",
-      type: "blog-preview",
+      type: "cards-grid",
       props: {
-        heading: "Featured Articles",
+        heading: "Featured Services",
       },
     },
   ],

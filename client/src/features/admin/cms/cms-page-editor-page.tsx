@@ -55,7 +55,6 @@ import {
   Copy,
   ExternalLink,
   AlertTriangle,
-  Sparkles,
 } from "lucide-react";
 import {
   Popover,
@@ -69,7 +68,6 @@ import type { BuilderContent } from "./builder/block-registry";
 import { reportBuilderRenderError } from "./builder/builder-diagnostics";
 import { mergeJoinHeroBlocks } from "@shared/cms-blocks";
 import { TemplatePicker } from "./components/template-picker";
-import { LandingPageWizard } from "./components/landing-page-wizard";
 import { analyzeCmsPageQuality } from "@/lib/cms-page-quality";
 import { useEditorLock } from "@/hooks/use-editor-lock";
 import { useLockConflictGuard } from "@/hooks/use-lock-conflict-guard";
@@ -128,7 +126,6 @@ export default function CmsPageEditorPage() {
   );
   const [activeTab, setActiveTab] = useState("builder");
   const [templatePickerOpen, setTemplatePickerOpen] = useState(isNew);
-  const [wizardOpen, setWizardOpen] = useState(false);
 
   const { data: page, isLoading: pageLoading } = useQuery<CmsPage>({
     queryKey: ["/api/admin/cms/pages", id],
@@ -735,7 +732,7 @@ export default function CmsPageEditorPage() {
               SEO
             </TabsTrigger>
             <TabsTrigger value="quality" data-testid="tab-quality">
-              <Sparkles className="h-4 w-4 mr-1.5" />
+              <LayoutTemplate className="h-4 w-4 mr-1.5" />
               Quality
             </TabsTrigger>
           </TabsList>
@@ -1297,21 +1294,6 @@ export default function CmsPageEditorPage() {
               if (templateName !== "Blank Page") {
                 toast({ title: `Template "${templateName}" applied` });
               }
-            }}
-            onOpenWizard={() => setWizardOpen(true)}
-          />
-          <LandingPageWizard
-            open={wizardOpen}
-            onClose={() => setWizardOpen(false)}
-            onCreate={(content, title) => {
-              setBuilderContent(content);
-              form.setValue("title", title);
-              form.setValue("pageType", "landing");
-              if (!slugManuallyEdited.current) {
-                form.setValue("slug", slugify(title));
-              }
-              setWizardOpen(false);
-              toast({ title: "Landing page generated — customize it below" });
             }}
           />
         </>

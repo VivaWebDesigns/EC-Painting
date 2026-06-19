@@ -27,7 +27,6 @@ import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
 import { DEFAULT_SITE_FEATURES, normalizeBooleanSetting } from "@shared/site-features";
-import { getEventPath } from "@shared/event-url";
 import {
   DEFAULT_DIRECTORY_SETTINGS,
   getDirectorySettings,
@@ -234,11 +233,9 @@ export function registerApiRoutes(app: Express) {
 
   app.get("/sitemap.xml", async (_req, res) => {
     try {
-      const [seoSettings, pages, posts, events] = await Promise.all([
+      const [seoSettings, pages] = await Promise.all([
         storage.seoSettings.get(),
         storage.cmsPages.getAllPages(),
-        storage.blog.getAllPosts(),
-        storage.events.getAllEvents(),
       ]);
 
       const base = seoSettings?.siteUrl?.replace(/\/$/, "") || "";
@@ -250,11 +247,9 @@ export function registerApiRoutes(app: Express) {
 
       const staticRoutes = [
         { path: "/about", changefreq: "monthly", priority: "0.7" },
-        { path: "/insights", changefreq: "weekly", priority: "0.8" },
-        { path: "/events", changefreq: "daily", priority: "0.8" },
-        { path: "/recordings", changefreq: "weekly", priority: "0.7" },
-        { path: "/directory", changefreq: "daily", priority: "0.9" },
-        { path: "/join", changefreq: "monthly", priority: "0.6" },
+        { path: "/gallery", changefreq: "monthly", priority: "0.7" },
+        { path: "/reviews", changefreq: "monthly", priority: "0.7" },
+        { path: "/services", changefreq: "monthly", priority: "0.8" },
         { path: "/contact", changefreq: "monthly", priority: "0.5" },
       ];
       for (const r of staticRoutes) {
@@ -268,6 +263,9 @@ export function registerApiRoutes(app: Express) {
             "home",
             "about",
             "contact",
+            "gallery",
+            "reviews",
+            "services",
             "join",
             "insights",
             "events",
@@ -283,27 +281,6 @@ export function registerApiRoutes(app: Express) {
             : undefined,
           changefreq: "monthly",
           priority: SPOKE_SERVICE_SLUGS.has(page.slug) ? "0.8" : "0.6",
-        });
-      }
-
-      for (const post of posts) {
-        if (!post.isPublished || post.noindex) continue;
-        urls.push({
-          loc: `${base}/insights/${post.slug}`,
-          lastmod: post.updatedAt
-            ? new Date(post.updatedAt).toISOString().split("T")[0]
-            : undefined,
-          changefreq: "monthly",
-          priority: "0.7",
-        });
-      }
-
-      for (const event of events) {
-        if (event.status === "draft" || event.visibility !== "public") continue;
-        urls.push({
-          loc: `${base}${getEventPath(event)}`,
-          changefreq: "weekly",
-          priority: "0.7",
         });
       }
 

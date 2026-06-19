@@ -44,7 +44,7 @@ import { CmsSitemapTab } from "./cms-sitemap-tab";
 
 const seoFormSchema = z.object({
   siteName: z.string().min(1, "Site name is required"),
-  titleSuffix: z.string().default(" | Core Platform"),
+  titleSuffix: z.string().default(" | 593 EC Painting"),
   defaultMetaDescription: z.string().max(320, "Keep under 320 characters").optional().nullable(),
   siteUrl: z
     .string()
@@ -144,12 +144,12 @@ export default function CmsSeoPage() {
   const form = useForm<SeoFormValues>({
     resolver: zodResolver(seoFormSchema),
     defaultValues: {
-      siteName: "Core Platform",
-      titleSuffix: " | Core Platform",
+      siteName: "593 EC Painting",
+      titleSuffix: " | 593 EC Painting",
       defaultMetaDescription: "",
       siteUrl: "",
       defaultOgImageUrl: "",
-      organizationName: "Core Platform",
+      organizationName: "593 EC Painting",
       organizationLogoUrl: "",
       facebookUrl: "",
       twitterHandle: "",
@@ -162,12 +162,12 @@ export default function CmsSeoPage() {
   useEffect(() => {
     if (settings) {
       form.reset({
-        siteName: settings.siteName ?? "Core Platform",
-        titleSuffix: settings.titleSuffix ?? " | Core Platform",
+        siteName: settings.siteName ?? "593 EC Painting",
+        titleSuffix: settings.titleSuffix ?? " | 593 EC Painting",
         defaultMetaDescription: settings.defaultMetaDescription ?? "",
         siteUrl: settings.siteUrl ?? "",
         defaultOgImageUrl: settings.defaultOgImageUrl ?? "",
-        organizationName: settings.organizationName ?? "Core Platform",
+        organizationName: settings.organizationName ?? "593 EC Painting",
         organizationLogoUrl: settings.organizationLogoUrl ?? "",
         facebookUrl: settings.facebookUrl ?? "",
         twitterHandle: settings.twitterHandle ?? "",
@@ -260,7 +260,7 @@ export default function CmsSeoPage() {
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder="Core Platform"
+                                placeholder="593 EC Painting"
                                 data-testid="input-site-name"
                               />
                             </FormControl>
@@ -281,7 +281,7 @@ export default function CmsSeoPage() {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                placeholder="Core Platform"
+                                placeholder="593 EC Painting"
                                 data-testid="input-org-name"
                               />
                             </FormControl>
@@ -302,7 +302,7 @@ export default function CmsSeoPage() {
                               <Input
                                 {...field}
                                 value={field.value ?? ""}
-                                placeholder="https://coreplatform.com"
+                                placeholder="https://ecpaintingcharlotte.com"
                                 autoPrependHttps
                                 data-testid="input-site-url"
                               />
@@ -337,12 +337,12 @@ export default function CmsSeoPage() {
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder=" | Core Platform"
+                                placeholder=" | 593 EC Painting"
                                 data-testid="input-title-suffix"
                               />
                             </FormControl>
                             <FormDescription className="text-xs">
-                              Appended to page titles — e.g. "Find a Mental Health Professional | Core Platform"
+                              Appended to page titles — e.g. "Interior Painting | 593 EC Painting"
                             </FormDescription>
                             <FormMessage />
                           </FormItem>

@@ -1,12 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { BlogPost, CmsPage, Event, SeoSettings } from "@shared/schema";
+import type { CmsPage, SeoSettings } from "@shared/schema";
 
 const mockGetSeo = vi.fn();
 const mockGetSetting = vi.fn();
 const mockGetPageBySlug = vi.fn();
-const mockGetPostBySlug = vi.fn();
-const mockGetEventByIdentifier = vi.fn();
-const mockGetProfileWithUser = vi.fn();
 
 vi.mock("../storage", () => ({
   storage: {
@@ -18,15 +15,6 @@ vi.mock("../storage", () => ({
     },
     cmsPages: {
       getPageBySlug: mockGetPageBySlug,
-    },
-    blog: {
-      getPostBySlug: mockGetPostBySlug,
-    },
-    events: {
-      getEventByIdentifier: mockGetEventByIdentifier,
-    },
-    therapists: {
-      getProfileWithUser: mockGetProfileWithUser,
     },
   },
 }));
@@ -51,19 +39,19 @@ const seoSettings: SeoSettings = {
 
 const cmsPage: CmsPage = {
   id: "page-1",
-  title: "Join the Network",
-  slug: "join",
+  title: "Painting Process",
+  slug: "painting-process",
   status: "published",
   pageType: "system",
   template: "full-width",
   sidebarId: null,
   content: {
     blocks: [
-      { id: "b1", type: "hero", props: { title: "The Application Process", subtitle: "Submit your application and complete credential verification." } },
+      { id: "b1", type: "hero", props: { title: "Our Painting Process", subtitle: "Prep, paint, cleanup, and walkthrough." } },
     ],
   },
   seoTitle: null,
-  seoDescription: "Learn about the application process.",
+  seoDescription: "Learn about the 593 EC Painting process.",
   seoKeywords: null,
   ogImageUrl: null,
   canonicalUrl: null,
@@ -76,115 +64,34 @@ const cmsPage: CmsPage = {
   updatedAt: new Date(),
 };
 
-const blogPost: BlogPost = {
-  id: "post-1",
-  title: "Understanding the Application Process",
-  slug: "understanding-application-process",
-  excerpt: "Everything you need to know before you apply.",
-  content: "<p>This article explains the application process in detail.</p>",
-  coverImageUrl: null,
-  coverImagePositionX: 50,
-  coverImagePositionY: 50,
-  authorName: "Team",
-  category: "Guides",
-  categories: ["Guides"],
-  tags: ["Application"],
-  postType: "article",
-  podcastUrl: null,
-  externalUrl: null,
-  sidebarId: null,
-  isPublished: true,
-  scheduledAt: null,
-  publishedAt: new Date(),
-  seoTitle: null,
-  seoDescription: null,
-  ogImageUrl: null,
-  noindex: false,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const event: Event = {
-  id: "event-1",
-  title: "Application Process Webinar",
-  slug: "application-process-webinar",
-  description: "Join us for a walk-through of the application process.",
-  date: new Date("2026-06-01T15:00:00.000Z"),
-  endDate: null,
-  location: "Online",
-  isVirtual: true,
-  zoomLink: null,
-  memberOnly: false,
-  imageUrl: null,
-  imagePositionX: 50,
-  imagePositionY: 50,
-  createdAt: new Date(),
-  virtualJoinUrl: null,
-  virtualDialInInfo: null,
-  recordingUrl: null,
-  showInArchives: false,
-  recordingAccess: "free",
-  recordingPrice: null,
-  registrationEnabled: false,
-  registrationType: "free",
-  registrationFee: null,
-  registrationCurrency: "usd",
-  registrationOpensAt: null,
-  registrationClosesAt: null,
-  capacity: null,
-  waitlistEnabled: false,
-  status: "published",
-  visibility: "public",
-  timezone: null,
-  locationName: null,
-  locationAddress: null,
-  latitude: null,
-  longitude: null,
-  speakerName: "Guide Team",
-  speakerBio: null,
-  speakerImageUrl: null,
-  isRecurring: false,
-  recurrencePattern: null,
-  recurrenceInterval: null,
-  recurrenceDaysOfWeek: null,
-  recurrenceEndDate: null,
-  recurrenceCount: null,
-  parentEventId: null,
-};
-
 describe("public-prerender.service", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockGetSeo.mockResolvedValue(seoSettings);
     mockGetSetting.mockResolvedValue(null);
     mockGetPageBySlug.mockResolvedValue(undefined);
-    mockGetPostBySlug.mockResolvedValue(undefined);
-    mockGetEventByIdentifier.mockResolvedValue(undefined);
-    mockGetProfileWithUser.mockResolvedValue(undefined);
   });
 
   it("returns a prerender snapshot for published CMS pages", async () => {
     mockGetPageBySlug.mockResolvedValue(cmsPage);
     const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
 
-    const snapshot = await getPublicHtmlSnapshot("/join");
+    const snapshot = await getPublicHtmlSnapshot("/painting-process");
 
-    expect(snapshot?.title).toContain("Join the Network");
-    expect(snapshot?.bodyHtml).toContain("The Application Process");
-    expect(snapshot?.canonicalUrl).toBe("https://coreplatform.com/join");
+    expect(snapshot?.title).toContain("Painting Process");
+    expect(snapshot?.bodyHtml).toContain("Our Painting Process");
+    expect(snapshot?.canonicalUrl).toBe("https://coreplatform.com/painting-process");
   });
 
-  it("returns a prerender snapshot for blog posts and event detail pages", async () => {
-    mockGetPostBySlug.mockResolvedValue(blogPost);
-    mockGetEventByIdentifier.mockResolvedValue(event);
+  it("does not prerender retired inherited public surfaces", async () => {
+    mockGetPageBySlug.mockResolvedValue({ ...cmsPage, slug: "join" });
     const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
 
-    const postSnapshot = await getPublicHtmlSnapshot("/insights/understanding-application-process");
-    const eventSnapshot = await getPublicHtmlSnapshot("/events/event-1");
-
-    expect(postSnapshot?.bodyHtml).toContain("This article explains the application process");
-    expect(eventSnapshot?.bodyHtml).toContain("Application Process Webinar");
-    expect(eventSnapshot?.canonicalUrl).toBe("https://coreplatform.com/events/application-process-webinar");
+    await expect(getPublicHtmlSnapshot("/join")).resolves.toBeNull();
+    await expect(getPublicHtmlSnapshot("/insights/old-post")).resolves.toBeNull();
+    await expect(getPublicHtmlSnapshot("/events/old-event")).resolves.toBeNull();
+    await expect(getPublicHtmlSnapshot("/recordings")).resolves.toBeNull();
+    await expect(getPublicHtmlSnapshot("/directory/old-profile")).resolves.toBeNull();
   });
 
   it("marks search result pages as noindex in the injected head", async () => {

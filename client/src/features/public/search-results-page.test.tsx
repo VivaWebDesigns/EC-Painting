@@ -48,10 +48,10 @@ describe("SearchResultsPage", () => {
         json: async () => [
           {
             type: "page",
-            id: "join",
-            title: "Join the Network",
-            url: "/join",
-            excerpt: "The Application Process includes Submit Your Application.",
+            id: "contact",
+            title: "Contact 593 EC Painting",
+            url: "/contact",
+            excerpt: "Request a free painting quote.",
             metadata: "Page",
           },
         ],
@@ -89,6 +89,6 @@ describe("SearchResultsPage", () => {
 
     expect(fetch).toHaveBeenCalledWith("/api/search?q=application%20process");
     expect(container.textContent).toContain('1 result for "application process"');
-    expect(container.textContent).toContain("Join the Network");
+    expect(container.textContent).toContain("Contact 593 EC Painting");
   });
 });

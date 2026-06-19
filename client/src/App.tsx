@@ -15,7 +15,6 @@ import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features"
 const HomePage = lazy(() => import("@/features/public/home-page"));
 const AboutPage = lazy(() => import("@/features/public/about-page"));
 const ContactPage = lazy(() => import("@/features/public/contact-page"));
-const JoinNetworkPage = lazy(() => import("@/features/public/join-network-page"));
 const CmsHybridPage = lazy(() =>
   import("@/features/public/cms-hybrid-page").then((module) => ({
     default: module.CmsHybridPage,
@@ -138,7 +137,7 @@ function Router() {
         <Route path="/sitemap" component={() => <CmsHybridPage slug="sitemap" fallback={<NotFound />} />} />
         <Route path="/404" component={() => <CmsHybridPage slug="404" fallback={<NotFound />} />} />
         <Route path="/preview/cms/:id" component={CmsPreviewPage} />
-        <Route path="/join" component={() => <CmsHybridPage slug="join" fallback={<JoinNetworkPage />} />} />
+        <Route path="/join" component={NotFound} />
         <Route path="/events" component={NotFound} />
         <Route path="/events/:id" component={NotFound} />
         <Route path="/recordings" component={NotFound} />
@@ -146,14 +145,14 @@ function Router() {
         <Route path="/insights" component={NotFound} />
         <Route path="/insights/:slug" component={NotFound} />
         <Route path="/directory" component={NotFound} />
-        <Route path="/privacy-policy" component={() => <CmsHybridPage slug="privacy-policy" fallback={<LegalFallbackPage title="Privacy Policy" subtitle="Review how Core Platform collects, uses, stores, and protects information across the website and related services." />} />} />
-        <Route path="/terms-of-service" component={() => <CmsHybridPage slug="terms-of-service" fallback={<LegalFallbackPage title="Terms of Service" subtitle="Review the terms governing use of the Core Platform website, directory, events, and related services." />} />} />
-        <Route path="/disclaimer" component={() => <CmsHybridPage slug="disclaimer" fallback={<LegalFallbackPage title="Disclaimer" subtitle="Review emergency guidance, directory vetting limitations, and important information about using the Core Platform directory and related services." />} />} />
+        <Route path="/privacy-policy" component={() => <CmsHybridPage slug="privacy-policy" fallback={<LegalFallbackPage title="Privacy Policy" subtitle="Review how 593 EC Painting collects, uses, stores, and protects information across the website and related services." />} />} />
+        <Route path="/terms-of-service" component={() => <CmsHybridPage slug="terms-of-service" fallback={<LegalFallbackPage title="Terms of Service" subtitle="Review the terms governing use of the 593 EC Painting website and related services." />} />} />
+        <Route path="/disclaimer" component={() => <CmsHybridPage slug="disclaimer" fallback={<LegalFallbackPage title="Disclaimer" subtitle="Review important information about using the 593 EC Painting website and related services." />} />} />
         <Route path="/directory/:id" component={NotFound} />
         <Route path="/reference/:token" component={ReferenceFormPage} />
         <Route path="/forms/:slug" component={StandaloneFormPage} />
         <Route path="/auth/login" component={LoginPage} />
-        <Route path="/auth/register"><Redirect to="/join" replace /></Route>
+        <Route path="/auth/register"><Redirect to="/auth/login" replace /></Route>
         <Route path="/auth/forgot-password" component={ForgotPasswordPage} />
         <Route path="/auth/reset-password" component={ResetPasswordPage} />
         <Route path="/setup" component={AdminSetupPage} />
