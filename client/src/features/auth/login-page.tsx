@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { LogIn } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -131,9 +130,7 @@ export default function LoginPage() {
                   >
                     {isPending ? (
                       <LoadingSpinner className="h-4 w-4 mr-2" />
-                    ) : (
-                      <LogIn className="h-4 w-4 mr-2" />
-                    )}
+                    ) : null}
                     Sign In
                   </Button>
                 </form>

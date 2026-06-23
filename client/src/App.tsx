@@ -43,7 +43,6 @@ const CmsMenusPage = lazy(() => import("@/features/admin/cms/cms-menus-page"));
 const CmsSidebarsPage = lazy(() => import("@/features/admin/cms/cms-sidebars-page"));
 const SystemBackupsPage = lazy(() => import("@/features/admin/system-backups-page"));
 
-const SearchResultsPage = lazy(() => import("@/features/public/search-results-page"));
 const LegalFallbackPage = lazy(() => import("@/features/public/legal-fallback-page"));
 
 function PageLoader() {
@@ -110,7 +109,7 @@ function Router() {
         <Route path="/events" component={NotFound} />
         <Route path="/events/:id" component={NotFound} />
         <Route path="/recordings" component={NotFound} />
-        <Route path="/search" component={SearchResultsPage} />
+        <Route path="/search" component={NotFound} />
         <Route path="/insights" component={NotFound} />
         <Route path="/insights/:slug" component={NotFound} />
         <Route path="/directory" component={NotFound} />

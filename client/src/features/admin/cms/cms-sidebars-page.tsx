@@ -37,7 +37,6 @@ import {
   Mail,
   PanelRight,
   Plus,
-  Search,
   Star,
   Trash2,
   Type,
@@ -50,6 +49,7 @@ import { useLockConflictGuard } from "@/hooks/use-lock-conflict-guard";
 const RETIRED_WIDGET_TYPES = new Set<SidebarWidgetType>([
   "recent-posts",
   "newsletter",
+  "search",
   "categories",
   "tag-cloud",
 ]);
@@ -70,7 +70,7 @@ const WIDGET_ICONS: Record<SidebarWidgetType, ElementType> = {
   newsletter: Mail,
   form: Mail,
   callout: Star,
-  search: Search,
+  search: PanelRight,
   categories: Type,
   "tag-cloud": Type,
   "custom-html": Type,

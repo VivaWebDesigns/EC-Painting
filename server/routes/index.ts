@@ -11,7 +11,6 @@ import cmsPublicRoutes from "./cms-public.routes";
 import r2PublicRoutes from "./r2-public.routes";
 import setupRoutes from "./setup.routes";
 import formsRoutes from "./forms.routes";
-import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
 
@@ -44,16 +43,6 @@ export function registerApiRoutes(app: Express) {
   app.use("/api/notifications", notificationsRoutes);
   app.use("/api/cms", cmsPublicRoutes);
   app.use("/api/setup", setupRoutes);
-
-  app.get("/api/search", async (req, res) => {
-    try {
-      const query = typeof req.query.q === "string" ? req.query.q : "";
-      res.json(await searchPublicSite(query));
-    } catch (err) {
-      logger.app.error("Failed to execute public site search", err);
-      res.status(500).json({ message: "Search failed" });
-    }
-  });
 
   app.get("/api/branding", async (_req, res) => {
     try {

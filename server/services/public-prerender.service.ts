@@ -414,28 +414,6 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
   };
 }
 
-function buildSearchSnapshot(query: string, seo: SeoSettings | null, siteUrl: string): PublicHtmlSnapshot {
-  const term = query.trim();
-  const title = term ? `Search Results for "${term}"` : "Site Search";
-  const description = term
-    ? `Search results for ${term} across pages on 593 EC Painting.`
-    : "Search pages on 593 EC Painting.";
-
-  return {
-    title: buildHeadTitle(title, seo),
-    description,
-    canonicalUrl: term ? `${siteUrl}/search?query=${encodeURIComponent(term)}` : `${siteUrl}/search`,
-    robots: "noindex,follow",
-    bodyHtml: buildSimplePageBody(title, description, [
-      "Search the site for pages on 593 EC Painting.",
-      term ? `Current search query: ${term}` : "",
-    ]),
-    jsonLd: [buildOrganizationSchema(seo, siteUrl), buildWebsiteSchema(seo, siteUrl)].filter(
-      Boolean,
-    ) as Array<Record<string, unknown>>,
-  };
-}
-
 function buildFallbackSnapshot(
   pathname: string,
   seo: SeoSettings | null,
@@ -468,7 +446,7 @@ function resolveCmsSlugForPathname(pathname: string) {
 
 export async function getPublicHtmlSnapshot(
   pathname: string,
-  search = "",
+  _search = "",
 ): Promise<PublicHtmlSnapshot | null> {
   if (
     pathname.startsWith("/api") ||
@@ -491,11 +469,6 @@ export async function getPublicHtmlSnapshot(
 
   const seo = (await storage.seoSettings.get()) ?? null;
   const siteUrl = (seo?.siteUrl || "").replace(/\/$/, "") || "https://ec-painting-production.up.railway.app";
-
-  if (pathname === "/search") {
-    const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-    return buildSearchSnapshot(params.get("query") || "", seo, siteUrl);
-  }
 
   const slug = resolveCmsSlugForPathname(pathname);
   if (slug) {

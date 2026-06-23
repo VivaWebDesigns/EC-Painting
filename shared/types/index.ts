@@ -1,5 +1,3 @@
-export type { PublicSearchResult, PublicSearchResultType } from "./public-search";
-
 export const UserRole = {
   ADMIN: "admin",
   EDITOR: "editor",

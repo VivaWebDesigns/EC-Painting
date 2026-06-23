@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { PublicFormRenderer } from "@/components/forms/public-form-renderer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import type { CmsSidebar, SidebarWidget } from "@shared/schema";
 
 function text(value: unknown, fallback = "") {
@@ -67,29 +65,6 @@ function CalloutWidget({ widget }: { widget: SidebarWidget }) {
   );
 }
 
-function SearchWidget({ widget }: { widget: SidebarWidget }) {
-  const [, navigate] = useLocation();
-  const [query, setQuery] = useState("");
-
-  return (
-    <WidgetCard title={widget.title || "Search"}>
-      <form
-        className="flex gap-2"
-        onSubmit={(event) => {
-          event.preventDefault();
-          navigate(query.trim() ? `/search?query=${encodeURIComponent(query.trim())}` : "/search");
-        }}
-        data-testid="sidebar-search-form"
-      >
-        <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search site content..." />
-        <Button type="submit" size="icon" aria-label="Search">
-          <Search className="h-4 w-4" />
-        </Button>
-      </form>
-    </WidgetCard>
-  );
-}
-
 function HtmlWidget({ widget }: { widget: SidebarWidget }) {
   return (
     <WidgetCard title={widget.title}>
@@ -104,7 +79,6 @@ function HtmlWidget({ widget }: { widget: SidebarWidget }) {
 function SidebarWidgetRenderer({ widget }: { widget: SidebarWidget }) {
   if (widget.type === "form") return <FormWidget widget={widget} />;
   if (widget.type === "callout") return <CalloutWidget widget={widget} />;
-  if (widget.type === "search") return <SearchWidget widget={widget} />;
   if (widget.type === "custom-html") return <HtmlWidget widget={widget} />;
   return null;
 }

@@ -94,15 +94,10 @@ describe("public-prerender.service", () => {
     await expect(getPublicHtmlSnapshot("/directory/old-profile")).resolves.toBeNull();
   });
 
-  it("marks search result pages as noindex in the injected head", async () => {
-    const { getPublicHtmlSnapshot, injectPublicHtmlSnapshot } = await import("../services/public-prerender.service");
-    const template = "<html><head><title>Default</title><!--APP_DYNAMIC_HEAD--></head><body><!--APP_PRERENDER_CONTENT--><div id=\"root\"></div></body></html>";
+  it("does not prerender the retired public search page", async () => {
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
 
-    const snapshot = await getPublicHtmlSnapshot("/search", "?query=application+process");
-    const html = injectPublicHtmlSnapshot(template, snapshot);
-
-    expect(html).toContain('meta name="robots" content="noindex,follow"');
-    expect(html).toContain("Search Results for &quot;application process&quot;");
+    await expect(getPublicHtmlSnapshot("/search", "?query=application+process")).resolves.toBeNull();
   });
 
   it("retrieves and injects custom public head additions", async () => {
