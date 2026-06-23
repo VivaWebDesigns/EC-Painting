@@ -10,7 +10,6 @@ import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useAuth } from "@/hooks/use-auth";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
-import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 
 const AboutPage = lazy(() => import("@/features/public/about-page"));
 const ContactPage = lazy(() => import("@/features/public/contact-page"));
@@ -30,8 +29,6 @@ const StandaloneFormPage = lazy(() => import("@/features/public/standalone-form-
 const AdminDashboardPage = lazy(() => import("@/features/admin/dashboard-page"));
 const AdminUsersPage = lazy(() => import("@/features/admin/users-page"));
 const AdminFormsPage = lazy(() => import("@/features/admin/forms-page"));
-const AdminCrmPage = lazy(() => import("@/features/admin/crm-page"));
-const AdminCrmClientsPage = lazy(() => import("@/features/admin/crm-clients-page"));
 const DocsPage = lazy(() => import("@/features/admin/docs-page"));
 const AdminSettingsPage = lazy(() => import("@/features/admin/settings-page"));
 const AdminDesignPage = lazy(() => import("@/features/admin/design-page"));
@@ -72,9 +69,6 @@ function AdminIndexRoute() {
     if (hasAdminPermission("content")) {
       return <Redirect to="/admin/cms" replace />;
     }
-    if (hasAdminPermission("crm")) {
-      return <Redirect to="/admin/crm" replace />;
-    }
     if (hasAdminPermission("design")) {
       return <Redirect to="/admin/design/branding" replace />;
     }
@@ -84,12 +78,6 @@ function AdminIndexRoute() {
 }
 
 function Router() {
-  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
-    queryKey: ["/api/site-config"],
-    staleTime: 60_000,
-  });
-  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
-
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
@@ -179,16 +167,6 @@ function Router() {
         <Route path="/admin/forms">
           <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["content"]}>
             <AdminFormsPage />
-          </ProtectedRoute>
-        </Route>
-        <Route path="/admin/crm/clients">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["crm"]}>
-            {siteFeatures.crmEnabled ? <AdminCrmClientsPage /> : <NotFound />}
-          </ProtectedRoute>
-        </Route>
-        <Route path="/admin/crm">
-          <ProtectedRoute roles={["admin", "editor"]} adminPermissions={["crm"]}>
-            {siteFeatures.crmEnabled ? <AdminCrmPage /> : <NotFound />}
           </ProtectedRoute>
         </Route>
         <Route path="/admin/blog">

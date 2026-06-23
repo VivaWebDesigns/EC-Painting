@@ -21,7 +21,6 @@ function normalizePermissions(user: User | undefined): AdminPermissionType[] {
     return [
       AdminPermission.CONTENT,
       AdminPermission.DESIGN,
-      AdminPermission.CRM,
     ];
   }
 
@@ -29,8 +28,7 @@ function normalizePermissions(user: User | undefined): AdminPermissionType[] {
 
   return user.adminPermissions.filter((permission): permission is AdminPermissionType =>
     permission === AdminPermission.CONTENT ||
-    permission === AdminPermission.DESIGN ||
-    permission === AdminPermission.CRM
+    permission === AdminPermission.DESIGN
   );
 }
 

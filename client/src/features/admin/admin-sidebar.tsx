@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard,
-  UserCheck,
   Users,
   FileText,
   Settings,
@@ -23,7 +21,6 @@ import {
   Database,
   Palette,
   Type,
-  Handshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { versionBrandAssetUrl } from "@/lib/branding";
@@ -35,7 +32,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { UserProfileDialog } from "@/components/shared/user-profile-dialog";
-import { DEFAULT_SITE_FEATURES, type SiteFeatures } from "@shared/site-features";
 import type { AdminPermission } from "@shared/types";
 import type { User as AppUser } from "@shared/schema";
 
@@ -53,7 +49,6 @@ interface NavGroup {
 }
 
 function buildNavGroups(
-  siteFeatures: SiteFeatures,
   user: AppUser | null,
   hasAdminPermission: (permission: AdminPermission) => boolean,
 ): NavGroup[] {
@@ -72,27 +67,6 @@ function buildNavGroups(
           : []),
       ],
     },
-    ...(siteFeatures.crmEnabled && hasAdminPermission("crm")
-      ? ([
-          {
-            label: "CRM",
-            items: [
-              {
-                title: "Pipeline",
-                href: "/admin/crm",
-                icon: Handshake,
-                iconColor: "text-blue-600",
-              },
-              {
-                title: "Clients",
-                href: "/admin/crm/clients",
-                icon: UserCheck,
-                iconColor: "text-emerald-600",
-              },
-            ],
-          },
-        ] satisfies NavGroup[])
-      : []),
     ...(hasAdminPermission("content")
       ? ([
           {
@@ -231,18 +205,13 @@ export function AdminSidebar({ children }: AdminSidebarProps) {
   );
   const adminIconLogo = versionBrandAssetUrl("/img/593-ec-painting-icon.png");
   const adminBrandName = companyName?.trim() || "593 EC Painting";
-  const { data: siteFeaturesData } = useQuery<SiteFeatures>({
-    queryKey: ["/api/site-config"],
-    staleTime: 60_000,
-  });
-  const siteFeatures = siteFeaturesData ?? DEFAULT_SITE_FEATURES;
-  const navGroups = buildNavGroups(siteFeatures, user, hasAdminPermission).filter(
+  const navGroups = buildNavGroups(user, hasAdminPermission).filter(
     (group) => group.items.length > 0,
   );
   const toggleGroup = (label: string, open: boolean) => {
     setOpenGroup(open ? label : null);
   };
-  const exactOnlyRoutes = ["/admin", "/admin/cms", "/admin/crm"];
+  const exactOnlyRoutes = ["/admin", "/admin/cms"];
   const isRouteActive = (href?: string) => Boolean(
     href &&
       (location === href ||

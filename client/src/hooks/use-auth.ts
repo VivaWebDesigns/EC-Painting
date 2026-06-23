@@ -9,7 +9,6 @@ function getAdminPermissions(user: User | null): AdminPermissionType[] {
     return [
       AdminPermission.CONTENT,
       AdminPermission.DESIGN,
-      AdminPermission.CRM,
     ];
   }
 
@@ -19,8 +18,7 @@ function getAdminPermissions(user: User | null): AdminPermissionType[] {
 
   return user.adminPermissions.filter((permission): permission is AdminPermissionType =>
     permission === AdminPermission.CONTENT ||
-    permission === AdminPermission.DESIGN ||
-    permission === AdminPermission.CRM
+    permission === AdminPermission.DESIGN
   );
 }
 

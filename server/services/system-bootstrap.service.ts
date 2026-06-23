@@ -7,10 +7,16 @@ import { ensureSystemEmailTemplates } from "./system-email-templates.service";
 import { ensureSystemForms } from "./system-forms.service";
 import { storage } from "../storage";
 
-const OBSOLETE_FEATURE_SETTING_KEYS = ["enable_directory", "enable_blog", "enable_events"];
+const OBSOLETE_SETTING_KEYS = [
+  "enable_directory",
+  "enable_blog",
+  "enable_events",
+  "enable_crm",
+  "crm_api_key",
+];
 
-async function removeObsoleteFeatureSettings() {
-  for (const key of OBSOLETE_FEATURE_SETTING_KEYS) {
+async function removeObsoleteSettings() {
+  for (const key of OBSOLETE_SETTING_KEYS) {
     await storage.settings.deleteSetting(key);
   }
 }
@@ -18,7 +24,7 @@ async function removeObsoleteFeatureSettings() {
 export async function runSystemBootstrap() {
   logger.app.info("Running system bootstrap");
 
-  await removeObsoleteFeatureSettings();
+  await removeObsoleteSettings();
   await ensureSystemCmsPages();
   await ensureSystemCmsMenus();
   await ensureSystemCmsSections();

@@ -11,12 +11,9 @@ import cmsPublicRoutes from "./cms-public.routes";
 import r2PublicRoutes from "./r2-public.routes";
 import setupRoutes from "./setup.routes";
 import formsRoutes from "./forms.routes";
-import crmRoutes from "./crm.routes";
-import { getSiteFeatures, requireSiteFeature } from "../middleware/site-feature-guard";
 import { searchPublicSite } from "../services/public-search.service";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
-import { DEFAULT_SITE_FEATURES } from "@shared/site-features";
 
 function escapeXml(str: string): string {
   return str
@@ -42,7 +39,6 @@ export function registerApiRoutes(app: Express) {
   app.use("/api/admin", settingsRoutes);
   app.use("/api/contact", contactRoutes);
   app.use("/api/forms", formsRoutes);
-  app.use("/api/crm", requireSiteFeature("crmEnabled"), crmRoutes);
   app.use("/api/admin/docs", docsRoutes);
   app.use("/api/uploads", uploadRoutes);
   app.use("/api/notifications", notificationsRoutes);
@@ -124,17 +120,6 @@ export function registerApiRoutes(app: Express) {
         secondaryTextColor: null,
         tertiaryTextColor: null,
       });
-    }
-  });
-
-  app.get("/api/site-config", async (_req, res) => {
-    try {
-      res.json(await getSiteFeatures());
-    } catch (err) {
-      logger.app.warn("Failed to retrieve system configuration, returning defaults", {
-        error: err instanceof Error ? err.message : String(err),
-      });
-      res.json(DEFAULT_SITE_FEATURES);
     }
   });
 

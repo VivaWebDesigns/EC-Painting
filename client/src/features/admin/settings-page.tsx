@@ -73,7 +73,6 @@ import {
 } from "@/lib/branding";
 import { cn } from "@/lib/utils";
 import { useEditorLock } from "@/hooks/use-editor-lock";
-import { DEFAULT_SITE_FEATURES, normalizeBooleanSetting } from "@shared/site-features";
 
 type SettingsData = Record<string, Record<string, { value: string; isSecret: boolean }>>;
 
@@ -103,8 +102,6 @@ type BrandingColorSettingKey =
   | "text_primary_foreground_color"
   | "text_secondary_foreground_color"
   | "text_tertiary_foreground_color";
-
-type SystemConfigurationSettingKey = "enable_crm";
 
 const BRANDING_CORE_COLOR_FIELDS: Array<{
   key: BrandingColorSettingKey;
@@ -218,19 +215,6 @@ const BRANDING_COLOR_FIELDS = [
   ...BRANDING_TYPOGRAPHY_COLOR_FIELDS,
   ...BRANDING_UI_TEXT_COLOR_FIELDS,
 ] as const;
-
-const SYSTEM_CONFIGURATION_FIELDS: Array<{
-  key: SystemConfigurationSettingKey;
-  label: string;
-  description: string;
-}> = [
-  {
-    key: "enable_crm",
-    label: "Enable CRM",
-    description:
-      "Turns the CRM pipeline app on or off, including admin navigation and inbound lead routes.",
-  },
-];
 
 interface EmailTemplate {
   id: string;
@@ -370,28 +354,6 @@ const INTEGRATIONS: IntegrationConfig[] = [
         label: "Reporting Private Key",
         isSecret: true,
         placeholder: "-----BEGIN PRIVATE KEY-----",
-      },
-    ],
-  },
-  {
-    category: "crm",
-    title: "CRM Inbound API",
-    description: "API key used by external lead sources like social ads, Zapier, and landing-page tools",
-    icon: Plug,
-    accountUrl: "/admin/settings",
-    docsUrl: "/admin/settings",
-    instructions: [
-      "Create a strong shared key for trusted lead sources.",
-      "Send inbound leads to /api/crm/leads with the key in the X-CRM-API-Key header.",
-      "Rotate this key if a connected integration is removed or compromised.",
-    ],
-    supportsConnectionTest: false,
-    fields: [
-      {
-        key: "crm_api_key",
-        label: "Inbound API Key",
-        isSecret: true,
-        placeholder: "Generate a long random secret",
       },
     ],
   },
@@ -696,118 +658,6 @@ function IntegrationsTab({ settings }: { settings: SettingsData }) {
       {INTEGRATIONS.map((config) => (
         <IntegrationCard key={config.category} config={config} settings={settings} />
       ))}
-    </div>
-  );
-}
-
-function SystemConfigurationTab({ settings }: { settings: SettingsData }) {
-  const { toast } = useToast();
-  const systemConfig = settings.system_configuration || {};
-  const getStoredValue = (key: SystemConfigurationSettingKey) => {
-    return normalizeBooleanSetting(
-      systemConfig[key]?.value,
-      DEFAULT_SITE_FEATURES.crmEnabled,
-    );
-  };
-  const [values, setValues] = useState<Record<SystemConfigurationSettingKey, boolean>>({
-    enable_crm: getStoredValue("enable_crm"),
-  });
-
-  useEffect(() => {
-    setValues({
-      enable_crm: getStoredValue("enable_crm"),
-    });
-  }, [systemConfig.enable_crm?.value]);
-
-  const saveMutation = useMutation({
-    mutationFn: async () => {
-      await Promise.all(
-        SYSTEM_CONFIGURATION_FIELDS.map((field) =>
-          apiRequest("PUT", "/api/admin/settings", {
-            key: field.key,
-            value: values[field.key] ? "true" : "false",
-            category: "system_configuration",
-            isSecret: false,
-          }),
-        ),
-      );
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["/api/admin/settings"] }),
-        queryClient.invalidateQueries({ queryKey: ["/api/site-config"] }),
-      ]);
-      toast({ title: "System configuration updated" });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Could not save system configuration",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  const hasChanges = SYSTEM_CONFIGURATION_FIELDS.some(
-    (field) => values[field.key] !== getStoredValue(field.key),
-  );
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold" data-testid="text-system-configuration-heading">
-          System Configuration
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          Control active operational tools for this site.
-        </p>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Operational Apps</CardTitle>
-          <CardDescription>
-            These toggles hide or reveal active admin tools. Existing data is preserved when an app
-            is turned off.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {SYSTEM_CONFIGURATION_FIELDS.map((field) => (
-            <div
-              key={field.key}
-              className="flex items-start justify-between gap-4 rounded-xl border p-4"
-            >
-              <div className="space-y-1">
-                <Label className="text-sm font-medium">{field.label}</Label>
-                <p className="text-xs text-muted-foreground">{field.description}</p>
-              </div>
-              <Switch
-                checked={values[field.key]}
-                onCheckedChange={(checked) =>
-                  setValues((current) => ({ ...current, [field.key]: checked }))
-                }
-                data-testid={`switch-${field.key}`}
-              />
-            </div>
-          ))}
-
-          <div className="flex gap-2 pt-2">
-            <Button
-              type="button"
-              onClick={() => saveMutation.mutate()}
-              disabled={!hasChanges || saveMutation.isPending}
-              data-testid="button-save-system-configuration"
-            >
-              {saveMutation.isPending ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="mr-2 h-4 w-4" />
-              )}
-              Save Configuration
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
@@ -2511,7 +2361,7 @@ export default function AdminSettingsPage() {
           System Settings
         </h1>
         <p className="text-muted-foreground mb-6">
-          Manage integrations, head markup, system configuration, and system email templates.
+          Manage integrations, head markup, and system email templates.
         </p>
 
         <Tabs defaultValue="integrations">
@@ -2521,9 +2371,6 @@ export default function AdminSettingsPage() {
             </TabsTrigger>
             <TabsTrigger value="head-tags" data-testid="tab-head-tag-additions">
               Head Tag Additions
-            </TabsTrigger>
-            <TabsTrigger value="configuration" data-testid="tab-system-configuration">
-              System Configuration
             </TabsTrigger>
             <TabsTrigger value="templates" data-testid="tab-templates">
               Email Templates
@@ -2554,15 +2401,6 @@ export default function AdminSettingsPage() {
             )}
           </TabsContent>
 
-          <TabsContent value="configuration" className="mt-6">
-            {isLoading ? (
-              <div className="flex items-center justify-center p-12">
-                <Loader2 className="h-6 w-6 animate-spin" />
-              </div>
-            ) : (
-              <SystemConfigurationTab settings={settings || {}} />
-            )}
-          </TabsContent>
         </Tabs>
       </div>
     </AdminSidebar>
