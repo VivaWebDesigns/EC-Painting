@@ -232,6 +232,10 @@ export function registerApiRoutes(app: Express) {
     }
   });
 
+  app.use("/api", (_req, res) => {
+    res.status(404).json({ message: "Not found" });
+  });
+
   app.use(async (req: Request, res: Response, next: NextFunction) => {
     if (req.method !== "GET" || req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
       return next();
