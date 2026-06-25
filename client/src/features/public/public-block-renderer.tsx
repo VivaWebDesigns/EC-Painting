@@ -445,6 +445,13 @@ function RichTextBlock({ props }: { props: Record<string, unknown> }) {
   );
 }
 
+function splitAfterFirstParagraph(html: string) {
+  const match = html.match(/<\/p>/i);
+  if (!match || match.index === undefined) return { first: html, rest: "" };
+  const splitAt = match.index + match[0].length;
+  return { first: html.slice(0, splitAt), rest: html.slice(splitAt) };
+}
+
 function TextImageBlock({ props }: { props: Record<string, unknown> }) {
   const imageRight = str(props.imagePosition) !== "left";
   const hasImage = !!str(props.imageUrl);
@@ -452,6 +459,27 @@ function TextImageBlock({ props }: { props: Record<string, unknown> }) {
   const align = str(props.alignment) || "left";
   const bodyAlign =
     align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+  const body = str(props.body);
+  const mobileImageAfterFirstParagraph =
+    str(props.mobileImagePlacement) === "after-first-paragraph" && hasImage;
+  const mobileBody = mobileImageAfterFirstParagraph ? splitAfterFirstParagraph(body) : null;
+  const image = (
+    <div className="flex h-full flex-col">
+      <div className="relative min-h-72 md:h-full md:min-h-0 md:flex-1">
+        <img
+          src={str(props.imageUrl)}
+          alt={str(props.imageAlt)}
+          style={mobileImageStyles}
+          className="w-full rounded-md shadow-lg [height:var(--mobile-image-height)] [object-fit:var(--mobile-image-fit)] [object-position:var(--mobile-image-position)] md:absolute md:inset-0 md:h-full md:w-full md:object-cover md:object-center"
+        />
+      </div>
+      {str(props.imageCaption) && (
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          {str(props.imageCaption)}
+        </p>
+      )}
+    </div>
+  );
   return (
     <div
       className={`flex flex-col ${imageRight ? "md:flex-row" : "md:flex-row-reverse"} gap-8 py-4 md:items-stretch`}
@@ -462,30 +490,32 @@ function TextImageBlock({ props }: { props: Record<string, unknown> }) {
           defaultAlignment={align === "center" ? "center" : align === "right" ? "right" : "left"}
           className="mb-4"
         />
-        {str(props.body) && (
+        {mobileBody ? (
+          <>
+            <div
+              className={`prose prose-sm max-w-none text-foreground ${bodyAlign}`}
+              dangerouslySetInnerHTML={{ __html: mobileBody.first }}
+            />
+            <div className="md:hidden">{image}</div>
+            {mobileBody.rest && (
+              <div
+                className={`prose prose-sm max-w-none text-foreground ${bodyAlign}`}
+                dangerouslySetInnerHTML={{ __html: mobileBody.rest }}
+              />
+            )}
+          </>
+        ) : body ? (
           <div
             className={`prose prose-sm max-w-none text-foreground ${bodyAlign}`}
-            dangerouslySetInnerHTML={{ __html: str(props.body) }}
+            dangerouslySetInnerHTML={{ __html: body }}
           />
-        )}
+        ) : null}
       </div>
-      <div className="flex min-w-0 flex-1 self-stretch flex-col">
+      <div
+        className={`${mobileImageAfterFirstParagraph ? "hidden md:flex" : "flex"} min-w-0 flex-1 self-stretch flex-col`}
+      >
         {hasImage ? (
-          <div className="flex h-full flex-col">
-            <div className="relative min-h-72 md:h-full md:min-h-0 md:flex-1">
-              <img
-                src={str(props.imageUrl)}
-                alt={str(props.imageAlt)}
-                style={mobileImageStyles}
-                className="w-full rounded-md shadow-lg [height:var(--mobile-image-height)] [object-fit:var(--mobile-image-fit)] [object-position:var(--mobile-image-position)] md:absolute md:inset-0 md:h-full md:w-full md:object-cover md:object-center"
-              />
-            </div>
-            {str(props.imageCaption) && (
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                {str(props.imageCaption)}
-              </p>
-            )}
-          </div>
+          image
         ) : (
           <div className="flex h-full min-h-48 items-center justify-center rounded-md border border-dashed bg-muted/40">
             <span className="text-muted-foreground text-sm">Image placeholder</span>

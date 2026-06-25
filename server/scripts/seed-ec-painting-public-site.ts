@@ -2719,6 +2719,7 @@ function aboutContent() {
         imageAlt: "Esau and Sandra with their family outdoors",
         imageCaption: "",
         imagePosition: "right",
+        mobileImagePlacement: "after-first-paragraph",
       }),
       featureList(
         "What You Get When You Hire 593 EC Painting",
