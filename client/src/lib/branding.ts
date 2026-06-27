@@ -44,6 +44,7 @@ export const BRANDING_FONT_OPTIONS: BrandingFontOption[] = [
   { value: "poppins", label: "Poppins", family: "'Poppins', sans-serif", category: "sans", preview: "Rounded and contemporary with clear rhythm." },
   { value: "source-sans-3", label: "Source Sans 3", family: "'Source Sans 3', sans-serif", category: "sans", preview: "Versatile editorial sans for interfaces." },
   { value: "nunito-sans", label: "Nunito Sans", family: "'Nunito Sans', sans-serif", category: "sans", preview: "Soft, approachable forms for welcoming brands." },
+  { value: "manrope", label: "Manrope", family: "'Manrope', sans-serif", category: "sans", preview: "Modern and polished with crisp geometric details." },
   { value: "work-sans", label: "Work Sans", family: "'Work Sans', sans-serif", category: "sans", preview: "Practical and crisp across sizes." },
   { value: "raleway", label: "Raleway", family: "'Raleway', sans-serif", category: "sans", preview: "Elegant sans suited to polished headings." },
   { value: "merriweather", label: "Merriweather", family: "'Merriweather', serif", category: "serif", preview: "Readable serif designed for long-form copy." },
