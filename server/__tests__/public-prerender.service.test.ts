@@ -83,6 +83,28 @@ describe("public-prerender.service", () => {
     expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process");
   });
 
+  it("uses short breadcrumb labels and a trailing slash for the homepage item", async () => {
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Services",
+      slug: "services",
+      seoTitle: "Painting Services in Charlotte, NC | 593 EC Painting",
+      canonicalUrl: "https://ecpaintingcharlotte.com/services/",
+    });
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/services/");
+    const breadcrumb = snapshot?.jsonLd?.find((schema) => schema["@type"] === "BreadcrumbList");
+
+    expect(breadcrumb).toMatchObject({
+      itemListElement: [
+        { name: "Home", item: "https://ecpaintingcharlotte.com/" },
+        { name: "Services", item: "https://ecpaintingcharlotte.com/services/" },
+      ],
+    });
+    expect(snapshot?.title).toBe("Painting Services in Charlotte, NC | 593 EC Painting");
+  });
+
   it("normalizes homepage SEO head data for live crawlers", async () => {
     mockGetSeo.mockResolvedValue({
       ...seoSettings,

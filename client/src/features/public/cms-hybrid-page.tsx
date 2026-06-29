@@ -161,7 +161,7 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
 
   const isHome = page.slug === "home" || page.slug === "";
   const pageUrl = canonicalForPage(page, origin);
-  const pageLabel = page.seoTitle || page.title;
+  const homeUrl = origin ? `${origin}/` : "/";
   const metadata = parseCmsMetadata(page.content);
   const breadcrumbParent =
     metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
@@ -175,13 +175,13 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
           typeof breadcrumbParent.name === "string" &&
           typeof breadcrumbParent.url === "string"
           ? [
-              { name: "Home", url: origin || "/" },
+              { name: "Home", url: homeUrl },
               { name: breadcrumbParent.name, url: breadcrumbParent.url },
               { name: page.title, url: pageUrl },
             ]
           : [
-              { name: "Home", url: origin || "/" },
-              { name: pageLabel, url: pageUrl },
+              { name: "Home", url: homeUrl },
+              { name: page.title, url: pageUrl },
             ],
       );
 

@@ -260,7 +260,7 @@ function canonicalForCmsPage(page: CmsPage, siteUrl: string) {
 function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
   const suffix = seo?.titleSuffix ?? " | 593 EC Painting";
   const siteName = seo?.siteName || seo?.organizationName || "";
-  return siteName && rawTitle.includes(siteName) ? rawTitle : `${rawTitle}${suffix}`;
+  return siteName && rawTitle.toLowerCase().includes(siteName.toLowerCase()) ? rawTitle : `${rawTitle}${suffix}`;
 }
 
 function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
@@ -483,6 +483,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
       ? (metadata.breadcrumbParent as { name?: unknown; url?: unknown })
       : null;
+  const homeUrl = canonicalForPath(siteUrl, "/");
   const breadcrumbs =
     page.slug === "home"
       ? null
@@ -491,12 +492,12 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
             typeof breadcrumbParent.name === "string" &&
             typeof breadcrumbParent.url === "string"
             ? [
-                { name: "Home", url: siteUrl },
+                { name: "Home", url: homeUrl },
                 { name: breadcrumbParent.name, url: breadcrumbParent.url },
                 { name: page.title, url: canonicalUrl },
               ]
             : [
-                { name: "Home", url: siteUrl },
+                { name: "Home", url: homeUrl },
                 { name: page.title, url: canonicalUrl },
               ],
         );

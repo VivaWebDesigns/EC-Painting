@@ -12,6 +12,19 @@ export function JsonLd({ schemas }: JsonLdProps) {
   useEffect(() => {
     if (valid.length === 0) return;
 
+    const schemaTypes = new Set(valid.map((schema) => schema["@type"]).filter(Boolean));
+    const existingPageSchemaScripts = Array.from(
+      document.head.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]'),
+    ).filter((script) => {
+      try {
+        const schema = JSON.parse(script.textContent || "{}") as JsonLdObject;
+        return schemaTypes.has(schema["@type"]);
+      } catch {
+        return false;
+      }
+    });
+    existingPageSchemaScripts.forEach((script) => script.remove());
+
     const scripts: HTMLScriptElement[] = valid.map((schema, i) => {
       const script = document.createElement("script");
       script.type = "application/ld+json";

@@ -2911,7 +2911,7 @@ function servicesContent() {
   return {
     blocks: [
       hero({
-        headline: "Professional Painting Services",
+        headline: "Painting Services in Charlotte, NC",
         subheadline:
           "Interior, exterior, cabinet, deck, and fence painting services built around careful prep and clean results.",
         image: "/img/services/services.webp",
@@ -3768,7 +3768,7 @@ export function allPageSpecs(): PageSpec[] {
       path: "/services/",
       metaTitle: "Painting Services in Charlotte, NC | 593 EC Painting",
       metaDescription:
-        "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and nearby communities. Family-owned, free quotes, 3-year warranty.",
+        "Interior, exterior, cabinet, deck, and fence painting services in Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe & nearby areas.",
       content: servicesContent(),
     },
     ...services.map((service) => ({
