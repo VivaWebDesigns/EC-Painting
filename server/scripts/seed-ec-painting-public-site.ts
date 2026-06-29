@@ -1601,7 +1601,7 @@ const spokePages: SpokePage[] = [
         body: [
           "If your home was built before 1980, the popcorn texture on your ceiling may contain asbestos — it was commonly used in popcorn texture compounds until it was banned in textured surfaces in 1978, and existing stock was used into the early 1980s.",
           "This isn't a reason to panic. Asbestos is only a health risk when it's disturbed and the fibers become airborne. Popcorn ceilings that contain asbestos and are left alone aren't dangerous. But removing them without proper testing and containment is exactly the kind of disturbance that releases fibers.",
-          "We don't guess. For any home built before 1980, we have the popcorn tested at a certified lab before scraping. If asbestos is present, we either (a) refer you to a licensed asbestos abatement contractor who can safely remove it, then come back and finish the ceiling, or (b) recommend covering rather than removing, depending on what makes sense for your situation. We'll never scrape an asbestos popcorn ceiling — it's illegal in North Carolina, and it's dangerous.",
+          "We don't guess. For any home built before 1980, we have the popcorn tested at a certified lab before scraping. If asbestos is present, we refer you to a licensed asbestos abatement contractor so the work is handled safely and properly. Once the abatement work is complete, we can come back to finish the ceiling, or we may recommend covering rather than removing, depending on what makes sense for your situation.",
           "If your home was built after 1980, asbestos isn't a concern and we can proceed directly with removal.",
         ],
       },

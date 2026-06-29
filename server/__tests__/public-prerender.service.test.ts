@@ -115,6 +115,36 @@ describe("public-prerender.service", () => {
     expect(snapshot?.title).toBe("Painting Services in Charlotte, NC | 593 EC Painting");
   });
 
+  it("normalizes legacy app hostnames in CMS breadcrumb schema URLs", async () => {
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Popcorn Ceiling Removal",
+      slug: "popcorn-ceiling-removal",
+      canonicalUrl: "https://ecpaintingcharlotte.com/popcorn-ceiling-removal/",
+      content: {
+        metadata: {
+          breadcrumbParent: {
+            name: "Services",
+            url: "https://ec-painting-production.up.railway.app/services/",
+          },
+        },
+        blocks: [],
+      },
+    });
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/popcorn-ceiling-removal/");
+    const breadcrumb = snapshot?.jsonLd?.find((schema) => schema["@type"] === "BreadcrumbList");
+
+    expect(breadcrumb).toMatchObject({
+      itemListElement: [
+        { name: "Home", item: "https://ecpaintingcharlotte.com/" },
+        { name: "Services", item: "https://ecpaintingcharlotte.com/services/" },
+        { name: "Popcorn Ceiling Removal", item: "https://ecpaintingcharlotte.com/popcorn-ceiling-removal/" },
+      ],
+    });
+  });
+
   it("removes tag-stripping spaces before punctuation in FAQ schema answers", async () => {
     mockGetPageBySlug.mockResolvedValue({
       ...cmsPage,

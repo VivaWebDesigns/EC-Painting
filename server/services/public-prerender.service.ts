@@ -268,6 +268,27 @@ function canonicalForPath(siteUrl: string, pathname: string) {
   return pathname === "/" ? `${siteUrl}/` : `${siteUrl}${pathname.replace(/\/$/, "")}/`;
 }
 
+const LEGACY_PUBLIC_HOSTS = new Set(["ec-painting-production.up.railway.app"]);
+
+function normalizeSiteUrl(value: string, siteUrl: string) {
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  try {
+    const canonical = new URL(normalizedSiteUrl);
+    if (value.startsWith("/")) {
+      return canonicalForPath(normalizedSiteUrl, value);
+    }
+
+    const parsed = new URL(value);
+    if (parsed.host === canonical.host || LEGACY_PUBLIC_HOSTS.has(parsed.host)) {
+      return `${canonical.origin}${parsed.pathname === "/" ? "/" : `${parsed.pathname.replace(/\/$/, "")}/`}`;
+    }
+  } catch {
+    return value;
+  }
+
+  return value;
+}
+
 function normalizeCanonicalUrl(canonicalUrl: string | null | undefined, siteUrl: string) {
   if (!canonicalUrl) return null;
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
@@ -529,7 +550,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
             typeof breadcrumbParent.url === "string"
             ? [
                 { name: "Home", url: homeUrl },
-                { name: breadcrumbParent.name, url: breadcrumbParent.url },
+                { name: breadcrumbParent.name, url: normalizeSiteUrl(breadcrumbParent.url, siteUrl) },
                 { name: page.title, url: canonicalUrl },
               ]
             : [
