@@ -1058,7 +1058,10 @@ function FeatureListBlock({ props }: { props: Record<string, unknown> }) {
             </div>
             <div>
               <h3 className="font-heading font-bold text-sm mb-1">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+              <p
+                className="text-sm text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-primary/80"
+                dangerouslySetInnerHTML={{ __html: f.description }}
+              />
             </div>
           </div>
         ))}

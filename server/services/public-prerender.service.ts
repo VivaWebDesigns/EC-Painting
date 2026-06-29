@@ -670,14 +670,14 @@ export function injectPublicHtmlSnapshot(
 
   const headParts = [
     `<meta name="description" content="${escapeHtml(snapshot.description)}" />`,
+    `<link rel="canonical" href="${escapeHtml(snapshot.canonicalUrl)}" />`,
+    snapshot.robots ? `<meta name="robots" content="${escapeHtml(snapshot.robots)}" />` : "",
     `<meta property="og:title" content="${escapeHtml(snapshot.title)}" />`,
     `<meta property="og:description" content="${escapeHtml(snapshot.description)}" />`,
     `<meta property="og:url" content="${escapeHtml(snapshot.canonicalUrl)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escapeHtml(snapshot.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(snapshot.description)}" />`,
-    `<link rel="canonical" href="${escapeHtml(snapshot.canonicalUrl)}" />`,
-    snapshot.robots ? `<meta name="robots" content="${escapeHtml(snapshot.robots)}" />` : "",
     snapshot.ogImageUrl
       ? `<meta property="og:image" content="${escapeHtml(snapshot.ogImageUrl)}" />`
       : "",

@@ -208,6 +208,10 @@ describe("public-prerender.service", () => {
     expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/");
     expect(html).toContain('<link rel="canonical" href="https://ecpaintingcharlotte.com/" />');
     expect(html).toContain('<meta property="og:image" content="https://ecpaintingcharlotte.com/img/593-ec-painting-og.jpg" />');
+    expect(html.indexOf('<link rel="canonical" href="https://ecpaintingcharlotte.com/" />')).toBeLessThan(
+      html.indexOf('<meta property="og:title"'),
+    );
+    expect(html.indexOf('<meta name="robots"')).toBeLessThan(html.indexOf('<meta property="og:title"'));
     expect(html).toContain('"HousePainter"');
     expect(html).toContain('"priceRange":"$$"');
     expect(html).toContain('"ratingValue":"5.0"');
