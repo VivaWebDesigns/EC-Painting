@@ -94,11 +94,25 @@ function absoluteUrl(path: string, origin: string) {
   return `${origin}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+function normalizeCanonicalUrl(canonicalUrl: string | null | undefined, origin: string) {
+  if (!canonicalUrl) return null;
+  const normalizedOrigin = origin.replace(/\/$/, "");
+  if (canonicalUrl === normalizedOrigin || canonicalUrl === `${normalizedOrigin}/`) {
+    return `${normalizedOrigin}/`;
+  }
+  if (!canonicalUrl.startsWith(`${normalizedOrigin}/`)) {
+    return canonicalUrl;
+  }
+  const [urlWithoutHash, hash = ""] = canonicalUrl.split("#", 2);
+  const [urlWithoutQuery, query = ""] = urlWithoutHash.split("?", 2);
+  const slashUrl = urlWithoutQuery.endsWith("/") ? urlWithoutQuery : `${urlWithoutQuery}/`;
+  return `${slashUrl}${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
+}
+
 function canonicalForPage(page: CmsPage, origin: string) {
   const isHome = page.slug === "home" || page.slug === "";
   if (isHome) return `${origin}/`;
-  if (page.canonicalUrl) return page.canonicalUrl;
-  return `${origin}/${page.slug}`;
+  return normalizeCanonicalUrl(page.canonicalUrl, origin) || `${origin}/${page.slug}/`;
 }
 
 export function buildCmsDocumentTitle(rawTitle: string, globalSeo?: SeoSettings) {

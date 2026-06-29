@@ -80,7 +80,7 @@ describe("public-prerender.service", () => {
 
     expect(snapshot?.title).toContain("Painting Process");
     expect(snapshot?.bodyHtml).toContain("Our Painting Process");
-    expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process");
+    expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process/");
   });
 
   it("uses short breadcrumb labels and a trailing slash for the homepage item", async () => {

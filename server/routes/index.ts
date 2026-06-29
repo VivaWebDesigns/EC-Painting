@@ -139,8 +139,13 @@ export function registerApiRoutes(app: Express) {
       };
 
       const urls: Array<{ loc: string; lastmod: string }> = [];
+      const pageLoc = (path: string) => {
+        if (!base) return path === "/" ? "/" : `${path.replace(/\/$/, "")}/`;
+        if (path === "/") return `${base}/`;
+        return `${base}${path.replace(/\/$/, "")}/`;
+      };
 
-      urls.push({ loc: base ? `${base}/` : "/", lastmod: lastmodForSlug("home") });
+      urls.push({ loc: pageLoc("/"), lastmod: lastmodForSlug("home") });
 
       const staticRoutes = [
         { path: "/about", slug: "about" },
@@ -150,7 +155,7 @@ export function registerApiRoutes(app: Express) {
         { path: "/contact", slug: "contact" },
       ];
       for (const r of staticRoutes) {
-        urls.push({ loc: `${base}${r.path}`, lastmod: lastmodForSlug(r.slug) });
+        urls.push({ loc: pageLoc(r.path), lastmod: lastmodForSlug(r.slug) });
       }
 
       for (const page of pages) {
@@ -172,7 +177,7 @@ export function registerApiRoutes(app: Express) {
         )
           continue;
         urls.push({
-          loc: `${base}/${page.slug}`,
+          loc: pageLoc(`/${page.slug}`),
           lastmod: page.updatedAt ? new Date(page.updatedAt).toISOString().split("T")[0] : today,
         });
       }

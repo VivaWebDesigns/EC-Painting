@@ -11,6 +11,7 @@ import {
   originCheck,
 } from "./middleware/security";
 import { canonicalHostRedirect } from "./middleware/canonical-host";
+import { trailingSlashRedirect } from "./middleware/trailing-slash";
 import { logger, requestIdMiddleware } from "./utils/logger";
 import { recordRequest, getMetricsSnapshot } from "./utils/metrics";
 import { startScheduledPublishService } from "./services/scheduled-publish.service";
@@ -27,6 +28,7 @@ const httpServer = createServer(app);
 
 app.use(securityHeaders());
 app.use(canonicalHostRedirect);
+app.use(trailingSlashRedirect);
 app.use(requestIdMiddleware);
 
 declare module "http" {

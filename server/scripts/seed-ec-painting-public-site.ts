@@ -3867,7 +3867,7 @@ export function page(spec: PageSpec): InsertCmsPage {
     seoDescription: spec.metaDescription,
     seoKeywords: "",
     ogImageUrl: OG_IMAGE_URL,
-    canonicalUrl: `${SITE_URL}${spec.path === "/" ? "/" : spec.path.replace(/\/$/, "")}`,
+    canonicalUrl: `${SITE_URL}${spec.path === "/" ? "/" : spec.path.replace(/\/$/, "") + "/"}`,
     noindex: spec.noindex ?? false,
     publishedAt: new Date(),
     scheduledAt: null,

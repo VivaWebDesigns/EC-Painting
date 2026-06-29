@@ -261,14 +261,29 @@ function absoluteUrl(path: string | null | undefined, siteUrl: string) {
 }
 
 function canonicalForPath(siteUrl: string, pathname: string) {
-  return pathname === "/" ? `${siteUrl}/` : `${siteUrl}${pathname}`;
+  return pathname === "/" ? `${siteUrl}/` : `${siteUrl}${pathname.replace(/\/$/, "")}/`;
+}
+
+function normalizeCanonicalUrl(canonicalUrl: string | null | undefined, siteUrl: string) {
+  if (!canonicalUrl) return null;
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  if (canonicalUrl === normalizedSiteUrl || canonicalUrl === `${normalizedSiteUrl}/`) {
+    return `${normalizedSiteUrl}/`;
+  }
+  if (!canonicalUrl.startsWith(`${normalizedSiteUrl}/`)) {
+    return canonicalUrl;
+  }
+  const [urlWithoutHash, hash = ""] = canonicalUrl.split("#", 2);
+  const [urlWithoutQuery, query = ""] = urlWithoutHash.split("?", 2);
+  const slashUrl = urlWithoutQuery.endsWith("/") ? urlWithoutQuery : `${urlWithoutQuery}/`;
+  return `${slashUrl}${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
 }
 
 function canonicalForCmsPage(page: CmsPage, siteUrl: string) {
   if (page.slug === "home" || page.slug === "") {
     return canonicalForPath(siteUrl, "/");
   }
-  return page.canonicalUrl || canonicalForPath(siteUrl, `/${page.slug}`);
+  return normalizeCanonicalUrl(page.canonicalUrl, siteUrl) || canonicalForPath(siteUrl, `/${page.slug}`);
 }
 
 function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
