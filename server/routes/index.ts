@@ -156,7 +156,7 @@ export function registerApiRoutes(app: Express) {
 
       const urls: Array<{ loc: string; lastmod: string }> = [];
 
-      urls.push({ loc: base || "/", lastmod: lastmodForSlug("home") });
+      urls.push({ loc: base ? `${base}/` : "/", lastmod: lastmodForSlug("home") });
 
       const staticRoutes = [
         { path: "/about", slug: "about" },
