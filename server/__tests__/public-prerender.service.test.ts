@@ -90,12 +90,22 @@ describe("public-prerender.service", () => {
       slug: "services",
       seoTitle: "Painting Services in Charlotte, NC | 593 EC Painting",
       canonicalUrl: "https://ecpaintingcharlotte.com/services/",
+      content: {
+        blocks: [
+          {
+            id: "hero-services",
+            type: "hero",
+            props: { heading: "Painting Services in Charlotte, NC", isActive: true },
+          },
+        ],
+      },
     });
     const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
 
     const snapshot = await getPublicHtmlSnapshot("/services/");
     const breadcrumb = snapshot?.jsonLd?.find((schema) => schema["@type"] === "BreadcrumbList");
 
+    expect(snapshot?.bodyHtml).toContain("<h1>Painting Services in Charlotte, NC</h1>");
     expect(breadcrumb).toMatchObject({
       itemListElement: [
         { name: "Home", item: "https://ecpaintingcharlotte.com/" },

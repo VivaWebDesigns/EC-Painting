@@ -240,6 +240,20 @@ function uniqueFragments(fragments: string[]) {
   });
 }
 
+function getPrimaryCmsHeading(value: unknown) {
+  if (!value || typeof value !== "object") return "";
+  const content = value as { blocks?: Array<{ type?: unknown; props?: Record<string, unknown> }> };
+  const blocks = Array.isArray(content.blocks) ? content.blocks : [];
+  const hero = blocks.find((block) => block.type === "hero" && block.props?.isActive !== false);
+  const heading =
+    typeof hero?.props?.heading === "string"
+      ? hero.props.heading
+      : typeof hero?.props?.headline === "string"
+        ? hero.props.headline
+        : "";
+  return stripHtml(heading);
+}
+
 function absoluteUrl(path: string | null | undefined, siteUrl: string) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path)) return path;
@@ -474,7 +488,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
   const canonicalUrl = canonicalForCmsPage(page, siteUrl);
   const metadata = getCmsMetadata(page);
   const bodyHtml = buildSimplePageBody(
-    page.title,
+    getPrimaryCmsHeading(page.content) || page.title,
     description,
     uniqueFragments(collectTextFragments(page.content)),
   );
