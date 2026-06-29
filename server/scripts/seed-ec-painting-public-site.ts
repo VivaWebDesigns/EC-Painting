@@ -2594,7 +2594,7 @@ function homeContent() {
         headline: "Charlotte's Family-Owned House Painters",
         subheadline:
           "Honest pricing, fast communication, and work that lasts. Serving Charlotte and the surrounding Carolinas for 5 years.",
-        image: "/img/gallery/exterior-home.webp",
+        image: "/img/hero/ec-hero-home.webp",
       }),
       block("trust-bar", {
         items: [
