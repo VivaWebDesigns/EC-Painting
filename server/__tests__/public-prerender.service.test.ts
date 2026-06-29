@@ -215,6 +215,40 @@ describe("public-prerender.service", () => {
     expect(html).toContain('<meta name="custom-test" content="enabled" />');
   });
 
+  it("does not allow custom head additions to duplicate generated canonical or robots tags", async () => {
+    mockGetSetting.mockResolvedValue(
+      [
+        '<link rel="canonical" href="https://example.com/wrong" />',
+        '<meta name="robots" content="noindex,nofollow" />',
+        '<meta name="custom-test" content="enabled" />',
+      ].join("\n"),
+    );
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      slug: "cabinet-painting",
+      title: "Cabinet Painting",
+      canonicalUrl: "https://ecpaintingcharlotte.com/cabinet-painting/",
+    });
+    const { getPublicHeadAdditions, getPublicHtmlSnapshot, injectPublicHtmlSnapshot } = await import(
+      "../services/public-prerender.service"
+    );
+    const template =
+      '<html><head><title>Default</title><link rel="canonical" href="https://example.com/old" /><meta name="robots" content="noindex" /><!--APP_DYNAMIC_HEAD--><link rel="canonical" href="https://example.com/old-2" /><meta name="robots" content="noindex" /></head><body><!--APP_PRERENDER_CONTENT--><div id="root"></div></body></html>';
+
+    const headHtml = await getPublicHeadAdditions();
+    const snapshot = await getPublicHtmlSnapshot("/cabinet-painting/");
+    const html = injectPublicHtmlSnapshot(template, snapshot, headHtml);
+
+    expect(headHtml).toBe('<meta name="custom-test" content="enabled" />');
+    expect(html.match(/<link rel="canonical"/g)).toHaveLength(1);
+    expect(html.match(/<meta name="robots"/g)).toHaveLength(1);
+    expect(html).toContain('<link rel="canonical" href="https://ecpaintingcharlotte.com/cabinet-painting/" />');
+    expect(html).toContain(
+      '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
+    );
+    expect(html).toContain('<meta name="custom-test" content="enabled" />');
+  });
+
   it("repairs malformed closing script tags in custom head additions", async () => {
     mockGetSetting.mockResolvedValue(
       [

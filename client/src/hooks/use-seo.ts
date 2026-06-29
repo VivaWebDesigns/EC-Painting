@@ -10,19 +10,20 @@ interface SeoOptions {
 
 function setMeta(name: string, content: string, property = false) {
   const attr = property ? "property" : "name";
-  let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
+  const matches = Array.from(document.head.querySelectorAll<HTMLMetaElement>(`meta[${attr}="${name}"]`));
+  let el = matches[0];
   if (!el) {
     el = document.createElement("meta");
     el.setAttribute(attr, name);
     document.head.appendChild(el);
   }
+  matches.slice(1).forEach((duplicate) => duplicate.remove());
   el.setAttribute("content", content);
 }
 
 function removeMeta(name: string, property = false) {
   const attr = property ? "property" : "name";
-  const el = document.head.querySelector(`meta[${attr}="${name}"]`);
-  if (el) el.remove();
+  document.head.querySelectorAll(`meta[${attr}="${name}"]`).forEach((el) => el.remove());
 }
 
 export function useSeo({ title, description, ogImage, canonical, noindex }: SeoOptions) {
@@ -45,12 +46,14 @@ export function useSeo({ title, description, ogImage, canonical, noindex }: SeoO
     }
 
     if (canonical) {
-      let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+      const matches = Array.from(document.head.querySelectorAll<HTMLLinkElement>('link[rel="canonical"]'));
+      let link = matches[0];
       if (!link) {
         link = document.createElement("link");
         link.setAttribute("rel", "canonical");
         document.head.appendChild(link);
       }
+      matches.slice(1).forEach((duplicate) => duplicate.remove());
       link.setAttribute("href", canonical);
     }
 

@@ -58,34 +58,36 @@ function parseCmsMetadata(content: unknown): Record<string, unknown> {
 
 function setMeta(name: string, content: string, property = false) {
   const attr = property ? "property" : "name";
-  let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
+  const matches = Array.from(document.head.querySelectorAll<HTMLMetaElement>(`meta[${attr}="${name}"]`));
+  let el = matches[0];
   if (!el) {
     el = document.createElement("meta");
     el.setAttribute(attr, name);
     document.head.appendChild(el);
   }
+  matches.slice(1).forEach((duplicate) => duplicate.remove());
   el.setAttribute("content", content);
 }
 
 function removeMeta(name: string, property = false) {
   const attr = property ? "property" : "name";
-  const el = document.head.querySelector(`meta[${attr}="${name}"]`);
-  if (el) el.remove();
+  document.head.querySelectorAll(`meta[${attr}="${name}"]`).forEach((el) => el.remove());
 }
 
 function setLink(rel: string, href: string) {
-  let el = document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+  const matches = Array.from(document.head.querySelectorAll<HTMLLinkElement>(`link[rel="${rel}"]`));
+  let el = matches[0];
   if (!el) {
     el = document.createElement("link");
     el.setAttribute("rel", rel);
     document.head.appendChild(el);
   }
+  matches.slice(1).forEach((duplicate) => duplicate.remove());
   el.setAttribute("href", href);
 }
 
 function removeLink(rel: string) {
-  const el = document.head.querySelector(`link[rel="${rel}"]`);
-  if (el) el.remove();
+  document.head.querySelectorAll(`link[rel="${rel}"]`).forEach((el) => el.remove());
 }
 
 function absoluteUrl(path: string, origin: string) {

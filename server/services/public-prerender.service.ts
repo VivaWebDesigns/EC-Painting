@@ -417,7 +417,10 @@ function normalizeHeadMarkup(value?: string | null) {
   return value
     .trim()
     // Repair a common paste mistake where </script is missing its closing angle bracket.
-    .replace(/<\/script(?!>)(?=(\s*<)|\s*$)/gi, "</script>");
+    .replace(/<\/script(?!>)(?=(\s*<)|\s*$)/gi, "</script>")
+    .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>\s*/gi, "")
+    .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>\s*/gi, "")
+    .trim();
 }
 
 function buildWebsiteSchema(seo: SeoSettings | null, siteUrl: string) {
@@ -627,16 +630,16 @@ export function injectPublicHtmlSnapshot(
   customHeadHtml?: string | null,
 ) {
   const normalizedTemplate = template
-    .replace(/\s*<meta name="description"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta property="og:title"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta property="og:description"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta property="og:image"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta property="og:url"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta name="twitter:card"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta name="twitter:title"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta name="twitter:description"[^>]*>\s*/i, "\n")
-    .replace(/\s*<meta name="robots"[^>]*>\s*/i, "\n")
-    .replace(/\s*<link rel="canonical"[^>]*>\s*/i, "\n");
+    .replace(/\s*<meta name="description"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta property="og:title"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta property="og:description"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta property="og:image"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta property="og:url"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta name="twitter:card"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta name="twitter:title"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta name="twitter:description"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<meta name="robots"[^>]*>\s*/gi, "\n")
+    .replace(/\s*<link rel="canonical"[^>]*>\s*/gi, "\n");
 
   if (!snapshot) {
     return normalizedTemplate
