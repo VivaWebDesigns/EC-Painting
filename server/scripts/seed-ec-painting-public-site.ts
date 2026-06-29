@@ -57,6 +57,11 @@ function item(label: string, url: string, children: MenuItem[] = []): MenuItem {
   };
 }
 
+function pageUrl(path: string) {
+  if (path === "/") return "/";
+  return path.replace(/\/$/, "") + "/";
+}
+
 function p(text: string) {
   return `<p>${text}</p>`;
 }
@@ -3917,11 +3922,11 @@ async function seedMenus() {
     location: "main_navigation",
     items: [
       item("Home", "/"),
-      item("Services", "/services", [item("All Services", "/services"), ...serviceItems]),
-      item("About", "/about"),
-      item("Gallery", "/gallery"),
-      item("Reviews", "/reviews"),
-      item("Contact", "/contact"),
+      item("Services", pageUrl("/services"), [item("All Services", pageUrl("/services")), ...serviceItems]),
+      item("About", pageUrl("/about")),
+      item("Gallery", pageUrl("/gallery")),
+      item("Reviews", pageUrl("/reviews")),
+      item("Contact", pageUrl("/contact")),
     ],
   });
   await upsertMenu({ name: "Services", location: "footer_platform", items: serviceItems });
@@ -3929,10 +3934,10 @@ async function seedMenus() {
     name: "Company",
     location: "footer_professionals",
     items: [
-      item("About", "/about"),
-      item("Gallery", "/gallery"),
-      item("Reviews", "/reviews"),
-      item("Contact", "/contact"),
+      item("About", pageUrl("/about")),
+      item("Gallery", pageUrl("/gallery")),
+      item("Reviews", pageUrl("/reviews")),
+      item("Contact", pageUrl("/contact")),
     ],
   });
   await deleteMenuByLocation("footer_resources");
@@ -3941,10 +3946,10 @@ async function seedMenus() {
     name: "Legal",
     location: "footer_legal",
     items: [
-      item("Privacy Policy", "/privacy-policy"),
-      item("Terms of Service", "/terms-of-service"),
-      item("Disclaimer", "/disclaimer"),
-      item("Sitemap", "/sitemap"),
+      item("Privacy Policy", pageUrl("/privacy-policy")),
+      item("Terms of Service", pageUrl("/terms-of-service")),
+      item("Disclaimer", pageUrl("/disclaimer")),
+      item("Sitemap", pageUrl("/sitemap")),
     ],
   });
 }

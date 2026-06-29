@@ -90,7 +90,7 @@ export default function AboutPage() {
             </div>
 
             <Button asChild size="lg" className="mt-9 min-h-12 px-7">
-              <Link href="/contact">
+              <Link href="/contact/">
                 Get a Free Estimate
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -128,7 +128,7 @@ export default function AboutPage() {
             ))}
           </div>
           <Button asChild size="lg" className="mt-9 min-h-12 px-7">
-            <Link href="/contact">
+            <Link href="/contact/">
               Contact Us Today
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -164,7 +164,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="min-h-12 px-7">
-              <Link href="/contact">Request a Free Quote</Link>
+              <Link href="/contact/">Request a Free Quote</Link>
             </Button>
             <Button
               asChild

@@ -16,6 +16,11 @@ function item(label: string, url: string, children: MenuItem[] = [], openInNewTa
   };
 }
 
+function pageUrl(path: string) {
+  if (path === "/") return "/";
+  return path.replace(/\/$/, "") + "/";
+}
+
 const obsoleteLegacyPlatformMenuUrls = new Set(["/directory", "/events", "/insights", "/recordings", "/join"]);
 const obsoleteLegacyPlatformMenuLabels = new Set([
   "browse specializations",
@@ -73,7 +78,7 @@ function patchLegalItemUrls(items: MenuItem[]): { items: MenuItem[]; changed: bo
       normalizedLabel === "privacy policy" &&
       (entry.url === "/contact" || entry.url === "" || entry.url === "#")
     ) {
-      nextUrl = "/privacy-policy";
+      nextUrl = pageUrl("/privacy-policy");
       changed = true;
     }
 
@@ -81,7 +86,7 @@ function patchLegalItemUrls(items: MenuItem[]): { items: MenuItem[]; changed: bo
       normalizedLabel === "terms of service" &&
       (entry.url === "/contact" || entry.url === "" || entry.url === "#")
     ) {
-      nextUrl = "/terms-of-service";
+      nextUrl = pageUrl("/terms-of-service");
       changed = true;
     }
 
@@ -89,7 +94,7 @@ function patchLegalItemUrls(items: MenuItem[]): { items: MenuItem[]; changed: bo
       normalizedLabel === "disclaimer" &&
       (entry.url === "/contact" || entry.url === "" || entry.url === "#")
     ) {
-      nextUrl = "/disclaimer";
+      nextUrl = pageUrl("/disclaimer");
       changed = true;
     }
 
@@ -106,7 +111,7 @@ function patchLegalItemUrls(items: MenuItem[]): { items: MenuItem[]; changed: bo
 
   const hasDisclaimer = nextItems.some((entry) => entry.label.trim().toLowerCase() === "disclaimer");
   if (!hasDisclaimer) {
-    nextItems.push(item("Disclaimer", "/disclaimer"));
+    nextItems.push(item("Disclaimer", pageUrl("/disclaimer")));
     changed = true;
   }
 
@@ -118,60 +123,60 @@ const defaultMenus: Array<InsertCmsMenu & { location: StandardMenuLocation }> = 
     name: "Main Navigation",
     location: "main_navigation",
     items: [
-      item("Services", "/services"),
-      item("Gallery", "/gallery"),
-      item("About", "/about"),
-      item("Reviews", "/reviews"),
-      item("Contact", "/contact"),
+      item("Services", pageUrl("/services")),
+      item("Gallery", pageUrl("/gallery")),
+      item("About", pageUrl("/about")),
+      item("Reviews", pageUrl("/reviews")),
+      item("Contact", pageUrl("/contact")),
     ],
   },
   {
     name: "Services",
     location: "footer_platform",
     items: [
-      item("Interior Painting", "/interior-painting"),
-      item("Exterior Painting", "/exterior-painting"),
-      item("Cabinet Painting", "/cabinet-painting"),
-      item("Deck Staining", "/deck-staining"),
-      item("Fence Staining", "/fence-staining"),
+      item("Interior Painting", pageUrl("/interior-painting")),
+      item("Exterior Painting", pageUrl("/exterior-painting")),
+      item("Cabinet Painting", pageUrl("/cabinet-painting")),
+      item("Deck Staining", pageUrl("/deck-staining")),
+      item("Fence Staining", pageUrl("/fence-staining")),
     ],
   },
   {
     name: "Specialty Services",
     location: "footer_professionals",
     items: [
-      item("Popcorn Ceiling Removal", "/popcorn-ceiling-removal"),
-      item("Drywall Repair", "/drywall-repair"),
-      item("Wallpaper Removal", "/wallpaper-removal"),
-      item("Pressure Washing", "/pressure-washing"),
-      item("Hardie Plank Painting", "/hardie-plank-painting"),
+      item("Popcorn Ceiling Removal", pageUrl("/popcorn-ceiling-removal")),
+      item("Drywall Repair", pageUrl("/drywall-repair")),
+      item("Wallpaper Removal", pageUrl("/wallpaper-removal")),
+      item("Pressure Washing", pageUrl("/pressure-washing")),
+      item("Hardie Plank Painting", pageUrl("/hardie-plank-painting")),
     ],
   },
   {
     name: "Resources",
     location: "footer_resources",
     items: [
-      item("Gallery", "/gallery"),
-      item("Reviews", "/reviews"),
-      item("Sitemap", "/sitemap"),
+      item("Gallery", pageUrl("/gallery")),
+      item("Reviews", pageUrl("/reviews")),
+      item("Sitemap", pageUrl("/sitemap")),
     ],
   },
   {
     name: "Company",
     location: "footer_company",
     items: [
-      item("About Us", "/about"),
-      item("Contact", "/contact"),
-      item("Support", "/contact"),
+      item("About Us", pageUrl("/about")),
+      item("Contact", pageUrl("/contact")),
+      item("Support", pageUrl("/contact")),
     ],
   },
   {
     name: "Legal",
     location: "footer_legal",
     items: [
-      item("Privacy Policy", "/privacy-policy"),
-      item("Terms of Service", "/terms-of-service"),
-      item("Disclaimer", "/disclaimer"),
+      item("Privacy Policy", pageUrl("/privacy-policy")),
+      item("Terms of Service", pageUrl("/terms-of-service")),
+      item("Disclaimer", pageUrl("/disclaimer")),
     ],
   },
 ];

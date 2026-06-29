@@ -95,7 +95,7 @@ function isLegalMenuItem(item: MenuItem) {
   return (
     item.id.toLowerCase().includes("legal") ||
     item.label.trim().toLowerCase() === "legal" ||
-    ["/privacy-policy", "/terms-of-service", "/disclaimer"].includes(item.url)
+    ["/privacy-policy", "/privacy-policy/", "/terms-of-service", "/terms-of-service/", "/disclaimer", "/disclaimer/"].includes(item.url)
   );
 }
 
