@@ -30,13 +30,6 @@ export async function loadGa4IfConsented() {
     return null;
   }
 
-  const script = await loadScriptWithConsent({
-    id: "ga4-gtag-js",
-    src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.ga4MeasurementId)}`,
-    category: "analytics",
-  });
-  if (!script) return null;
-
   window.dataLayer = window.dataLayer || [];
   const gtag = (...args: unknown[]) => {
     window.dataLayer?.push(args);
@@ -47,6 +40,13 @@ export async function loadGa4IfConsented() {
     window.gtag("js", new Date());
     loadedGa4MeasurementId = config.ga4MeasurementId;
   }
+
+  const script = await loadScriptWithConsent({
+    id: "ga4-gtag-js",
+    src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.ga4MeasurementId)}`,
+    category: "analytics",
+  });
+  if (!script) return null;
 
   return config;
 }
