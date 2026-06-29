@@ -658,7 +658,7 @@ function FaqBlock({ props }: { props: Record<string, unknown> }) {
           items.map((item, i) => (
             <AccordionItem key={i} value={`faq-${i}`} className="border rounded-lg px-4">
               <AccordionTrigger className="font-medium text-left">{item.question}</AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent forceMount>
                 <div
                   className="text-muted-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-primary/80 [&_p]:m-0"
                   dangerouslySetInnerHTML={{ __html: item.answer }}
