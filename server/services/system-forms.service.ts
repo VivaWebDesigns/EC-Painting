@@ -41,11 +41,17 @@ function settings(overrides: Partial<CmsFormSettings>): CmsFormSettings {
 
 type ManagedSystemForm = InsertCmsForm;
 
+const LEGACY_CONTACT_FORM_DESCRIPTION =
+  "Primary public contact form used on the Contact page and embeddable form blocks.";
+
+const CONTACT_FORM_DESCRIPTION =
+  "Tell us a little about your project and we'll follow up to schedule your free quote.";
+
 const SYSTEM_FORMS: ManagedSystemForm[] = [
   {
     name: "Contact Form",
     slug: "contact-form",
-    description: "Primary public contact form used on the Contact page and embeddable form blocks.",
+    description: CONTACT_FORM_DESCRIPTION,
     kind: "contact",
     isSystem: true,
     isActive: true,
@@ -72,9 +78,14 @@ export async function ensureSystemForms() {
   for (const systemForm of SYSTEM_FORMS) {
     const existing = await storage.forms.getBySlug(systemForm.slug);
     if (existing) {
+      const existingDescription =
+        existing.slug === "contact-form" && existing.description === LEGACY_CONTACT_FORM_DESCRIPTION
+          ? CONTACT_FORM_DESCRIPTION
+          : existing.description;
+
       await storage.forms.update(existing.id, {
         name: existing.name || systemForm.name,
-        description: existing.description ?? systemForm.description ?? "",
+        description: existingDescription ?? systemForm.description ?? "",
         kind: existing.kind || systemForm.kind,
         isSystem: true,
         isActive: existing.isActive ?? true,
