@@ -1026,7 +1026,7 @@ const services = [
     extras: [
       [
         "Stain or Paint Your Fence?",
-        [
+        ul([
           strong(
             "Stain (Recommended for Most Fences)",
             "Penetrates the wood instead of sitting on top. Doesn't peel. Shows or enhances the wood grain. Easier to refresh when the time comes.",
@@ -1039,7 +1039,7 @@ const services = [
             "Paint",
             "Best for fences that have already been painted, or where you want a specific color (white picket, bold accent color). Requires more maintenance than stain.",
           ),
-        ],
+        ]),
       ],
       [
         "Signs Your Fence Needs Attention",
