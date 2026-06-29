@@ -101,25 +101,38 @@ function canonicalForPage(page: CmsPage, origin: string) {
   return `${origin}/${page.slug}`;
 }
 
+export function buildCmsDocumentTitle(rawTitle: string, globalSeo?: SeoSettings) {
+  const title = rawTitle.trim();
+  if (!title) return "";
+
+  const titleSuffix = globalSeo?.titleSuffix ?? " | 593 EC Painting";
+  const siteName = globalSeo?.siteName || "593 EC Painting";
+  if (!titleSuffix) return title;
+
+  return siteName && title.toLowerCase().includes(siteName.toLowerCase())
+    ? title
+    : `${title}${titleSuffix}`;
+}
+
 function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSettings }) {
   useEffect(() => {
     const prevTitle = document.title;
     const effectiveTitle = page.seoTitle || page.title;
-    const titleSuffix = globalSeo?.titleSuffix ?? " | 593 EC Painting";
+    const documentTitle = buildCmsDocumentTitle(effectiveTitle, globalSeo);
     const effectiveDescription =
       page.seoDescription || globalSeo?.defaultMetaDescription || "";
     const origin =
       (globalSeo?.siteUrl || (typeof window !== "undefined" ? window.location.origin : "")).replace(/\/$/, "");
     const effectiveOgImage = absoluteUrl(page.ogImageUrl || globalSeo?.defaultOgImageUrl || "", origin);
 
-    if (effectiveTitle) document.title = `${effectiveTitle}${titleSuffix}`;
+    if (documentTitle) document.title = documentTitle;
 
     if (effectiveDescription) {
       setMeta("description", effectiveDescription);
       setMeta("og:description", effectiveDescription, true);
     }
 
-    if (effectiveTitle) setMeta("og:title", effectiveTitle, true);
+    if (documentTitle) setMeta("og:title", documentTitle, true);
 
     if (effectiveOgImage) {
       setMeta("og:image", effectiveOgImage, true);
