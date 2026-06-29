@@ -1,4 +1,5 @@
 import { loadScriptWithConsent } from "@/lib/consented-script-loader";
+import { hasCookieConsent } from "@/lib/cookie-consent";
 
 export interface AnalyticsRuntimeConfig {
   ga4MeasurementId: string | null;
@@ -26,7 +27,7 @@ export async function getAnalyticsRuntimeConfig(): Promise<AnalyticsRuntimeConfi
 
 export async function loadGa4IfConsented() {
   const config = await getAnalyticsRuntimeConfig();
-  if (!config.ga4MeasurementId || typeof window === "undefined") {
+  if (!config.ga4MeasurementId || typeof window === "undefined" || !hasCookieConsent("analytics")) {
     return null;
   }
 
@@ -41,12 +42,11 @@ export async function loadGa4IfConsented() {
     loadedGa4MeasurementId = config.ga4MeasurementId;
   }
 
-  const script = await loadScriptWithConsent({
+  void loadScriptWithConsent({
     id: "ga4-gtag-js",
     src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.ga4MeasurementId)}`,
     category: "analytics",
-  });
-  if (!script) return null;
+  }).catch(() => undefined);
 
   return config;
 }
