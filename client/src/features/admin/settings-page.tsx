@@ -52,7 +52,6 @@ import {
   Check,
   Palette,
   MapPin,
-  BarChart3,
   Bold,
   Italic,
   Underline as UnderlineIcon,
@@ -313,47 +312,6 @@ const INTEGRATIONS: IntegrationConfig[] = [
         label: "Server Prefix",
         isSecret: false,
         placeholder: "us6",
-      },
-    ],
-  },
-  {
-    category: "google_analytics",
-    title: "Google Analytics",
-    description:
-      "Reserve the GA4 tracking and reporting configuration used by future public analytics and the planned admin Analytics area.",
-    icon: BarChart3,
-    accountUrl: "https://analytics.google.com/analytics/web/",
-    docsUrl: "https://support.google.com/analytics/answer/9539598",
-    instructions: [
-      "Open Google Analytics Admin and choose the GA4 property for this site.",
-      "Copy the Measurement ID from Data streams > Web stream details.",
-      "For reporting access, create a Google Cloud service account and add its email to the GA4 property with viewer access.",
-    ],
-    supportsConnectionTest: false,
-    fields: [
-      {
-        key: "ga4_measurement_id",
-        label: "GA4 Measurement ID",
-        isSecret: false,
-        placeholder: "G-XXXXXXXXXX",
-      },
-      {
-        key: "ga4_property_id",
-        label: "GA4 Property ID",
-        isSecret: false,
-        placeholder: "123456789",
-      },
-      {
-        key: "ga4_reporting_client_email",
-        label: "Reporting Service Account Email",
-        isSecret: false,
-        placeholder: "ga-reporting@your-project.iam.gserviceaccount.com",
-      },
-      {
-        key: "ga4_reporting_private_key",
-        label: "Reporting Private Key",
-        isSecret: true,
-        placeholder: "-----BEGIN PRIVATE KEY-----",
       },
     ],
   },
@@ -718,24 +676,6 @@ function HeadTagAdditionsTab({ settings }: { settings: SettingsData }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            <p className="font-medium">A quick note on Google Analytics</p>
-            <p className="mt-1">
-              The existing <span className="font-medium">Integrations &gt; Google Analytics</span>{" "}
-              card is still the right place for your structured GA4 configuration. Use this area
-              when you specifically need to paste a raw vendor head tag.
-            </p>
-            <p className="mt-2">
-              Tags pasted here load directly on the public site and are not automatically gated by
-              cookie-consent preferences.
-            </p>
-            <p className="mt-2">
-              For GA4, enter the measurement ID in the integration card instead of pasting the full
-              Google script snippet here. That keeps analytics aligned with the site&apos;s consent
-              flow.
-            </p>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="public-head-html">Head tag markup</Label>
             <Textarea

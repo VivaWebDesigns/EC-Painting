@@ -104,22 +104,6 @@ export function registerApiRoutes(app: Express) {
     }
   });
 
-  app.get("/api/runtime-integrations", async (_req, res) => {
-    try {
-      const analytics = await storage.settings.getDecryptedCategory("google_analytics");
-      res.json({
-        ga4MeasurementId: analytics.ga4_measurement_id || null,
-      });
-    } catch (err) {
-      logger.app.warn("Failed to retrieve runtime integrations, returning defaults", {
-        error: err instanceof Error ? err.message : String(err),
-      });
-      res.json({
-        ga4MeasurementId: null,
-      });
-    }
-  });
-
   app.get("/api/seo/global", async (_req, res) => {
     const settings = await storage.seoSettings.get();
     res.json(settings ?? {});

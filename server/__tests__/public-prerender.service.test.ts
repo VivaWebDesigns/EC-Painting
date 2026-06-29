@@ -118,7 +118,7 @@ describe("public-prerender.service", () => {
   it("repairs malformed closing script tags in custom head additions", async () => {
     mockGetSetting.mockResolvedValue(
       [
-        '<script async src="https://www.googletagmanager.com/gtag/js?id=G-TEST"></script',
+        '<script async src="https://example.com/vendor.js"></script',
         '<script>window.dataLayer = window.dataLayer || [];</script',
       ].join("\n"),
     );

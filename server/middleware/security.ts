@@ -37,7 +37,6 @@ export function securityHeaders(): RequestHandler {
         scriptSrc: [
           "'self'",
           "https://www.instagram.com",
-          "https://www.googletagmanager.com",
           "https://static.cloudflareinsights.com",
         ],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com"],
@@ -57,9 +56,6 @@ export function securityHeaders(): RequestHandler {
         ],
         connectSrc: [
           "'self'",
-          "https://www.google-analytics.com",
-          "https://region1.google-analytics.com",
-          "https://www.googletagmanager.com",
           "https://cloudflareinsights.com",
           "https://www.instagram.com",
           "https://*.instagram.com",

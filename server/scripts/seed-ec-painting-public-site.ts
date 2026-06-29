@@ -3246,7 +3246,7 @@ function privacyContent() {
       "Cookies and Tracking Technologies",
       [
         "Our website uses cookies and similar technologies to remember your preferences, understand how visitors use the site, and improve performance.",
-        `We use:${ul(["<strong>Essential cookies</strong> — required for the website to function properly", "<strong>Analytics cookies</strong> — Google Analytics, which helps us understand how visitors use the site (this data is anonymized and aggregated)", "<strong>Reviews widget cookies</strong> — our Google Reviews widget may set cookies to display live reviews"])}`,
+        `We use:${ul(["<strong>Essential cookies</strong> — required for the website to function properly", "<strong>Preference cookies</strong> — used to remember choices you make on the site", "<strong>Reviews widget cookies</strong> — our Google Reviews widget may set cookies to display live reviews"])}`,
         "You can control or disable cookies through your browser settings. Disabling certain cookies may affect how parts of the website work for you.",
       ],
     ],

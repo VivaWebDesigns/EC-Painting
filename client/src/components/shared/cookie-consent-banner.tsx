@@ -81,7 +81,6 @@ export function CookieConsentBanner() {
   const handleAcceptAll = () => {
     persistConsent({
       preferences: true,
-      analytics: true,
       marketing: true,
     });
   };
@@ -117,12 +116,6 @@ export function CookieConsentBanner() {
               description="Remember choices such as display preferences to improve your experience on return visits."
               checked={preferences.preferences}
               onCheckedChange={(checked) => setPreferences((current) => ({ ...current, preferences: checked }))}
-            />
-            <CookiePreferenceRow
-              title="Analytics Cookies"
-              description="Help us understand how visitors use the site so we can improve performance and usability."
-              checked={preferences.analytics}
-              onCheckedChange={(checked) => setPreferences((current) => ({ ...current, analytics: checked }))}
             />
             <CookiePreferenceRow
               title="Marketing Cookies"
@@ -209,12 +202,6 @@ export function CookieConsentBanner() {
               description="Remember choices such as display preferences to improve your experience on return visits."
               checked={preferences.preferences}
               onCheckedChange={(checked) => setPreferences((current) => ({ ...current, preferences: checked }))}
-            />
-            <CookiePreferenceRow
-              title="Analytics Cookies"
-              description="Help us understand how visitors use the site so we can improve performance and usability."
-              checked={preferences.analytics}
-              onCheckedChange={(checked) => setPreferences((current) => ({ ...current, analytics: checked }))}
             />
             <CookiePreferenceRow
               title="Marketing Cookies"
