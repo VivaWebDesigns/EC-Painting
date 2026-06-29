@@ -8,6 +8,8 @@ import { BrandingProvider } from "@/components/shared/branding-provider";
 import { CookieConsentBanner } from "@/components/shared/cookie-consent-banner";
 import { ProtectedRoute } from "@/components/shared/protected-route";
 import { useAuth } from "@/hooks/use-auth";
+import { subscribeToCookieConsent } from "@/lib/cookie-consent";
+import { trackGa4PageView } from "@/lib/analytics-runtime";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 
@@ -398,6 +400,49 @@ function RouteTitleManager() {
   return null;
 }
 
+function AnalyticsRuntimeManager() {
+  const [location] = useLocation();
+  const lastTrackedPathRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const trackCurrentPage = async () => {
+      if (typeof window === "undefined") return;
+
+      const pagePath = `${window.location.pathname}${window.location.search}`;
+      if (
+        pagePath.startsWith("/admin") ||
+        pagePath.startsWith("/auth") ||
+        pagePath.startsWith("/setup") ||
+        pagePath.startsWith("/preview")
+      ) {
+        return;
+      }
+      if (lastTrackedPathRef.current === pagePath && window.gtag) return;
+
+      const tracked = await trackGa4PageView(pagePath);
+      if (!cancelled && tracked) {
+        lastTrackedPathRef.current = pagePath;
+      }
+    };
+
+    void trackCurrentPage();
+    const unsubscribe = subscribeToCookieConsent((record) => {
+      if (record.preferences.analytics) {
+        void trackCurrentPage();
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, [location]);
+
+  return null;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -408,6 +453,7 @@ function App() {
             <RouteAdminModeManager />
             <RouteTitleManager />
             <RouteScrollManager />
+            <AnalyticsRuntimeManager />
             <Router />
             <CookieConsentBanner />
           </SetupGuard>

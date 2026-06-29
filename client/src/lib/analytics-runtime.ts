@@ -5,6 +5,7 @@ export interface AnalyticsRuntimeConfig {
 }
 
 let analyticsRuntimeConfigPromise: Promise<AnalyticsRuntimeConfig> | null = null;
+let loadedGa4MeasurementId: string | null = null;
 
 export async function getAnalyticsRuntimeConfig(): Promise<AnalyticsRuntimeConfig> {
   if (!analyticsRuntimeConfigPromise) {
@@ -29,11 +30,12 @@ export async function loadGa4IfConsented() {
     return null;
   }
 
-  await loadScriptWithConsent({
+  const script = await loadScriptWithConsent({
     id: "ga4-gtag-js",
     src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.ga4MeasurementId)}`,
     category: "analytics",
   });
+  if (!script) return null;
 
   window.dataLayer = window.dataLayer || [];
   const gtag = (...args: unknown[]) => {
@@ -41,10 +43,25 @@ export async function loadGa4IfConsented() {
   };
   window.gtag = window.gtag || gtag;
 
-  window.gtag("js", new Date());
-  window.gtag("config", config.ga4MeasurementId);
+  if (loadedGa4MeasurementId !== config.ga4MeasurementId) {
+    window.gtag("js", new Date());
+    loadedGa4MeasurementId = config.ga4MeasurementId;
+  }
 
   return config;
+}
+
+export async function trackGa4PageView(pagePath: string, pageTitle?: string) {
+  const config = await loadGa4IfConsented();
+  if (!config?.ga4MeasurementId || typeof window === "undefined" || !window.gtag) {
+    return false;
+  }
+
+  window.gtag("config", config.ga4MeasurementId, {
+    page_path: pagePath,
+    page_title: pageTitle ?? document.title,
+  });
+  return true;
 }
 
 declare global {
