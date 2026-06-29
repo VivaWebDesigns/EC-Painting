@@ -166,7 +166,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
 }
 
 export function Footer() {
-  const { companyName } = useBranding();
+  const { companyName, companyAddress, companyPhoneNumbers } = useBranding();
   const { data: publicMenus } = useQuery<Partial<Record<PublicMenuLocation, CmsMenu>>>({
     queryKey: ["/api/cms/menus"],
     queryFn: async () => {
@@ -216,6 +216,11 @@ export function Footer() {
 
   const useStandardFooterMenus = standardFooterMenus.length > 0;
   const brandName = companyName?.trim() || "593 EC Painting";
+  const legalName = brandName.toLowerCase().includes("llc") ? brandName : `${brandName} LLC`;
+  const address = companyAddress?.trim() || "7007 Berolina Ln, Charlotte, NC 28226";
+  const phoneDisplay = companyPhoneNumbers?.split(",")[0]?.trim() || "(774) 329-7109";
+  const phoneHref = `tel:${phoneDisplay.replace(/[^\d+]/g, "")}`;
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const footerLogo = versionBrandAssetUrl("/img/593-ec-painting-logo-footer.png");
 
   return (
@@ -237,6 +242,26 @@ export function Footer() {
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">
               Professional painting for interiors, exteriors, cabinets, decks, and fences.
             </p>
+            <address className="mt-5 space-y-2 text-sm not-italic leading-relaxed text-slate-300/75">
+              <p className="font-semibold text-white">{legalName}</p>
+              <p>
+                <a
+                  href={mapsHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerLinkClass}
+                  data-testid="link-footer-address"
+                >
+                  {address}
+                </a>
+              </p>
+              <p>
+                <a href={phoneHref} className={footerLinkClass} data-testid="link-footer-phone">
+                  {phoneDisplay}
+                </a>
+              </p>
+              <p>Monday-Friday: 8:00 AM-5:00 PM</p>
+            </address>
             <div className="mt-5 flex items-center gap-3">
               <a
                 href={FACEBOOK_URL}
