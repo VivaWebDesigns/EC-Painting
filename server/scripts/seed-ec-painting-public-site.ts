@@ -2798,7 +2798,7 @@ function contactContent() {
         headline: "Get a Free Painting Quote",
         subheadline:
           "Tell us about your project and we'll get back to you within 24 hours — usually faster.",
-        image: "/img/gallery/front-door.webp",
+        image: "/img/hero/ec-hero-contact.webp",
         secondary: false,
         primaryText: "",
         primaryLink: "",
