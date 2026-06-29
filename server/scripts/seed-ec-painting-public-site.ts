@@ -11,6 +11,7 @@ const PHONE_DISPLAY = "(774) 329-7109";
 const PHONE_TEL = "tel:7743297109";
 const EMAIL = "ecpainting_593@outlook.com";
 const ADDRESS = "7007 Berolina Ln, Charlotte, NC 28226";
+const ADDRESS_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`;
 const LAUNCH_DATE = "June 14, 2026";
 const GOOGLE_BUSINESS_URL = "https://share.google/u57kJ9pAzlWBYogu8";
 const FACEBOOK_URL = "https://www.facebook.com/ec.painting.3/";
@@ -2815,9 +2816,9 @@ function contactContent() {
       block("contact-info", {
         title: "Prefer to Call or Text?",
         items: [
-          { icon: "Phone", label: "Phone / Text", value: PHONE_DISPLAY },
-          { icon: "Mail", label: "Email", value: EMAIL },
-          { icon: "MapPin", label: "Address", value: ADDRESS },
+          { icon: "Phone", label: "Phone / Text", value: PHONE_DISPLAY, href: PHONE_TEL },
+          { icon: "Mail", label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
+          { icon: "MapPin", label: "Address", value: ADDRESS, href: ADDRESS_MAPS_URL },
           { icon: "Clock", label: "Hours", value: "Monday–Friday, 8:00 AM – 5:00 PM" },
         ],
       }),

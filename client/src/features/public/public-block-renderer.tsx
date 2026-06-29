@@ -1000,8 +1000,26 @@ function VideoEmbedBlock({ props }: { props: Record<string, unknown> }) {
   );
 }
 
+function contactItemHref(item: { icon?: string; label?: string; value?: string; href?: string }) {
+  if (item.href) return item.href;
+  const label = `${item.icon ?? ""} ${item.label ?? ""}`.toLowerCase();
+  const value = item.value?.trim() ?? "";
+  if (!value) return "";
+  if (label.includes("phone")) {
+    const digits = value.replace(/\D/g, "");
+    return digits ? `tel:${digits.length === 10 ? `1${digits}` : digits}` : "";
+  }
+  if (label.includes("mail") || label.includes("email")) {
+    return `mailto:${value}`;
+  }
+  if (label.includes("map") || label.includes("address")) {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`;
+  }
+  return "";
+}
+
 function ContactInfoBlock({ props }: { props: Record<string, unknown> }) {
-  const items = arr<{ icon: string; label: string; value: string }>(props.items);
+  const items = arr<{ icon: string; label: string; value: string; href?: string }>(props.items);
   return (
     <div className="py-4">
       <SectionHeading props={props} defaultAlignment="left" className="mb-6" />
@@ -1009,17 +1027,34 @@ function ContactInfoBlock({ props }: { props: Record<string, unknown> }) {
         {items.length === 0 ? (
           <p className="text-muted-foreground text-sm">Add contact items to display here.</p>
         ) : (
-          items.map((item, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <LucideIcon name={item.icon || "Globe"} className="h-4 w-4 text-primary" />
+          items.map((item, i) => {
+            const href = contactItemHref(item);
+            const isExternal = /^https?:\/\//i.test(href);
+            const valueClassName =
+              "break-words font-medium text-sm text-foreground hover:text-primary hover:underline underline-offset-2";
+            return (
+              <div key={i} className="flex items-start gap-3">
+                <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <LucideIcon name={item.icon || "Globe"} className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                      className={valueClassName}
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <p className="break-words font-medium text-sm">{item.value}</p>
+                  )}
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-muted-foreground">{item.label}</p>
-                <p className="break-words font-medium text-sm">{item.value}</p>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

@@ -856,6 +856,7 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
           { key: "icon", label: "Icon (Lucide name)", type: "text", placeholder: "e.g. MapPin, Mail, Phone" },
           { key: "label", label: "Label", type: "text", placeholder: "e.g. Email, Phone" },
           { key: "value", label: "Value", type: "text", placeholder: "Contact detail" },
+          { key: "href", label: "Link URL", type: "text", placeholder: "Optional tel:, mailto:, or maps URL" },
         ],
       },
     ],
