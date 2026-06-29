@@ -2567,6 +2567,19 @@ const reviews = [
   },
 ];
 
+function googleReviewItems() {
+  return reviews.map((review) => ({
+    quote: review.quote,
+    name: review.name,
+    date: review.date,
+    role: "Customer",
+    location: "Google review",
+    rating: 5,
+    source: "Google",
+    sourceIcon: "google",
+  }));
+}
+
 function serviceAreaBlock() {
   return rich("Proudly Serving Charlotte and the Surrounding Carolinas", [
     "We work throughout the greater Charlotte metro and into the South Carolina border communities. If you're within about 30 miles of Charlotte, we can paint your home.",
@@ -2675,7 +2688,8 @@ function homeContent() {
       block("testimonials", {
         title: "What Our Customers Say",
         subtitle: "Real reviews from homeowners across Charlotte and the surrounding areas.",
-        items: reviews,
+        variant: "google-carousel",
+        items: googleReviewItems(),
         sectionBackgroundColor: "#f4f8fb",
       }),
       serviceAreaBlock(),
@@ -2887,16 +2901,7 @@ function reviewsContent() {
         sectionBackgroundColor: "#ffffff",
         sectionPaddingTop: "md",
         sectionPaddingBottom: "lg",
-        items: reviews.map((review) => ({
-          quote: review.quote,
-          name: review.name,
-          date: review.date,
-          role: "Customer",
-          location: "Google review",
-          rating: 5,
-          source: "Google",
-          sourceIcon: "google",
-        })),
+        items: googleReviewItems(),
       }),
     ],
   };
