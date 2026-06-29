@@ -115,6 +115,42 @@ describe("public-prerender.service", () => {
     expect(snapshot?.title).toBe("Painting Services in Charlotte, NC | 593 EC Painting");
   });
 
+  it("removes tag-stripping spaces before punctuation in FAQ schema answers", async () => {
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Exterior Painting",
+      slug: "exterior-painting",
+      canonicalUrl: "https://ecpaintingcharlotte.com/exterior-painting/",
+      content: {
+        blocks: [
+          {
+            id: "faq-exterior",
+            type: "faq",
+            props: {
+              items: [
+                {
+                  question: "Do you pressure wash first?",
+                  answer:
+                    'Yes. See our dedicated <a href="/pressure-washing/">pressure washing page</a>.',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/exterior-painting/");
+    const faqSchema = snapshot?.jsonLd?.find((schema) => schema["@type"] === "FAQPage") as
+      | { mainEntity?: Array<{ acceptedAnswer?: { text?: string } }> }
+      | undefined;
+
+    expect(faqSchema?.mainEntity?.[0]?.acceptedAnswer?.text).toBe(
+      "Yes. See our dedicated pressure washing page.",
+    );
+  });
+
   it("normalizes homepage SEO head data for live crawlers", async () => {
     mockGetSeo.mockResolvedValue({
       ...seoSettings,

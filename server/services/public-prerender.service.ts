@@ -184,7 +184,11 @@ function escapeHtml(value: string) {
 }
 
 function stripHtml(value: string) {
-  return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/\s+([.,!?;:])/g, "$1")
+    .trim();
 }
 
 function truncate(value: string, length = 240) {
