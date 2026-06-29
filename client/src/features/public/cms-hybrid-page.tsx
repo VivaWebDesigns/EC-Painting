@@ -9,7 +9,6 @@ import type { BlockInstance, BuilderContent } from "@/features/admin/cms/builder
 import type { CmsPage, SeoSettings } from "@shared/schema";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
-  buildOrganizationLd,
   buildBreadcrumbLd,
   buildFaqPageLd,
   buildServiceLd,
@@ -89,6 +88,19 @@ function removeLink(rel: string) {
   if (el) el.remove();
 }
 
+function absoluteUrl(path: string, origin: string) {
+  if (!path) return "";
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${origin}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
+function canonicalForPage(page: CmsPage, origin: string) {
+  const isHome = page.slug === "home" || page.slug === "";
+  if (isHome) return `${origin}/`;
+  if (page.canonicalUrl) return page.canonicalUrl;
+  return `${origin}/${page.slug}`;
+}
+
 function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSettings }) {
   useEffect(() => {
     const prevTitle = document.title;
@@ -96,9 +108,9 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
     const titleSuffix = globalSeo?.titleSuffix ?? " | 593 EC Painting";
     const effectiveDescription =
       page.seoDescription || globalSeo?.defaultMetaDescription || "";
-    const effectiveOgImage = page.ogImageUrl || globalSeo?.defaultOgImageUrl || "";
     const origin =
-      globalSeo?.siteUrl || (typeof window !== "undefined" ? window.location.origin : "");
+      (globalSeo?.siteUrl || (typeof window !== "undefined" ? window.location.origin : "")).replace(/\/$/, "");
+    const effectiveOgImage = absoluteUrl(page.ogImageUrl || globalSeo?.defaultOgImageUrl || "", origin);
 
     if (effectiveTitle) document.title = `${effectiveTitle}${titleSuffix}`;
 
@@ -115,7 +127,7 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
       removeMeta("og:image", true);
     }
 
-    const canonical = page.canonicalUrl || `${origin}/${page.slug}`;
+    const canonical = canonicalForPage(page, origin);
     setLink("canonical", canonical);
 
     if (page.noindex) {
@@ -132,10 +144,10 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
   }, [page, globalSeo]);
 
   const origin =
-    globalSeo?.siteUrl || (typeof window !== "undefined" ? window.location.origin : "");
+    (globalSeo?.siteUrl || (typeof window !== "undefined" ? window.location.origin : "")).replace(/\/$/, "");
 
   const isHome = page.slug === "home" || page.slug === "";
-  const pageUrl = page.canonicalUrl || (isHome ? origin : `${origin}/${page.slug}`);
+  const pageUrl = canonicalForPage(page, origin);
   const pageLabel = page.seoTitle || page.title;
   const metadata = parseCmsMetadata(page.content);
   const breadcrumbParent =
@@ -169,7 +181,6 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
   return (
     <JsonLd
       schemas={[
-        globalSeo ? buildOrganizationLd(globalSeo) : null,
         breadcrumbs,
         serviceSchema && typeof serviceSchema.serviceType === "string"
           ? buildServiceLd({

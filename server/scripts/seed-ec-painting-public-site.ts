@@ -4,7 +4,7 @@ import { pool } from "../db";
 import { storage } from "../storage";
 import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } from "@shared/schema";
 
-const SITE_URL = process.env.APP_URL || "https://593ecpaintingllc.com";
+const SITE_URL = process.env.APP_URL || "https://ecpaintingcharlotte.com";
 const BRAND_NAME = "593 EC Painting";
 const LEGAL_NAME = "593 EC Painting LLC";
 const PHONE_DISPLAY = "(774) 329-7109";
@@ -2581,8 +2581,8 @@ function googleReviewItems() {
 }
 
 function serviceAreaBlock() {
-  return rich("Proudly Serving Charlotte and the Surrounding Carolinas", [
-    "We work throughout the greater Charlotte metro and into the South Carolina border communities. If you're within about 30 miles of Charlotte, we can paint your home.",
+  return rich("Proudly Serving Charlotte and Nearby Communities", [
+    "We work throughout Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities within about 30 miles of Charlotte.",
     `<strong>Cities we serve:</strong> ${SERVICE_AREA}.`,
   ]);
 }
@@ -2591,9 +2591,9 @@ function homeContent() {
   return {
     blocks: [
       hero({
-        headline: "Charlotte's Family-Owned House Painters",
+        headline: "Family-Owned House Painters Serving Charlotte, NC",
         subheadline:
-          "Honest pricing, fast communication, and work that lasts. Serving Charlotte and the surrounding Carolinas for 5 years.",
+          "Honest pricing, fast communication, and work that lasts. Serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities.",
         image: "/img/hero/ec-hero-home.webp",
       }),
       block("trust-bar", {
@@ -2607,7 +2607,7 @@ function homeContent() {
         ],
       }),
       rich("Painting Done Right by People Who Care", [
-        "593 EC Painting is run by Esau and Sandra, a husband-and-wife team that has been painting homes across Charlotte and the surrounding Carolinas for 5 years. We started this business because we believed homeowners deserved better — a painter who shows up when they say they will, communicates throughout the project, treats your home with respect, and stands behind every job long after the last brushstroke.",
+        "593 EC Painting is run by Esau and Sandra, a husband-and-wife team that has been painting homes across Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities for 5 years. We started this business because we believed homeowners deserved better — a painter who shows up when they say they will, communicates throughout the project, treats your home with respect, and stands behind every job long after the last brushstroke.",
         "That's still how we work today. When you call 593 EC Painting, you reach Esau or Sandra directly. When we paint your home, we treat it the way we'd treat our own. And if something isn't right, we come back and make it right. That's the difference between hiring a painting crew and hiring a family who paints.",
       ]),
       cards(
@@ -2813,11 +2813,11 @@ function contactContent() {
           { icon: "Phone", label: "Phone / Text", value: PHONE_DISPLAY },
           { icon: "Mail", label: "Email", value: EMAIL },
           { icon: "MapPin", label: "Address", value: ADDRESS },
-          { icon: "Clock", label: "Hours", value: "Monday–Saturday, 8:00 AM – 6:00 PM" },
+          { icon: "Clock", label: "Hours", value: "Monday–Friday, 8:00 AM – 5:00 PM" },
         ],
       }),
       rich("Where We Work", [
-        "We serve Charlotte and the surrounding Carolinas within about a 30-mile radius. If you're in or near any of these communities, we'd love to quote your project:",
+        "We serve Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities within about a 30-mile radius. If you're in or near any of these communities, we'd love to quote your project:",
         SERVICE_AREA + ".",
         "Not sure if we cover your area? Just call — if we can't help, we'll point you toward someone who can.",
       ]),
@@ -3691,7 +3691,7 @@ function sitemapContent() {
         },
       ]),
       rich("Contact Information", [
-        `${LEGAL_NAME}<br />${ADDRESS}<br />Phone: ${PHONE_DISPLAY}<br />Hours: Monday–Saturday, 8:00 AM – 6:00 PM`,
+        `${LEGAL_NAME}<br />${ADDRESS}<br />Phone: ${PHONE_DISPLAY}<br />Hours: Monday–Friday, 8:00 AM – 5:00 PM`,
       ]),
       rich("Service Area", [
         "We serve homeowners within approximately a 30-mile radius of Charlotte. Cities we serve include:",
@@ -3721,9 +3721,9 @@ export function allPageSpecs(): PageSpec[] {
       title: "Home",
       slug: "home",
       path: "/",
-      metaTitle: "593 EC Painting | Charlotte's Family-Owned House Painters",
+      metaTitle: "House Painters in Charlotte, NC | 593 EC Painting",
       metaDescription:
-        "Family-owned house painters serving Charlotte, NC and surrounding areas. Interior, exterior, cabinets, decks, and fences. Honest pricing, free quotes, work guaranteed.",
+        "Family-owned house painters serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities.",
       content: homeContent(),
     },
     {
@@ -3732,7 +3732,7 @@ export function allPageSpecs(): PageSpec[] {
       path: "/about/",
       metaTitle: "About 593 EC Painting | Family-Owned Charlotte Painters",
       metaDescription:
-        "Meet Esau and Sandra, the husband-and-wife team behind 593 EC Painting. 5 years of painting homes across Charlotte, NC and the surrounding Carolinas.",
+        "Meet Esau and Sandra, the husband-and-wife team behind 593 EC Painting. 5 years of painting homes across Charlotte, NC and nearby communities.",
       content: aboutContent(),
     },
     {
@@ -3741,7 +3741,7 @@ export function allPageSpecs(): PageSpec[] {
       path: "/contact/",
       metaTitle: "Contact 593 EC Painting | Free Quotes in Charlotte, NC",
       metaDescription:
-        "Request a free painting quote from 593 EC Painting. Family-owned house painters serving Charlotte, NC and surrounding areas. Call (774) 329-7109 or request online.",
+        "Request a free painting quote from 593 EC Painting. Family-owned house painters serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities.",
       content: contactContent(),
     },
     {
@@ -3759,7 +3759,7 @@ export function allPageSpecs(): PageSpec[] {
       path: "/reviews/",
       metaTitle: "Reviews | 593 EC Painting Charlotte, NC",
       metaDescription:
-        "See what Charlotte homeowners say about 593 EC Painting. Read real Google reviews from interior, exterior, and cabinet painting customers across the Carolinas.",
+        "See what Charlotte homeowners say about 593 EC Painting. Read real Google reviews from interior, exterior, and cabinet painting customers near Charlotte.",
       content: reviewsContent(),
     },
     {
@@ -3768,7 +3768,7 @@ export function allPageSpecs(): PageSpec[] {
       path: "/services/",
       metaTitle: "Painting Services in Charlotte, NC | 593 EC Painting",
       metaDescription:
-        "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and the surrounding Carolinas. Family-owned, free quotes, 3-year warranty.",
+        "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and nearby communities. Family-owned, free quotes, 3-year warranty.",
       content: servicesContent(),
     },
     ...services.map((service) => ({
@@ -3867,7 +3867,7 @@ export function page(spec: PageSpec): InsertCmsPage {
     seoDescription: spec.metaDescription,
     seoKeywords: "",
     ogImageUrl: OG_IMAGE_URL,
-    canonicalUrl: `${SITE_URL}${spec.path === "/" ? "" : spec.path}`,
+    canonicalUrl: `${SITE_URL}${spec.path === "/" ? "/" : spec.path.replace(/\/$/, "")}`,
     noindex: spec.noindex ?? false,
     publishedAt: new Date(),
     scheduledAt: null,
@@ -3954,7 +3954,7 @@ async function seedSettings() {
     siteName: BRAND_NAME,
     titleSuffix: ` | ${BRAND_NAME}`,
     defaultMetaDescription:
-      "Family-owned house painters serving Charlotte, NC and surrounding areas. Interior, exterior, cabinets, decks, and fences.",
+      "Family-owned house painters serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities.",
     siteUrl: SITE_URL,
     defaultOgImageUrl: OG_IMAGE_URL,
     organizationName: BRAND_NAME,
@@ -3972,8 +3972,8 @@ async function seedSettings() {
     ["company_google_business_url", GOOGLE_BUSINESS_URL],
     ["frontend_logo_url", LOGO_URL],
     ["favicon_url", FAVICON_URL],
-    ["frontend_body_font", "open-sans"],
-    ["frontend_heading_font", "montserrat"],
+    ["frontend_body_font", "inter"],
+    ["frontend_heading_font", "manrope"],
     ["brand_primary_color", "#0A83A5"],
     ["brand_secondary_color", "#F3F7FA"],
     ["brand_tertiary_color", "#0F5F7A"],

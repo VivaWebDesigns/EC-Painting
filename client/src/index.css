@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -106,9 +104,9 @@
   --chart-4: 160 65% 40%;
   --chart-5: 12 78% 58%;
 
-  --font-sans: "Open Sans", sans-serif;
-  --font-serif: "Montserrat", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Manrope", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --public-text-h1: var(--foreground);
   --public-text-h2: var(--foreground);
   --public-text-h3: var(--foreground);

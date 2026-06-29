@@ -83,6 +83,38 @@ describe("public-prerender.service", () => {
     expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process");
   });
 
+  it("normalizes homepage SEO head data for live crawlers", async () => {
+    mockGetSeo.mockResolvedValue({
+      ...seoSettings,
+      defaultOgImageUrl: "/img/593-ec-painting-og.jpg",
+      organizationLogoUrl: "/img/593-ec-painting-logo-full-color.png",
+    });
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Home",
+      slug: "home",
+      seoTitle: "House Painters in Charlotte, NC | 593 EC Painting",
+      canonicalUrl: "https://ecpaintingcharlotte.com",
+      ogImageUrl: null,
+    });
+    const { getPublicHtmlSnapshot, injectPublicHtmlSnapshot } = await import(
+      "../services/public-prerender.service"
+    );
+
+    const snapshot = await getPublicHtmlSnapshot("/");
+    const html = injectPublicHtmlSnapshot(
+      "<html><head><title>Default</title><!--APP_DYNAMIC_HEAD--></head><body><!--APP_PRERENDER_CONTENT--><div id=\"root\"></div></body></html>",
+      snapshot,
+    );
+
+    expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/");
+    expect(html).toContain('<link rel="canonical" href="https://ecpaintingcharlotte.com/" />');
+    expect(html).toContain('<meta property="og:image" content="https://ecpaintingcharlotte.com/img/593-ec-painting-og.jpg" />');
+    expect(html).toContain('"HousePainter"');
+    expect(html).toContain('"priceRange":"$$"');
+    expect(html).toContain('"ratingValue":"5.0"');
+  });
+
   it("does not prerender retired inherited public surfaces", async () => {
     mockGetPageBySlug.mockResolvedValue({ ...cmsPage, slug: "join" });
     const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");

@@ -14,6 +14,44 @@ interface PublicHtmlSnapshot {
 const DEFAULT_DESCRIPTION =
   "593 EC Painting provides residential interior painting, exterior painting, cabinet painting, deck staining, and fence staining in Charlotte, NC.";
 
+const BUSINESS_PHONE = "+17743297109";
+const BUSINESS_PHONE_DISPLAY = "(774) 329-7109";
+const BUSINESS_EMAIL = "ecpainting_593@outlook.com";
+const BUSINESS_STREET = "7007 Berolina Ln";
+const BUSINESS_CITY = "Charlotte";
+const BUSINESS_STATE = "NC";
+const BUSINESS_POSTAL_CODE = "28226";
+const BUSINESS_DESCRIPTION =
+  "Family-owned house painters serving Charlotte, NC with interior painting, exterior painting, cabinet painting, deck staining, fence staining, drywall repair, pressure washing, and related residential painting services.";
+const BUSINESS_SERVICE_AREAS = [
+  ["Charlotte", "NC"],
+  ["Matthews", "NC"],
+  ["Mint Hill", "NC"],
+  ["Monroe", "NC"],
+  ["Pineville", "NC"],
+  ["Huntersville", "NC"],
+  ["Cornelius", "NC"],
+  ["Davidson", "NC"],
+  ["Concord", "NC"],
+  ["Waxhaw", "NC"],
+  ["Indian Trail", "NC"],
+  ["Stallings", "NC"],
+  ["Fort Mill", "SC"],
+  ["Indian Land", "SC"],
+  ["Rock Hill", "SC"],
+];
+const BUSINESS_SERVICES = [
+  "Interior Painting",
+  "Exterior Painting",
+  "Cabinet Painting",
+  "Deck Staining",
+  "Fence Staining",
+  "Drywall Repair",
+  "Pressure Washing",
+  "Popcorn Ceiling Removal",
+  "Wallpaper Removal",
+];
+
 const RETIRED_PUBLIC_PREFIXES = ["/insights", "/events", "/recordings", "/directory"];
 const RETIRED_PUBLIC_PATHS = new Set(["/join"]);
 
@@ -22,11 +60,11 @@ const FALLBACK_STATIC_PAGES: Record<
   { title: string; description: string; body: string; noindex?: boolean }
 > = {
   "/": {
-    title: "593 EC Painting | Charlotte's Family-Owned House Painters",
+    title: "House Painters in Charlotte, NC | 593 EC Painting",
     description:
-      "Family-owned house painters serving Charlotte, NC and surrounding areas. Interior, exterior, cabinets, decks, and fences. Honest pricing, free quotes, work guaranteed.",
+      "Family-owned house painters serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities.",
     body:
-      "593 EC Painting is a family-owned residential painting business serving Charlotte and the surrounding Carolinas with interior, exterior, cabinet, deck, and fence painting.",
+      "593 EC Painting is a family-owned residential painting business serving Charlotte, Matthews, Indian Trail, Waxhaw, Fort Mill, Indian Land, Monroe, and nearby communities with interior, exterior, cabinet, deck, and fence painting.",
   },
   "/about": {
     title: "About 593 EC Painting",
@@ -59,7 +97,7 @@ const FALLBACK_STATIC_PAGES: Record<
   "/services": {
     title: "Painting Services in Charlotte, NC",
     description:
-      "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and the surrounding Carolinas.",
+      "Interior, exterior, cabinet, deck, and fence painting services across Charlotte, NC and nearby communities.",
     body:
       "Explore residential painting services from 593 EC Painting, including interior painting, exterior painting, cabinet painting, deck staining, and fence staining.",
   },
@@ -208,6 +246,17 @@ function absoluteUrl(path: string | null | undefined, siteUrl: string) {
   return `${siteUrl}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+function canonicalForPath(siteUrl: string, pathname: string) {
+  return pathname === "/" ? `${siteUrl}/` : `${siteUrl}${pathname}`;
+}
+
+function canonicalForCmsPage(page: CmsPage, siteUrl: string) {
+  if (page.slug === "home" || page.slug === "") {
+    return canonicalForPath(siteUrl, "/");
+  }
+  return page.canonicalUrl || canonicalForPath(siteUrl, `/${page.slug}`);
+}
+
 function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
   const suffix = seo?.titleSuffix ?? " | 593 EC Painting";
   const siteName = seo?.siteName || seo?.organizationName || "";
@@ -216,18 +265,76 @@ function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
 
 function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
   if (!seo?.organizationName && !seo?.siteName) return null;
+  const name = seo?.organizationName || seo?.siteName || "593 EC Painting";
+  const logoUrl = absoluteUrl(seo?.organizationLogoUrl || "/img/593-ec-painting-logo-full-color.png", siteUrl);
+  const imageUrl = absoluteUrl(seo?.defaultOgImageUrl || "/img/593-ec-painting-og.jpg", siteUrl);
+  const sameAs = [
+    seo?.facebookUrl,
+    seo?.instagramUrl,
+    seo?.linkedinUrl,
+    seo?.twitterHandle ? `https://x.com/${seo.twitterHandle.replace(/^@/, "")}` : null,
+  ].filter((url): url is string => !!url);
+
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["HousePainter", "LocalBusiness"],
     "@id": `${siteUrl}/#business`,
-    name: seo?.organizationName || seo?.siteName || "593 EC Painting",
-    url: siteUrl,
-    logo: seo?.organizationLogoUrl
-      ? {
-          "@type": "ImageObject",
-          url: absoluteUrl(seo.organizationLogoUrl, siteUrl),
-        }
-      : undefined,
+    name,
+    legalName: "593 EC Painting LLC",
+    description: BUSINESS_DESCRIPTION,
+    url: `${siteUrl}/`,
+    telephone: BUSINESS_PHONE,
+    email: BUSINESS_EMAIL,
+    priceRange: "$$",
+    logo: {
+      "@type": "ImageObject",
+      url: logoUrl,
+    },
+    image: imageUrl,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BUSINESS_STREET,
+      addressLocality: BUSINESS_CITY,
+      addressRegion: BUSINESS_STATE,
+      postalCode: BUSINESS_POSTAL_CODE,
+      addressCountry: "US",
+    },
+    areaServed: BUSINESS_SERVICE_AREAS.map(([name, region]) => ({
+      "@type": "City",
+      name,
+      addressRegion: region,
+      addressCountry: "US",
+    })),
+    openingHoursSpecification: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+    ].map((dayOfWeek) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek,
+      opens: "08:00",
+      closes: "17:00",
+    })),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Residential painting services",
+      itemListElement: BUSINESS_SERVICES.map((serviceName) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: serviceName,
+          provider: { "@id": `${siteUrl}/#business` },
+        },
+      })),
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: "21",
+    },
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
   };
 }
 
@@ -285,7 +392,7 @@ function buildWebsiteSchema(seo: SeoSettings | null, siteUrl: string) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: seo?.siteName || "593 EC Painting",
-    url: siteUrl,
+    url: `${siteUrl}/`,
   };
 }
 
@@ -364,8 +471,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     page.seoDescription ||
     truncate(uniqueFragments(collectTextFragments(page.content)).join(" "), 180) ||
     DEFAULT_DESCRIPTION;
-  const canonicalUrl =
-    page.canonicalUrl || (page.slug === "home" ? siteUrl : `${siteUrl}/${page.slug}`);
+  const canonicalUrl = canonicalForCmsPage(page, siteUrl);
   const metadata = getCmsMetadata(page);
   const bodyHtml = buildSimplePageBody(
     page.title,
@@ -399,7 +505,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     title: buildHeadTitle(title, seo),
     description,
     canonicalUrl,
-    ogImageUrl: page.ogImageUrl || seo?.defaultOgImageUrl || null,
+    ogImageUrl: absoluteUrl(page.ogImageUrl || seo?.defaultOgImageUrl || null, siteUrl) || null,
     robots: page.noindex
       ? "noindex,nofollow"
       : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
@@ -425,8 +531,8 @@ function buildFallbackSnapshot(
   return {
     title: buildHeadTitle(fallback.title, seo),
     description: fallback.description,
-    canonicalUrl: pathname === "/" ? siteUrl : `${siteUrl}${pathname}`,
-    ogImageUrl: seo?.defaultOgImageUrl || null,
+    canonicalUrl: canonicalForPath(siteUrl, pathname),
+    ogImageUrl: absoluteUrl(seo?.defaultOgImageUrl || null, siteUrl) || null,
     robots: fallback.noindex ? "noindex,nofollow" : null,
     bodyHtml: buildSimplePageBody(fallback.title, fallback.body),
     jsonLd: [buildOrganizationSchema(seo, siteUrl), buildWebsiteSchema(seo, siteUrl)].filter(
@@ -500,8 +606,8 @@ export function injectPublicHtmlSnapshot(
 
   if (!snapshot) {
     return normalizedTemplate
-      .replace("<!--APP_DYNAMIC_HEAD-->", customHeadHtml || "")
-      .replace("<!--APP_PRERENDER_CONTENT-->", "");
+      .replace("<!--APP_DYNAMIC_HEAD-->", () => customHeadHtml || "")
+      .replace("<!--APP_PRERENDER_CONTENT-->", () => "");
   }
 
   const headParts = [
@@ -525,10 +631,10 @@ export function injectPublicHtmlSnapshot(
   ].filter(Boolean);
 
   return normalizedTemplate
-    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(snapshot.title)}</title>`)
-    .replace("<!--APP_DYNAMIC_HEAD-->", headParts.join("\n"))
+    .replace(/<title>[\s\S]*?<\/title>/i, () => `<title>${escapeHtml(snapshot.title)}</title>`)
+    .replace("<!--APP_DYNAMIC_HEAD-->", () => headParts.join("\n"))
     .replace(
       "<!--APP_PRERENDER_CONTENT-->",
-      snapshot.bodyHtml ? `<div id="seo-prerender">${snapshot.bodyHtml}</div>` : "",
+      () => snapshot.bodyHtml ? `<div id="seo-prerender">${snapshot.bodyHtml}</div>` : "",
     );
 }
