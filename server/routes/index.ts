@@ -23,14 +23,6 @@ function escapeXml(str: string): string {
     .replace(/'/g, "&apos;");
 }
 
-const SPOKE_SERVICE_SLUGS = new Set([
-  "popcorn-ceiling-removal",
-  "drywall-repair",
-  "wallpaper-removal",
-  "pressure-washing",
-  "hardie-plank-painting",
-]);
-
 export function registerApiRoutes(app: Express) {
   app.use("/r2", r2PublicRoutes);
   app.use("/api/auth", authRoutes);
@@ -155,20 +147,26 @@ export function registerApiRoutes(app: Express) {
 
       const base = seoSettings?.siteUrl?.replace(/\/$/, "") || "";
 
-      const urls: Array<{ loc: string; lastmod?: string; changefreq?: string; priority?: string }> =
-        [];
+      const today = new Date().toISOString().split("T")[0];
+      const pageBySlug = new Map(pages.map((page) => [page.slug, page]));
+      const lastmodForSlug = (slug: string) => {
+        const updatedAt = pageBySlug.get(slug)?.updatedAt;
+        return updatedAt ? new Date(updatedAt).toISOString().split("T")[0] : today;
+      };
 
-      urls.push({ loc: base || "/", changefreq: "weekly", priority: "1.0" });
+      const urls: Array<{ loc: string; lastmod: string }> = [];
+
+      urls.push({ loc: base || "/", lastmod: lastmodForSlug("home") });
 
       const staticRoutes = [
-        { path: "/about", changefreq: "monthly", priority: "0.7" },
-        { path: "/gallery", changefreq: "monthly", priority: "0.7" },
-        { path: "/reviews", changefreq: "monthly", priority: "0.7" },
-        { path: "/services", changefreq: "monthly", priority: "0.8" },
-        { path: "/contact", changefreq: "monthly", priority: "0.5" },
+        { path: "/about", slug: "about" },
+        { path: "/gallery", slug: "gallery" },
+        { path: "/reviews", slug: "reviews" },
+        { path: "/services", slug: "services" },
+        { path: "/contact", slug: "contact" },
       ];
       for (const r of staticRoutes) {
-        urls.push({ loc: `${base}${r.path}`, changefreq: r.changefreq, priority: r.priority });
+        urls.push({ loc: `${base}${r.path}`, lastmod: lastmodForSlug(r.slug) });
       }
 
       for (const page of pages) {
@@ -191,11 +189,7 @@ export function registerApiRoutes(app: Express) {
           continue;
         urls.push({
           loc: `${base}/${page.slug}`,
-          lastmod: page.updatedAt
-            ? new Date(page.updatedAt).toISOString().split("T")[0]
-            : undefined,
-          changefreq: "monthly",
-          priority: SPOKE_SERVICE_SLUGS.has(page.slug) ? "0.8" : "0.6",
+          lastmod: page.updatedAt ? new Date(page.updatedAt).toISOString().split("T")[0] : today,
         });
       }
 
@@ -204,9 +198,7 @@ export function registerApiRoutes(app: Express) {
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
         ...urls.map((u) => {
           const parts = [`  <url>`, `    <loc>${escapeXml(u.loc)}</loc>`];
-          if (u.lastmod) parts.push(`    <lastmod>${u.lastmod}</lastmod>`);
-          if (u.changefreq) parts.push(`    <changefreq>${u.changefreq}</changefreq>`);
-          if (u.priority) parts.push(`    <priority>${u.priority}</priority>`);
+          parts.push(`    <lastmod>${u.lastmod}</lastmod>`);
           parts.push(`  </url>`);
           return parts.join("\n");
         }),
