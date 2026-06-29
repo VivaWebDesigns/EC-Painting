@@ -956,7 +956,7 @@ const services = [
         "How long until I can walk on my deck after staining?",
         "Usually 24 hours for foot traffic, 48 hours before putting furniture back. We'll give you specific timing based on the stain we use.",
       ],
-      ["Do you stain fences too?", "Yes — see our fence staining page for details."],
+      ["Do you stain fences too?", 'Yes — see our <a href="/fence-staining/">fence staining page</a> for details.'],
     ],
   },
   {
