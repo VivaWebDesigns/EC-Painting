@@ -1,8 +1,7 @@
 import { randomUUID } from "crypto";
 import { pathToFileURL } from "url";
-import { pool } from "../db";
-import { storage } from "../storage";
 import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } from "@shared/schema";
+import type { storage as Storage } from "../storage";
 
 const SITE_URL = process.env.APP_URL || "https://ecpaintingcharlotte.com";
 const BRAND_NAME = "593 EC Painting";
@@ -64,6 +63,25 @@ const DEFAULT_SEED_OPTIONS: SeedOptions = {
   resetBranding: false,
   deleteObsoletePages: false,
 };
+
+let storageClient: typeof Storage | null = null;
+
+async function getStorage() {
+  if (!storageClient) {
+    const mod = await import("../storage");
+    storageClient = mod.storage;
+  }
+  return storageClient;
+}
+
+async function closePool() {
+  const { pool } = await import("../db");
+  await pool.end();
+}
+
+function isHelpRequest(argv = process.argv.slice(2)) {
+  return argv.includes("--help") || argv.includes("-h");
+}
 
 const PAGE_LEVEL_PROTECTED_FIELDS = new Set([
   "status",
@@ -128,6 +146,62 @@ function parseSeedOptions(argv = process.argv.slice(2)): SeedOptions {
   }
 
   return options;
+}
+
+function printSeedHelp() {
+  console.log(`
+EC Painting public-site CMS seed
+
+Default behavior:
+  Creates missing public CMS pages, menus, SEO settings, and branding settings.
+  Existing CMS/admin-edited records are skipped. Normal seed runs do not overwrite
+  existing page content, image fields, focal/crop/position fields, alt text,
+  captions, SEO fields, menus, robots.txt, or branding settings.
+
+Usage:
+  tsx server/scripts/seed-ec-painting-public-site.ts [flags]
+
+Flags:
+  --update-existing
+  --update-pages
+      Update existing seeded pages from code-defined page content. These aliases
+      do the same thing. Protected page-level fields and protected content image
+      fields are still preserved by default.
+
+  --reset-page-field=<field-or-path>
+      Advanced page update allowlist. Use with care when a specific protected
+      page field intentionally needs to be replaced. Examples: seoTitle,
+      ogImageUrl, content.blocks.0.props.backgroundImageUrl.
+
+  --reset-menus
+      Replace existing seeded menu locations with seed-defined menu structures
+      and delete obsolete seed-managed footer menu locations. This can overwrite
+      admin menu labels, URLs, nesting, ordering, and custom menu items.
+
+  --reset-seo
+      Replace existing global SEO settings from seed defaults. This can overwrite
+      site name, title suffix, default meta description, site URL, default social
+      image, organization fields, social links, default robots noindex, and
+      custom robots.txt content.
+
+  --reset-branding
+      Replace existing seeded branding settings from seed defaults. This can
+      overwrite business identity, phone/address settings, logo/favicon URLs,
+      fonts, brand colors, and text colors.
+
+  --delete-obsolete
+      Delete obsolete legacy seeded public pages by slug. Use only when you are
+      intentionally cleaning up seed-managed legacy pages.
+
+  --force
+      Combines --update-pages, --reset-menus, --reset-seo, --reset-branding, and
+      --delete-obsolete. Page-level protected fields are reset, but protected
+      content image/focal/alt/caption fields are still preserved unless separately
+      allowlisted with --reset-page-field.
+
+  --help, -h
+      Show this help.
+`.trim());
 }
 
 function isAllowedProtectedField(path: string[], options: SeedOptions) {
@@ -4052,6 +4126,7 @@ export function allPageSpecs(): PageSpec[] {
 }
 
 async function seedPage(data: InsertCmsPage, options: SeedOptions, summary: SeedSummary) {
+  const storage = await getStorage();
   const existing = await storage.cmsPages.getPageBySlug(data.slug);
   if (existing) {
     if (!options.updatePages) {
@@ -4092,6 +4167,7 @@ export function page(spec: PageSpec): InsertCmsPage {
 }
 
 export async function seedPages(options: SeedOptions = seedOptions(), summary: SeedSummary = emptySummary()) {
+  const storage = await getStorage();
   for (const spec of allPageSpecs()) {
     await seedPage(page(spec), options, summary);
   }
@@ -4123,6 +4199,7 @@ async function seedMenu(
   options: SeedOptions,
   summary: SeedSummary,
 ) {
+  const storage = await getStorage();
   const existing = await storage.cmsMenus.getByLocation(data.location);
   if (existing) {
     if (!options.resetMenus) {
@@ -4138,6 +4215,7 @@ async function seedMenu(
 }
 
 async function deleteMenuByLocation(location: StandardMenuLocation, summary: SeedSummary) {
+  const storage = await getStorage();
   const existing = await storage.cmsMenus.getByLocation(location);
   if (existing) {
     await storage.cmsMenus.delete(existing.id);
@@ -4189,6 +4267,7 @@ export async function seedMenus(options: SeedOptions = seedOptions(), summary: S
 }
 
 export async function seedSettings(options: SeedOptions = seedOptions(), summary: SeedSummary = emptySummary()) {
+  const storage = await getStorage();
   const seoSettings = {
     siteName: BRAND_NAME,
     titleSuffix: ` | ${BRAND_NAME}`,
@@ -4265,6 +4344,11 @@ export async function seedEcPaintingPublicSite(options: SeedOptions = seedOption
 }
 
 async function main() {
+  if (isHelpRequest()) {
+    printSeedHelp();
+    return;
+  }
+
   const options = parseSeedOptions();
   const summary = await seedEcPaintingPublicSite(options);
   console.log(
@@ -4287,6 +4371,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       process.exitCode = 1;
     })
     .finally(async () => {
-      await pool.end();
+      if (!isHelpRequest()) {
+        await closePool();
+      }
     });
 }

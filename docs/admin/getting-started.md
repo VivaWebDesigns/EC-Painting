@@ -8,6 +8,7 @@ This documentation area is the operating manual for the 593 EC Painting admin. I
 2. Review the media library guide before replacing images or documents.
 3. Review the forms guide before publishing, sharing, or embedding managed forms.
 4. Review the integrations and backups guides before changing infrastructure or credentials.
+5. Review the public site seeding guide before running any CMS seed or reset command.
 
 ## Admin Workflow Principles
 
@@ -34,3 +35,7 @@ Settings under Admin control system integrations such as Cloudflare R2 and Mailg
 ### Recovery
 
 Backups, deployment notes, and operational runbooks are included in this documentation library and should be reviewed before major changes.
+
+### Public Site Seeding
+
+The public-site seed script is create-only by default and preserves CMS/admin edits. Its reset flags can overwrite live CMS pages, menus, SEO, robots.txt, and branding settings, so review the seeding guide before using them.
