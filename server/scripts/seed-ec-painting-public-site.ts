@@ -40,6 +40,205 @@ const SERVICE_AREA_CITIES = [
   "Rock Hill, SC",
 ];
 
+export type SeedOptions = {
+  updatePages: boolean;
+  resetProtectedPageFields: Set<string>;
+  resetMenus: boolean;
+  resetSeo: boolean;
+  resetBranding: boolean;
+  deleteObsoletePages: boolean;
+};
+
+type SeedSummary = {
+  pages: { created: number; updated: number; skipped: number; deleted: number };
+  menus: { created: number; updated: number; skipped: number; deleted: number };
+  seo: { created: number; updated: number; skipped: number };
+  branding: { created: number; updated: number; skipped: number };
+};
+
+const DEFAULT_SEED_OPTIONS: SeedOptions = {
+  updatePages: false,
+  resetProtectedPageFields: new Set(),
+  resetMenus: false,
+  resetSeo: false,
+  resetBranding: false,
+  deleteObsoletePages: false,
+};
+
+const PAGE_LEVEL_PROTECTED_FIELDS = new Set([
+  "status",
+  "seoTitle",
+  "seoDescription",
+  "seoKeywords",
+  "ogImageUrl",
+  "canonicalUrl",
+  "noindex",
+  "publishedAt",
+  "scheduledAt",
+  "createdBy",
+  "updatedBy",
+  "sidebarId",
+]);
+
+export function seedOptions(overrides: Partial<SeedOptions> = {}): SeedOptions {
+  return {
+    ...DEFAULT_SEED_OPTIONS,
+    ...overrides,
+    resetProtectedPageFields: new Set(overrides.resetProtectedPageFields ?? []),
+  };
+}
+
+function parseSeedOptions(argv = process.argv.slice(2)): SeedOptions {
+  const options = seedOptions();
+
+  for (const arg of argv) {
+    if (arg === "--update-existing" || arg === "--update-pages") {
+      options.updatePages = true;
+      continue;
+    }
+    if (arg === "--reset-menus") {
+      options.resetMenus = true;
+      continue;
+    }
+    if (arg === "--reset-seo") {
+      options.resetSeo = true;
+      continue;
+    }
+    if (arg === "--reset-branding") {
+      options.resetBranding = true;
+      continue;
+    }
+    if (arg === "--delete-obsolete") {
+      options.deleteObsoletePages = true;
+      continue;
+    }
+    if (arg.startsWith("--reset-page-field=")) {
+      options.updatePages = true;
+      options.resetProtectedPageFields.add(arg.slice("--reset-page-field=".length));
+      continue;
+    }
+    if (arg === "--force") {
+      options.updatePages = true;
+      options.resetMenus = true;
+      options.resetSeo = true;
+      options.resetBranding = true;
+      options.deleteObsoletePages = true;
+      options.resetProtectedPageFields = new Set(PAGE_LEVEL_PROTECTED_FIELDS);
+    }
+  }
+
+  return options;
+}
+
+function isAllowedProtectedField(path: string[], options: SeedOptions) {
+  const key = path[path.length - 1] ?? "";
+  const dotPath = path.join(".");
+  return options.resetProtectedPageFields.has(key) || options.resetProtectedPageFields.has(dotPath);
+}
+
+function isProtectedContentKey(key: string) {
+  const normalized = key.toLowerCase();
+  return (
+    normalized.includes("image") ||
+    normalized.includes("focal") ||
+    normalized.includes("crop") ||
+    normalized.includes("caption") ||
+    normalized === "alt" ||
+    normalized.endsWith("alt") ||
+    normalized.includes("positionx") ||
+    normalized.includes("positiony")
+  );
+}
+
+function preserveProtectedContentFields(
+  seededValue: unknown,
+  existingValue: unknown,
+  options: SeedOptions,
+  path: string[] = [],
+): unknown {
+  const key = path[path.length - 1] ?? "";
+  if (
+    existingValue !== undefined &&
+    key &&
+    isProtectedContentKey(key) &&
+    !isAllowedProtectedField(path, options)
+  ) {
+    return existingValue;
+  }
+
+  if (Array.isArray(seededValue)) {
+    if (!Array.isArray(existingValue)) return seededValue;
+    return seededValue.map((entry, index) =>
+      preserveProtectedContentFields(entry, existingValue[index], options, [...path, String(index)]),
+    );
+  }
+
+  if (
+    seededValue &&
+    typeof seededValue === "object" &&
+    !Array.isArray(seededValue) &&
+    existingValue &&
+    typeof existingValue === "object" &&
+    !Array.isArray(existingValue)
+  ) {
+    const next: Record<string, unknown> = { ...(seededValue as Record<string, unknown>) };
+    const existingRecord = existingValue as Record<string, unknown>;
+    for (const childKey of Object.keys(next)) {
+      next[childKey] = preserveProtectedContentFields(
+        next[childKey],
+        existingRecord[childKey],
+        options,
+        [...path, childKey],
+      );
+    }
+    for (const childKey of Object.keys(existingRecord)) {
+      if (
+        !(childKey in next) &&
+        isProtectedContentKey(childKey) &&
+        !isAllowedProtectedField([...path, childKey], options)
+      ) {
+        next[childKey] = existingRecord[childKey];
+      }
+    }
+    return next;
+  }
+
+  return seededValue;
+}
+
+function mergeSeedPageWithExisting(
+  seededPage: InsertCmsPage,
+  existingPage: InsertCmsPage,
+  options: SeedOptions,
+): InsertCmsPage {
+  const next: Record<string, unknown> = { ...seededPage };
+  const existingRecord = existingPage as Record<string, unknown>;
+
+  for (const field of PAGE_LEVEL_PROTECTED_FIELDS) {
+    if (field in existingRecord && !options.resetProtectedPageFields.has(field)) {
+      next[field] = existingRecord[field];
+    }
+  }
+
+  next.content = preserveProtectedContentFields(
+    seededPage.content,
+    existingPage.content,
+    options,
+    ["content"],
+  );
+
+  return next as InsertCmsPage;
+}
+
+function emptySummary(): SeedSummary {
+  return {
+    pages: { created: 0, updated: 0, skipped: 0, deleted: 0 },
+    menus: { created: 0, updated: 0, skipped: 0, deleted: 0 },
+    seo: { created: 0, updated: 0, skipped: 0 },
+    branding: { created: 0, updated: 0, skipped: 0 },
+  };
+}
+
 function id() {
   return randomUUID();
 }
@@ -3852,13 +4051,22 @@ export function allPageSpecs(): PageSpec[] {
   ];
 }
 
-async function upsertPage(data: InsertCmsPage) {
+async function seedPage(data: InsertCmsPage, options: SeedOptions, summary: SeedSummary) {
   const existing = await storage.cmsPages.getPageBySlug(data.slug);
   if (existing) {
-    await storage.cmsPages.updatePage(existing.id, data);
+    if (!options.updatePages) {
+      summary.pages.skipped += 1;
+      return;
+    }
+    await storage.cmsPages.updatePage(
+      existing.id,
+      mergeSeedPageWithExisting(data, existing as unknown as InsertCmsPage, options),
+    );
+    summary.pages.updated += 1;
     return;
   }
   await storage.cmsPages.createPage(data);
+  summary.pages.created += 1;
 }
 
 export function page(spec: PageSpec): InsertCmsPage {
@@ -3883,42 +4091,63 @@ export function page(spec: PageSpec): InsertCmsPage {
   };
 }
 
-async function seedPages() {
+export async function seedPages(options: SeedOptions = seedOptions(), summary: SeedSummary = emptySummary()) {
   for (const spec of allPageSpecs()) {
-    await upsertPage(page(spec));
+    await seedPage(page(spec), options, summary);
   }
-  const obsoleteSlugs = [
-    "commercial-painting",
-    "kitchen-cabinet-painting",
-    "join",
-    "events",
-    "recordings",
-    "insights",
-    "directory",
-  ];
-  for (const slug of obsoleteSlugs) {
-    const obsoletePage = await storage.cmsPages.getPageBySlug(slug);
-    if (obsoletePage) await storage.cmsPages.deletePage(obsoletePage.id);
+
+  if (options.deleteObsoletePages) {
+    const obsoleteSlugs = [
+      "commercial-painting",
+      "kitchen-cabinet-painting",
+      "join",
+      "events",
+      "recordings",
+      "insights",
+      "directory",
+    ];
+    for (const slug of obsoleteSlugs) {
+      const obsoletePage = await storage.cmsPages.getPageBySlug(slug);
+      if (obsoletePage) {
+        await storage.cmsPages.deletePage(obsoletePage.id);
+        summary.pages.deleted += 1;
+      }
+    }
   }
+
+  return summary;
 }
 
-async function upsertMenu(data: InsertCmsMenu & { location: StandardMenuLocation }) {
+async function seedMenu(
+  data: InsertCmsMenu & { location: StandardMenuLocation },
+  options: SeedOptions,
+  summary: SeedSummary,
+) {
   const existing = await storage.cmsMenus.getByLocation(data.location);
   if (existing) {
+    if (!options.resetMenus) {
+      summary.menus.skipped += 1;
+      return;
+    }
     await storage.cmsMenus.update(existing.id, data);
+    summary.menus.updated += 1;
     return;
   }
   await storage.cmsMenus.create(data);
+  summary.menus.created += 1;
 }
 
-async function deleteMenuByLocation(location: StandardMenuLocation) {
+async function deleteMenuByLocation(location: StandardMenuLocation, summary: SeedSummary) {
   const existing = await storage.cmsMenus.getByLocation(location);
-  if (existing) await storage.cmsMenus.delete(existing.id);
+  if (existing) {
+    await storage.cmsMenus.delete(existing.id);
+    summary.menus.deleted += 1;
+  }
 }
 
-async function seedMenus() {
+export async function seedMenus(options: SeedOptions = seedOptions(), summary: SeedSummary = emptySummary()) {
   const serviceItems = services.map((service) => item(service.navTitle, service.path));
-  await upsertMenu({
+  await seedMenu({
     name: "Main Navigation",
     location: "main_navigation",
     items: [
@@ -3929,9 +4158,9 @@ async function seedMenus() {
       item("Reviews", pageUrl("/reviews")),
       item("Contact", pageUrl("/contact")),
     ],
-  });
-  await upsertMenu({ name: "Services", location: "footer_platform", items: serviceItems });
-  await upsertMenu({
+  }, options, summary);
+  await seedMenu({ name: "Services", location: "footer_platform", items: serviceItems }, options, summary);
+  await seedMenu({
     name: "Company",
     location: "footer_professionals",
     items: [
@@ -3940,10 +4169,12 @@ async function seedMenus() {
       item("Reviews", pageUrl("/reviews")),
       item("Contact", pageUrl("/contact")),
     ],
-  });
-  await deleteMenuByLocation("footer_resources");
-  await deleteMenuByLocation("footer_company");
-  await upsertMenu({
+  }, options, summary);
+  if (options.resetMenus) {
+    await deleteMenuByLocation("footer_resources", summary);
+    await deleteMenuByLocation("footer_company", summary);
+  }
+  await seedMenu({
     name: "Legal",
     location: "footer_legal",
     items: [
@@ -3952,11 +4183,13 @@ async function seedMenus() {
       item("Disclaimer", pageUrl("/disclaimer")),
       item("Sitemap", pageUrl("/sitemap")),
     ],
-  });
+  }, options, summary);
+
+  return summary;
 }
 
-async function seedSettings() {
-  await storage.seoSettings.upsert({
+export async function seedSettings(options: SeedOptions = seedOptions(), summary: SeedSummary = emptySummary()) {
+  const seoSettings = {
     siteName: BRAND_NAME,
     titleSuffix: ` | ${BRAND_NAME}`,
     defaultMetaDescription:
@@ -3969,7 +4202,18 @@ async function seedSettings() {
     instagramUrl: INSTAGRAM_URL,
     defaultRobotsNoindex: false,
     customRobotsTxt: `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
-  });
+  };
+
+  const existingSeo = await storage.seoSettings.get();
+  if (!existingSeo) {
+    await storage.seoSettings.upsert(seoSettings);
+    summary.seo.created += 1;
+  } else if (options.resetSeo) {
+    await storage.seoSettings.upsert(seoSettings);
+    summary.seo.updated += 1;
+  } else {
+    summary.seo.skipped += 1;
+  }
 
   const branding: Array<[string, string]> = [
     ["company_name", BRAND_NAME],
@@ -3994,16 +4238,46 @@ async function seedSettings() {
     ["text_secondary_foreground_color", "#0F172A"],
     ["text_tertiary_foreground_color", "#FFFFFF"],
   ];
-  for (const [key, value] of branding)
-    await storage.settings.upsertSetting(key, value, "branding", false);
+  for (const [key, value] of branding) {
+    const existing = await storage.settings.getSetting(key);
+    if (existing === null || existing === undefined) {
+      await storage.settings.upsertSetting(key, value, "branding", false);
+      summary.branding.created += 1;
+      continue;
+    }
+    if (options.resetBranding) {
+      await storage.settings.upsertSetting(key, value, "branding", false);
+      summary.branding.updated += 1;
+      continue;
+    }
+    summary.branding.skipped += 1;
+  }
 
+  return summary;
+}
+
+export async function seedEcPaintingPublicSite(options: SeedOptions = seedOptions()) {
+  const summary = emptySummary();
+  await seedPages(options, summary);
+  await seedMenus(options, summary);
+  await seedSettings(options, summary);
+  return summary;
 }
 
 async function main() {
-  await seedPages();
-  await seedMenus();
-  await seedSettings();
-  console.log("Seeded 593 EC Painting public CMS pages, menus, branding, and SEO settings.");
+  const options = parseSeedOptions();
+  const summary = await seedEcPaintingPublicSite(options);
+  console.log(
+    JSON.stringify(
+      {
+        message: "Seeded 593 EC Painting public CMS pages, menus, branding, and SEO settings.",
+        mode: options,
+        summary,
+      },
+      null,
+      2,
+    ),
+  );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
