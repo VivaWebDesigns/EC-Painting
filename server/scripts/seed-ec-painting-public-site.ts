@@ -3336,6 +3336,13 @@ function serviceDetailContent(service: (typeof services)[number]) {
     ? galleryImageGroups[serviceData.galleryCategory]
     : undefined;
   return {
+    metadata: {
+      breadcrumbParent: { name: "Services", url: `${SITE_URL}/services/` },
+      serviceSchema: {
+        serviceType: service.navTitle,
+        areaServed: SERVICE_AREA_CITIES,
+      },
+    },
     blocks: [
       hero({
         headline: service.heroTitle,

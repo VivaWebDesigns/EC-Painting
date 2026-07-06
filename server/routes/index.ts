@@ -13,6 +13,7 @@ import setupRoutes from "./setup.routes";
 import formsRoutes from "./forms.routes";
 import { buildRobotsTxtPayload } from "../services/robots-txt.service";
 import { storage } from "../storage/index";
+import { paramString } from "../utils/params";
 
 function escapeXml(str: string): string {
   return str
@@ -22,6 +23,20 @@ function escapeXml(str: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 }
+
+const LEGACY_SERVICE_PATH_REDIRECTS: Record<string, string> = {
+  "interior-painting": "/interior-painting/",
+  "exterior-painting": "/exterior-painting/",
+  "cabinet-painting": "/cabinet-painting/",
+  "kitchen-cabinet-painting": "/cabinet-painting/",
+  "deck-staining": "/deck-staining/",
+  "fence-staining": "/fence-staining/",
+  "popcorn-ceiling-removal": "/popcorn-ceiling-removal/",
+  "drywall-repair": "/drywall-repair/",
+  "wallpaper-removal": "/wallpaper-removal/",
+  "pressure-washing": "/pressure-washing/",
+  "hardie-plank-painting": "/hardie-plank-painting/",
+};
 
 export function registerApiRoutes(app: Express) {
   app.use("/r2", r2PublicRoutes);
@@ -107,6 +122,15 @@ export function registerApiRoutes(app: Express) {
   app.get("/api/seo/global", async (_req, res) => {
     const settings = await storage.seoSettings.get();
     res.json(settings ?? {});
+  });
+
+  app.get("/services/:slug", (req, res, next) => {
+    const targetPath = LEGACY_SERVICE_PATH_REDIRECTS[paramString(req.params.slug)];
+    if (!targetPath) return next();
+
+    const queryIndex = req.originalUrl.indexOf("?");
+    const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : "";
+    return res.redirect(301, `${targetPath}${query}`);
   });
 
   app.get("/robots.txt", async (_req, res) => {

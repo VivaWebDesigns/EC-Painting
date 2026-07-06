@@ -161,4 +161,18 @@ describe("seed-ec-painting-public-site", () => {
     expect(heroBlock.props.imageCaption).toBe("Admin hero caption");
     expect(heroBlock.props.mobileImageUrl).toBe("/uploads/cms/admin-mobile.webp");
   });
+
+  it("seeds Service schema metadata for core service pages", async () => {
+    const { allPageSpecs } = await import("../scripts/seed-ec-painting-public-site");
+
+    const interior = allPageSpecs().find((page) => page.slug === "interior-painting");
+
+    expect(interior?.content.metadata).toMatchObject({
+      breadcrumbParent: { name: "Services", url: "https://ecpaintingcharlotte.com/services/" },
+      serviceSchema: {
+        serviceType: "Interior Painting",
+        areaServed: expect.arrayContaining(["Charlotte, NC", "Fort Mill, SC"]),
+      },
+    });
+  });
 });

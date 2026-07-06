@@ -115,6 +115,60 @@ describe("public-prerender.service", () => {
     expect(snapshot?.title).toBe("Painting Services in Charlotte, NC | 593 EC Painting");
   });
 
+  it("includes crawlable internal links in the prerendered body", async () => {
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Services",
+      slug: "services",
+      canonicalUrl: "https://ecpaintingcharlotte.com/services/",
+      content: {
+        blocks: [
+          {
+            id: "cards-services",
+            type: "cards-grid",
+            props: {
+              title: "Painting Services",
+              cards: [
+                {
+                  title: "Interior Painting",
+                  description: "Walls, ceilings, trim, and full home repaints.",
+                  link: "/interior-painting/",
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/services/");
+
+    expect(snapshot?.bodyHtml).toContain('<nav class="seo-prerender-links"');
+    expect(snapshot?.bodyHtml).toContain('<a href="/services/">Services</a>');
+    expect(snapshot?.bodyHtml).toContain('<a href="/interior-painting/">Interior Painting</a>');
+  });
+
+  it("adds Service schema for known core service pages without CMS metadata", async () => {
+    mockGetPageBySlug.mockResolvedValue({
+      ...cmsPage,
+      title: "Interior Painting",
+      slug: "interior-painting",
+      canonicalUrl: "https://ecpaintingcharlotte.com/interior-painting/",
+      content: { blocks: [] },
+    });
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/interior-painting/");
+    const serviceSchema = snapshot?.jsonLd?.find((schema) => schema["@type"] === "Service");
+
+    expect(serviceSchema).toMatchObject({
+      serviceType: "Interior Painting",
+      url: "https://ecpaintingcharlotte.com/interior-painting/",
+      provider: { "@id": "https://ecpaintingcharlotte.com/#business" },
+    });
+  });
+
   it("normalizes legacy app hostnames in CMS breadcrumb schema URLs", async () => {
     mockGetPageBySlug.mockResolvedValue({
       ...cmsPage,

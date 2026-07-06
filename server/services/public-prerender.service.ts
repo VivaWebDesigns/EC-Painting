@@ -51,6 +51,26 @@ const BUSINESS_SERVICES = [
   "Popcorn Ceiling Removal",
   "Wallpaper Removal",
 ];
+const CORE_SERVICE_TYPES_BY_SLUG: Record<string, string> = {
+  "interior-painting": "Interior Painting",
+  "exterior-painting": "Exterior Painting",
+  "cabinet-painting": "Cabinet Painting",
+  "deck-staining": "Deck Staining",
+  "fence-staining": "Fence Staining",
+  "popcorn-ceiling-removal": "Popcorn Ceiling Removal",
+  "drywall-repair": "Drywall Repair",
+  "wallpaper-removal": "Wallpaper Removal",
+  "pressure-washing": "Pressure Washing",
+  "hardie-plank-painting": "Hardie Plank Painting",
+};
+const SITEWIDE_INTERNAL_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services/" },
+  { label: "About", href: "/about/" },
+  { label: "Gallery", href: "/gallery/" },
+  { label: "Reviews", href: "/reviews/" },
+  { label: "Contact", href: "/contact/" },
+];
 
 const RETIRED_PUBLIC_PREFIXES = ["/insights", "/events", "/recordings", "/directory"];
 const RETIRED_PUBLIC_PATHS = new Set(["/join"]);
@@ -244,6 +264,99 @@ function uniqueFragments(fragments: string[]) {
   });
 }
 
+function getShortText(value: unknown) {
+  return typeof value === "string" ? stripHtml(value).trim() : "";
+}
+
+function labelFromPath(path: string) {
+  if (path === "/") return "Home";
+  const slug = path.replace(/^\/+|\/+$/g, "").split("/").pop() || path;
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function normalizeInternalHref(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed || !trimmed.startsWith("/") || trimmed.startsWith("//")) return null;
+  if (trimmed.startsWith("/api/") || trimmed.startsWith("/admin/") || trimmed.startsWith("/auth/")) {
+    return null;
+  }
+  return trimmed === "/" ? "/" : `${trimmed.replace(/\/$/, "")}/`;
+}
+
+function collectInternalLinks(value: unknown, inheritedLabel = ""): Array<{ label: string; href: string }> {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value.flatMap((entry) => collectInternalLinks(entry, inheritedLabel));
+  }
+  if (typeof value !== "object") return [];
+
+  const record = value as Record<string, unknown>;
+  const localLabel =
+    getShortText(record.title) ||
+    getShortText(record.label) ||
+    getShortText(record.name) ||
+    getShortText(record.heading) ||
+    getShortText(record.headline) ||
+    inheritedLabel;
+  const links: Array<{ label: string; href: string }> = [];
+
+  for (const [key, entry] of Object.entries(record)) {
+    const normalizedKey = key.toLowerCase();
+    if (
+      typeof entry === "string" &&
+      [
+        "href",
+        "link",
+        "url",
+        "ctalink",
+        "ctasecondarylink",
+        "primarylink",
+        "secondarylink",
+      ].includes(normalizedKey)
+    ) {
+      const href = normalizeInternalHref(entry);
+      if (href) links.push({ label: localLabel || labelFromPath(href), href });
+    }
+
+    links.push(...collectInternalLinks(entry, localLabel));
+  }
+
+  return links;
+}
+
+function uniqueInternalLinks(links: Array<{ label: string; href: string }>) {
+  const seen = new Set<string>();
+  return links.filter((link) => {
+    if (seen.has(link.href)) return false;
+    seen.add(link.href);
+    return true;
+  });
+}
+
+function buildPrerenderInternalLinks(pageContent: unknown) {
+  const links = uniqueInternalLinks([
+    ...SITEWIDE_INTERNAL_LINKS,
+    ...collectInternalLinks(pageContent),
+  ]).slice(0, 24);
+
+  if (links.length === 0) return "";
+
+  return [
+    `<nav class="seo-prerender-links" aria-label="Internal links">`,
+    `<ul>`,
+    ...links.map(
+      (link) =>
+        `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label || labelFromPath(link.href))}</a></li>`,
+    ),
+    `</ul>`,
+    `</nav>`,
+  ].join("");
+}
+
 function getPrimaryCmsHeading(value: unknown) {
   if (!value || typeof value !== "object") return "";
   const content = value as { blocks?: Array<{ type?: unknown; props?: Record<string, unknown> }> };
@@ -407,9 +520,14 @@ function buildServiceSchema(
   siteUrl: string,
 ) {
   const serviceSchema = metadata.serviceSchema;
-  if (!serviceSchema || typeof serviceSchema !== "object") return null;
-  const schema = serviceSchema as { serviceType?: unknown; areaServed?: unknown };
-  if (typeof schema.serviceType !== "string") return null;
+  const schema =
+    serviceSchema && typeof serviceSchema === "object"
+      ? (serviceSchema as { serviceType?: unknown; areaServed?: unknown })
+      : {
+          serviceType: CORE_SERVICE_TYPES_BY_SLUG[page.slug],
+          areaServed: BUSINESS_SERVICE_AREAS.map(([name, region]) => `${name}, ${region}`),
+        };
+  if (typeof schema.serviceType !== "string" || !schema.serviceType) return null;
   const areaServed = Array.isArray(schema.areaServed)
     ? schema.areaServed.filter((city): city is string => typeof city === "string")
     : [];
@@ -507,7 +625,12 @@ function buildFaqPageSchema(pageContent: unknown) {
   };
 }
 
-function buildSimplePageBody(title: string, description: string, fragments: string[] = []) {
+function buildSimplePageBody(
+  title: string,
+  description: string,
+  fragments: string[] = [],
+  linksHtml = "",
+) {
   const paragraphs = uniqueFragments([description, ...fragments])
     .filter((fragment) => fragment && fragment.toLowerCase() !== title.trim().toLowerCase())
     .slice(0, 8);
@@ -517,6 +640,7 @@ function buildSimplePageBody(title: string, description: string, fragments: stri
     `<article>`,
     `<h1>${escapeHtml(title)}</h1>`,
     ...paragraphs.map((paragraph) => `<p>${escapeHtml(truncate(paragraph, 340))}</p>`),
+    linksHtml,
     `</article>`,
     `</main>`,
   ].join("");
@@ -534,6 +658,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     getPrimaryCmsHeading(page.content) || page.title,
     description,
     uniqueFragments(collectTextFragments(page.content)),
+    buildPrerenderInternalLinks(page.content),
   );
 
   const breadcrumbParent =
@@ -592,7 +717,12 @@ function buildFallbackSnapshot(
     canonicalUrl: canonicalForPath(siteUrl, pathname),
     ogImageUrl: absoluteUrl(seo?.defaultOgImageUrl || null, siteUrl) || null,
     robots: fallback.noindex ? "noindex,nofollow" : null,
-    bodyHtml: buildSimplePageBody(fallback.title, fallback.body),
+    bodyHtml: buildSimplePageBody(
+      fallback.title,
+      fallback.body,
+      [],
+      buildPrerenderInternalLinks(null),
+    ),
     jsonLd: [buildOrganizationSchema(seo, siteUrl), buildWebsiteSchema(seo, siteUrl)].filter(
       Boolean,
     ) as Array<Record<string, unknown>>,
