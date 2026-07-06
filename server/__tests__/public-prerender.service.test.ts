@@ -161,11 +161,19 @@ describe("public-prerender.service", () => {
 
     const snapshot = await getPublicHtmlSnapshot("/interior-painting/");
     const serviceSchema = snapshot?.jsonLd?.find((schema) => schema["@type"] === "Service");
+    const breadcrumb = snapshot?.jsonLd?.find((schema) => schema["@type"] === "BreadcrumbList");
 
     expect(serviceSchema).toMatchObject({
       serviceType: "Interior Painting",
       url: "https://ecpaintingcharlotte.com/interior-painting/",
       provider: { "@id": "https://ecpaintingcharlotte.com/#business" },
+    });
+    expect(breadcrumb).toMatchObject({
+      itemListElement: [
+        { name: "Home", item: "https://ecpaintingcharlotte.com/" },
+        { name: "Services", item: "https://ecpaintingcharlotte.com/services/" },
+        { name: "Interior Painting", item: "https://ecpaintingcharlotte.com/interior-painting/" },
+      ],
     });
   });
 

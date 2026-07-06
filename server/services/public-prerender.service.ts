@@ -663,17 +663,27 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
     metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
       ? (metadata.breadcrumbParent as { name?: unknown; url?: unknown })
       : null;
+  const inferredBreadcrumbParent = CORE_SERVICE_TYPES_BY_SLUG[page.slug]
+    ? { name: "Services", url: canonicalForPath(siteUrl, "/services") }
+    : null;
+  const resolvedBreadcrumbParent =
+    breadcrumbParent &&
+    typeof breadcrumbParent.name === "string" &&
+    typeof breadcrumbParent.url === "string"
+      ? {
+          name: breadcrumbParent.name,
+          url: normalizeSiteUrl(breadcrumbParent.url, siteUrl),
+        }
+      : inferredBreadcrumbParent;
   const homeUrl = canonicalForPath(siteUrl, "/");
   const breadcrumbs =
     page.slug === "home"
       ? null
       : buildBreadcrumbSchema(
-          breadcrumbParent &&
-            typeof breadcrumbParent.name === "string" &&
-            typeof breadcrumbParent.url === "string"
+          resolvedBreadcrumbParent
             ? [
                 { name: "Home", url: homeUrl },
-                { name: breadcrumbParent.name, url: normalizeSiteUrl(breadcrumbParent.url, siteUrl) },
+                resolvedBreadcrumbParent,
                 { name: page.title, url: canonicalUrl },
               ]
             : [
