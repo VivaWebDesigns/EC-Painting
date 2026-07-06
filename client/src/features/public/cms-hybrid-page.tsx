@@ -26,6 +26,36 @@ interface CmsPageViewProps {
   previewLabel?: string;
 }
 
+const CORE_SERVICE_TYPES_BY_SLUG: Record<string, string> = {
+  "interior-painting": "Interior Painting",
+  "exterior-painting": "Exterior Painting",
+  "cabinet-painting": "Cabinet Painting",
+  "deck-staining": "Deck Staining",
+  "fence-staining": "Fence Staining",
+  "popcorn-ceiling-removal": "Popcorn Ceiling Removal",
+  "drywall-repair": "Drywall Repair",
+  "wallpaper-removal": "Wallpaper Removal",
+  "pressure-washing": "Pressure Washing",
+  "hardie-plank-painting": "Hardie Plank Painting",
+};
+const SERVICE_AREA_CITIES = [
+  "Charlotte, NC",
+  "Matthews, NC",
+  "Mint Hill, NC",
+  "Monroe, NC",
+  "Pineville, NC",
+  "Huntersville, NC",
+  "Cornelius, NC",
+  "Davidson, NC",
+  "Concord, NC",
+  "Waxhaw, NC",
+  "Indian Trail, NC",
+  "Stallings, NC",
+  "Fort Mill, SC",
+  "Indian Land, SC",
+  "Rock Hill, SC",
+];
+
 class CmsNotFoundError extends Error {
   constructor(slug: string) {
     super(`CMS page not found: ${slug}`);
@@ -204,16 +234,26 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
     metadata.breadcrumbParent && typeof metadata.breadcrumbParent === "object"
       ? (metadata.breadcrumbParent as { name?: unknown; url?: unknown })
       : null;
+  const inferredBreadcrumbParent = CORE_SERVICE_TYPES_BY_SLUG[page.slug]
+    ? { name: "Services", url: normalizeSiteUrl("/services/", origin) }
+    : null;
+  const resolvedBreadcrumbParent =
+    breadcrumbParent &&
+    typeof breadcrumbParent.name === "string" &&
+    typeof breadcrumbParent.url === "string"
+      ? {
+          name: breadcrumbParent.name,
+          url: normalizeSiteUrl(breadcrumbParent.url, origin),
+        }
+      : inferredBreadcrumbParent;
 
   const breadcrumbs = isHome
     ? null
     : buildBreadcrumbLd(
-        breadcrumbParent &&
-          typeof breadcrumbParent.name === "string" &&
-          typeof breadcrumbParent.url === "string"
+        resolvedBreadcrumbParent
           ? [
               { name: "Home", url: homeUrl },
-              { name: breadcrumbParent.name, url: normalizeSiteUrl(breadcrumbParent.url, origin) },
+              resolvedBreadcrumbParent,
               { name: page.title, url: pageUrl },
             ]
           : [
@@ -226,7 +266,10 @@ function CmsPageSeo({ page, globalSeo }: { page: CmsPage; globalSeo?: SeoSetting
   const serviceSchema =
     metadata.serviceSchema && typeof metadata.serviceSchema === "object"
       ? (metadata.serviceSchema as { serviceType?: unknown; areaServed?: unknown })
-      : null;
+      : {
+          serviceType: CORE_SERVICE_TYPES_BY_SLUG[page.slug],
+          areaServed: SERVICE_AREA_CITIES,
+        };
 
   return (
     <JsonLd
