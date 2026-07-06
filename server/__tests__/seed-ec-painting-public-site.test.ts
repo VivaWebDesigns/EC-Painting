@@ -175,4 +175,13 @@ describe("seed-ec-painting-public-site", () => {
       },
     });
   });
+
+  it("uses the current public domain in seeded legal and sitemap content", async () => {
+    const { allPageSpecs } = await import("../scripts/seed-ec-painting-public-site");
+
+    const seededContent = JSON.stringify(allPageSpecs());
+
+    expect(seededContent).toContain("ecpaintingcharlotte.com");
+    expect(seededContent).not.toContain("593ecpaintingllc.com");
+  });
 });

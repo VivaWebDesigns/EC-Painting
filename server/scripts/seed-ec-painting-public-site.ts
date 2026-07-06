@@ -3496,7 +3496,7 @@ function privacyContent() {
     [
       "Introduction",
       [
-        `${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us. This Privacy Policy explains what information we collect when you visit 593ecpaintingllc.com or request a painting quote, how we use it, who we share it with, and the choices you have.`,
+        `${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our") respects your privacy and is committed to protecting the personal information you share with us. This Privacy Policy explains what information we collect when you visit ecpaintingcharlotte.com or request a painting quote, how we use it, who we share it with, and the choices you have.`,
         "By using this website or submitting a quote request, you agree to the practices described in this policy. If you do not agree, please do not use the website or submit information through it.",
       ],
     ],
@@ -3574,7 +3574,7 @@ function termsContent() {
     [
       "Agreement to Terms",
       [
-        `These Terms of Service ("Terms") govern your use of the 593ecpaintingllc.com website (the "Website") operated by ${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our"), and any quotes, estimates, or painting services you request through this Website or directly from us.`,
+        `These Terms of Service ("Terms") govern your use of the ecpaintingcharlotte.com website (the "Website") operated by ${LEGAL_NAME} ("593 EC Painting," "we," "us," or "our"), and any quotes, estimates, or painting services you request through this Website or directly from us.`,
         "By using this Website or requesting a quote, you agree to be bound by these Terms. If you do not agree, please do not use the Website.",
       ],
     ],
@@ -3655,7 +3655,7 @@ function disclaimerContent() {
     [
       "General Disclaimer",
       [
-        'The information provided on 593ecpaintingllc.com (the "Website") is for general informational purposes only. While we make every effort to keep information accurate and up to date, 593 EC Painting LLC makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the Website or its content.',
+        'The information provided on ecpaintingcharlotte.com (the "Website") is for general informational purposes only. While we make every effort to keep information accurate and up to date, 593 EC Painting LLC makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the Website or its content.',
         "Any reliance you place on Website information is strictly at your own risk.",
       ],
     ],
@@ -3852,7 +3852,7 @@ function sitemapContent() {
       block("section-header", {
         eyebrow: "",
         title: "Sitemap",
-        subtitle: "A complete index of every page on 593ecpaintingllc.com.",
+        subtitle: "A complete index of every page on ecpaintingcharlotte.com.",
         alignment: "center",
         headingLevel: "h1",
       }),
