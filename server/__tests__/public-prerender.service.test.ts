@@ -269,6 +269,8 @@ describe("public-prerender.service", () => {
     expect(html).toContain('"HousePainter"');
     expect(html).toContain('"priceRange":"$$"');
     expect(html).toContain('"ratingValue":"5.0"');
+    expect(html).toContain('"areaServed":[{"@type":"City","name":"Charlotte, NC"}');
+    expect(html).not.toContain('"addressRegion":"NC","addressCountry":"US"');
   });
 
   it("does not prerender retired inherited public surfaces", async () => {

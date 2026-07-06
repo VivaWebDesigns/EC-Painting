@@ -468,9 +468,7 @@ function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
     },
     areaServed: BUSINESS_SERVICE_AREAS.map(([name, region]) => ({
       "@type": "City",
-      name,
-      addressRegion: region,
-      addressCountry: "US",
+      name: `${name}, ${region}`,
     })),
     openingHoursSpecification: [
       "Monday",
