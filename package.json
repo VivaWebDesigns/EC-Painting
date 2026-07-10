@@ -15,7 +15,11 @@
     "git:ensure-clean": "test -z \"$(git status --porcelain)\"",
     "lint": "eslint client/src server shared",
     "format": "prettier --check client/src server shared",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:browser:install": "playwright install chromium firefox webkit",
+    "test:browser": "playwright test",
+    "test:browser:headed": "playwright test --headed",
+    "test:browser:ui": "playwright test --ui"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1004.0",
@@ -118,6 +122,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.61.1",
     "@replit/vite-plugin-cartographer": "^0.4.4",
     "@replit/vite-plugin-dev-banner": "^0.1.1",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
