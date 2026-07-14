@@ -172,7 +172,7 @@ export default function AboutPage() {
               variant="outline"
               className="min-h-12 border-white/20 bg-white/5 px-7 text-white hover:bg-white hover:text-slate-950"
             >
-              <a href="tel:+17743297109">Call (774) 329-7109</a>
+              <a href="tel:+17042771972">Call (704) 277-1972</a>
             </Button>
           </div>
         </div>

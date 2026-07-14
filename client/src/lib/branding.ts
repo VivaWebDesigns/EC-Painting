@@ -69,7 +69,7 @@ export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
   faviconUrl: "/favicon.ico",
   companyName: "593 EC Painting",
   companyAddress: "7007 Berolina Ln, Charlotte, NC 28226",
-  companyPhoneNumbers: "(774) 329-7109",
+  companyPhoneNumbers: "(704) 277-1972",
   companyGoogleBusinessUrl: "https://share.google/u57kJ9pAzlWBYogu8",
   bodyFont: "inter",
   headingFont: "manrope",

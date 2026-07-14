@@ -14,8 +14,8 @@ interface PublicHtmlSnapshot {
 const DEFAULT_DESCRIPTION =
   "593 EC Painting provides residential interior painting, exterior painting, cabinet painting, deck staining, and fence staining in Charlotte, NC.";
 
-const BUSINESS_PHONE = "+17743297109";
-const BUSINESS_PHONE_DISPLAY = "(774) 329-7109";
+const BUSINESS_PHONE = "+17042771972";
+const BUSINESS_PHONE_DISPLAY = "(704) 277-1972";
 const BUSINESS_EMAIL = "ecpainting_593@outlook.com";
 const BUSINESS_STREET = "7007 Berolina Ln";
 const BUSINESS_CITY = "Charlotte";
@@ -98,7 +98,7 @@ const FALLBACK_STATIC_PAGES: Record<
     description:
       "Request a free painting quote from 593 EC Painting in Charlotte, NC.",
     body:
-      "Call or text (774) 329-7109, or request a free quote for your next interior, exterior, cabinet, deck, or fence project.",
+      "Call or text (704) 277-1972, or request a free quote for your next interior, exterior, cabinet, deck, or fence project.",
   },
   "/gallery": {
     title: "Painting Gallery",

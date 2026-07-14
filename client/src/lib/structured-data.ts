@@ -3,7 +3,7 @@ import { stripHtml } from "@/lib/html";
 
 export type JsonLdObject = Record<string, unknown>;
 
-const BUSINESS_PHONE = "+17743297109";
+const BUSINESS_PHONE = "+17042771972";
 const BUSINESS_EMAIL = "ecpainting_593@outlook.com";
 const BUSINESS_DESCRIPTION =
   "Family-owned house painters serving Charlotte, NC with interior painting, exterior painting, cabinet painting, deck staining, fence staining, drywall repair, pressure washing, and related residential painting services.";

@@ -218,7 +218,7 @@ export function Footer() {
   const brandName = companyName?.trim() || "593 EC Painting";
   const legalName = brandName.toLowerCase().includes("llc") ? brandName : `${brandName} LLC`;
   const address = companyAddress?.trim() || "7007 Berolina Ln, Charlotte, NC 28226";
-  const phoneDisplay = companyPhoneNumbers?.split(",")[0]?.trim() || "(774) 329-7109";
+  const phoneDisplay = companyPhoneNumbers?.split(",")[0]?.trim() || "(704) 277-1972";
   const phoneHref = `tel:${phoneDisplay.replace(/[^\d+]/g, "")}`;
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const footerLogo = versionBrandAssetUrl("/img/593-ec-painting-logo-footer.png");
