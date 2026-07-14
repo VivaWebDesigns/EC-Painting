@@ -83,6 +83,23 @@ describe("public-prerender.service", () => {
     expect(snapshot?.canonicalUrl).toBe("https://ecpaintingcharlotte.com/painting-process/");
   });
 
+  it("uses the persisted branding phone in prerendered organization schema", async () => {
+    mockGetPageBySlug.mockResolvedValue(cmsPage);
+    mockGetSetting.mockImplementation(async (key: string) =>
+      key === "company_phone_numbers" ? "(980) 555-0100" : null,
+    );
+    const { getPublicHtmlSnapshot } = await import("../services/public-prerender.service");
+
+    const snapshot = await getPublicHtmlSnapshot("/painting-process");
+    const organization = snapshot?.jsonLd?.find((schema) =>
+      Array.isArray(schema["@type"])
+        ? (schema["@type"] as string[]).includes("LocalBusiness")
+        : schema["@type"] === "LocalBusiness",
+    );
+
+    expect(organization?.telephone).toBe("+19805550100");
+  });
+
   it("uses short breadcrumb labels and a trailing slash for the homepage item", async () => {
     mockGetPageBySlug.mockResolvedValue({
       ...cmsPage,

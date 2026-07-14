@@ -1,3 +1,5 @@
+import { DEFAULT_COMPANY_PHONE_NUMBERS } from "@shared/company-phone";
+
 export type PropType =
   | "text"
   | "textarea"
@@ -843,7 +845,7 @@ const BASE_BLOCK_REGISTRY: BlockDef[] = [
       title: "Get in Touch",
       items: [
         { icon: "MapPin", label: "Service Area", value: "Charlotte, NC and surrounding areas" },
-        { icon: "Phone", label: "Phone", value: "(704) 277-1972" },
+        { icon: "Phone", label: "Phone", value: DEFAULT_COMPANY_PHONE_NUMBERS },
       ],
     },
     propDefs: [

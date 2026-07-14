@@ -1,9 +1,9 @@
 import type { SeoSettings } from "@shared/schema";
 import { stripHtml } from "@/lib/html";
+import { companyPhoneE164 } from "@shared/company-phone";
 
 export type JsonLdObject = Record<string, unknown>;
 
-const BUSINESS_PHONE = "+17042771972";
 const BUSINESS_EMAIL = "ecpainting_593@outlook.com";
 const BUSINESS_DESCRIPTION =
   "Family-owned house painters serving Charlotte, NC with interior painting, exterior painting, cabinet painting, deck staining, fence staining, drywall repair, pressure washing, and related residential painting services.";
@@ -49,7 +49,10 @@ function absoluteUrl(path: string, base?: string | null): string {
   return `${origin}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
-export function buildOrganizationLd(globalSeo: SeoSettings): JsonLdObject | null {
+export function buildOrganizationLd(
+  globalSeo: SeoSettings,
+  companyPhoneNumbers?: string | null,
+): JsonLdObject | null {
   if (!globalSeo.organizationName && !globalSeo.siteName) return null;
 
   const name = globalSeo.organizationName || globalSeo.siteName || "593 EC Painting";
@@ -74,7 +77,7 @@ export function buildOrganizationLd(globalSeo: SeoSettings): JsonLdObject | null
     legalName: "593 EC Painting LLC",
     description: BUSINESS_DESCRIPTION,
     url: siteUrl ? `${siteUrl}/` : undefined,
-    telephone: BUSINESS_PHONE,
+    telephone: companyPhoneE164(companyPhoneNumbers),
     email: BUSINESS_EMAIL,
     priceRange: "$$",
     logo: {

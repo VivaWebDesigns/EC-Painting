@@ -4,8 +4,10 @@ import { Footer } from "@/components/layout/footer";
 import { JsonLd } from "@/components/shared/json-ld";
 import { buildOrganizationLd, buildWebSiteLd } from "@/lib/structured-data";
 import type { SeoSettings } from "@shared/schema";
+import { useBranding } from "@/components/shared/branding-provider";
 
 function SiteOrganizationJsonLd() {
+  const { companyPhoneNumbers } = useBranding();
   const { data: globalSeo } = useQuery<SeoSettings>({
     queryKey: ["/api/seo/global"],
     staleTime: 10 * 60 * 1000,
@@ -15,7 +17,7 @@ function SiteOrganizationJsonLd() {
 
   return (
     <JsonLd
-      schemas={[buildOrganizationLd(globalSeo), buildWebSiteLd(globalSeo)]}
+      schemas={[buildOrganizationLd(globalSeo, companyPhoneNumbers), buildWebSiteLd(globalSeo)]}
     />
   );
 }

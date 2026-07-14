@@ -5,6 +5,7 @@ import { SiFacebook, SiInstagram } from "react-icons/si";
 import { useBranding } from "@/components/shared/branding-provider";
 import { versionBrandAssetUrl } from "@/lib/branding";
 import type { CmsMenu, MenuItem, PublicMenuLocation } from "@shared/schema";
+import { companyPhoneHref, getPrimaryCompanyPhone } from "@shared/company-phone";
 
 const FACEBOOK_URL = "https://www.facebook.com/ec.painting.3/";
 const INSTAGRAM_URL = "https://www.instagram.com/593ecpainting/";
@@ -218,8 +219,8 @@ export function Footer() {
   const brandName = companyName?.trim() || "593 EC Painting";
   const legalName = brandName.toLowerCase().includes("llc") ? brandName : `${brandName} LLC`;
   const address = companyAddress?.trim() || "7007 Berolina Ln, Charlotte, NC 28226";
-  const phoneDisplay = companyPhoneNumbers?.split(",")[0]?.trim() || "(704) 277-1972";
-  const phoneHref = `tel:${phoneDisplay.replace(/[^\d+]/g, "")}`;
+  const phoneDisplay = getPrimaryCompanyPhone(companyPhoneNumbers);
+  const phoneHref = companyPhoneHref(companyPhoneNumbers);
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const footerLogo = versionBrandAssetUrl("/img/593-ec-painting-logo-footer.png");
 

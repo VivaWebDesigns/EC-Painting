@@ -9,6 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/page-layout";
 import { useSeo } from "@/hooks/use-seo";
+import { useBranding } from "@/components/shared/branding-provider";
+import { companyPhoneHref, getPrimaryCompanyPhone } from "@shared/company-phone";
 
 const ABOUT_IMAGE_URL = "/img/about-family.webp";
 
@@ -34,6 +36,9 @@ const serviceArea =
   "Charlotte, Matthews, Mint Hill, Monroe, Pineville, Huntersville, Cornelius, Davidson, Concord, Tega Cay, Waxhaw, Indian Trail, Stallings, Fort Mill, Indian Land, Rock Hill, and surrounding areas.";
 
 export default function AboutPage() {
+  const { companyPhoneNumbers } = useBranding();
+  const phoneDisplay = getPrimaryCompanyPhone(companyPhoneNumbers);
+  const phoneHref = companyPhoneHref(companyPhoneNumbers);
   useSeo({
     title: "About 593 EC Painting | Family-Owned Charlotte Painters",
     description:
@@ -172,7 +177,7 @@ export default function AboutPage() {
               variant="outline"
               className="min-h-12 border-white/20 bg-white/5 px-7 text-white hover:bg-white hover:text-slate-950"
             >
-              <a href="tel:+17042771972">Call (704) 277-1972</a>
+              <a href={phoneHref}>Call {phoneDisplay}</a>
             </Button>
           </div>
         </div>

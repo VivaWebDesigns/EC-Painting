@@ -1,4 +1,5 @@
 import type { CmsPage, SeoSettings } from "@shared/schema";
+import { companyPhoneE164, getPrimaryCompanyPhone } from "@shared/company-phone";
 import { storage } from "../storage";
 
 interface PublicHtmlSnapshot {
@@ -14,8 +15,6 @@ interface PublicHtmlSnapshot {
 const DEFAULT_DESCRIPTION =
   "593 EC Painting provides residential interior painting, exterior painting, cabinet painting, deck staining, and fence staining in Charlotte, NC.";
 
-const BUSINESS_PHONE = "+17042771972";
-const BUSINESS_PHONE_DISPLAY = "(704) 277-1972";
 const BUSINESS_EMAIL = "ecpainting_593@outlook.com";
 const BUSINESS_STREET = "7007 Berolina Ln";
 const BUSINESS_CITY = "Charlotte";
@@ -97,8 +96,7 @@ const FALLBACK_STATIC_PAGES: Record<
     title: "Contact 593 EC Painting",
     description:
       "Request a free painting quote from 593 EC Painting in Charlotte, NC.",
-    body:
-      "Call or text (704) 277-1972, or request a free quote for your next interior, exterior, cabinet, deck, or fence project.",
+    body: "Request a free quote for your next interior, exterior, cabinet, deck, or fence project.",
   },
   "/gallery": {
     title: "Painting Gallery",
@@ -430,7 +428,11 @@ function buildHeadTitle(rawTitle: string, seo?: SeoSettings | null) {
   return siteName && rawTitle.toLowerCase().includes(siteName.toLowerCase()) ? rawTitle : `${rawTitle}${suffix}`;
 }
 
-function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
+function buildOrganizationSchema(
+  seo: SeoSettings | null,
+  siteUrl: string,
+  companyPhoneNumbers?: string | null,
+) {
   if (!seo?.organizationName && !seo?.siteName) return null;
   const name = seo?.organizationName || seo?.siteName || "593 EC Painting";
   const logoUrl = absoluteUrl(seo?.organizationLogoUrl || "/img/593-ec-painting-logo-full-color.png", siteUrl);
@@ -450,7 +452,7 @@ function buildOrganizationSchema(seo: SeoSettings | null, siteUrl: string) {
     legalName: "593 EC Painting LLC",
     description: BUSINESS_DESCRIPTION,
     url: `${siteUrl}/`,
-    telephone: BUSINESS_PHONE,
+    telephone: companyPhoneE164(companyPhoneNumbers),
     email: BUSINESS_EMAIL,
     priceRange: "$$",
     logo: {
@@ -644,7 +646,12 @@ function buildSimplePageBody(
   ].join("");
 }
 
-function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: string): PublicHtmlSnapshot {
+function buildCmsSnapshot(
+  page: CmsPage,
+  seo: SeoSettings | null,
+  siteUrl: string,
+  companyPhoneNumbers?: string | null,
+): PublicHtmlSnapshot {
   const title = page.seoTitle || page.title || "Page";
   const description =
     page.seoDescription ||
@@ -702,7 +709,7 @@ function buildCmsSnapshot(page: CmsPage, seo: SeoSettings | null, siteUrl: strin
       : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
     bodyHtml,
     jsonLd: [
-      buildOrganizationSchema(seo, siteUrl),
+      buildOrganizationSchema(seo, siteUrl, companyPhoneNumbers),
       buildWebsiteSchema(seo, siteUrl),
       breadcrumbs,
       buildServiceSchema(page, metadata, canonicalUrl, description, siteUrl),
@@ -715,6 +722,7 @@ function buildFallbackSnapshot(
   pathname: string,
   seo: SeoSettings | null,
   siteUrl: string,
+  companyPhoneNumbers?: string | null,
 ): PublicHtmlSnapshot | null {
   const fallback = FALLBACK_STATIC_PAGES[pathname];
   if (!fallback) return null;
@@ -727,11 +735,16 @@ function buildFallbackSnapshot(
     robots: fallback.noindex ? "noindex,nofollow" : null,
     bodyHtml: buildSimplePageBody(
       fallback.title,
-      fallback.body,
+      pathname === "/contact"
+        ? `Call or text ${getPrimaryCompanyPhone(companyPhoneNumbers)}, or ${fallback.body.charAt(0).toLowerCase()}${fallback.body.slice(1)}`
+        : fallback.body,
       [],
       buildPrerenderInternalLinks(null),
     ),
-    jsonLd: [buildOrganizationSchema(seo, siteUrl), buildWebsiteSchema(seo, siteUrl)].filter(
+    jsonLd: [
+      buildOrganizationSchema(seo, siteUrl, companyPhoneNumbers),
+      buildWebsiteSchema(seo, siteUrl),
+    ].filter(
       Boolean,
     ) as Array<Record<string, unknown>>,
   };
@@ -770,17 +783,18 @@ export async function getPublicHtmlSnapshot(
   }
 
   const seo = (await storage.seoSettings.get()) ?? null;
+  const companyPhoneNumbers = await storage.settings.getSetting("company_phone_numbers");
   const siteUrl = (seo?.siteUrl || "").replace(/\/$/, "") || "https://ec-painting-production.up.railway.app";
 
   const slug = resolveCmsSlugForPathname(pathname);
   if (slug) {
     const page = await storage.cmsPages.getPageBySlug(slug);
     if (page?.status === "published") {
-      return buildCmsSnapshot(page, seo, siteUrl);
+      return buildCmsSnapshot(page, seo, siteUrl, companyPhoneNumbers);
     }
   }
 
-  return buildFallbackSnapshot(pathname, seo, siteUrl);
+  return buildFallbackSnapshot(pathname, seo, siteUrl, companyPhoneNumbers);
 }
 
 export function injectPublicHtmlSnapshot(

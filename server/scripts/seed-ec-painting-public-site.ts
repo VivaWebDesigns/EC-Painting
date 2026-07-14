@@ -2,12 +2,18 @@ import { randomUUID } from "crypto";
 import { pathToFileURL } from "url";
 import type { InsertCmsPage, InsertCmsMenu, MenuItem, StandardMenuLocation } from "@shared/schema";
 import type { storage as Storage } from "../storage";
+import {
+  DEFAULT_COMPANY_PHONE_NUMBERS,
+  companyPhoneHref,
+  companyPhoneSmsHref,
+} from "@shared/company-phone";
 
 const SITE_URL = process.env.APP_URL || "https://ecpaintingcharlotte.com";
 const BRAND_NAME = "593 EC Painting";
 const LEGAL_NAME = "593 EC Painting LLC";
-const PHONE_DISPLAY = "(704) 277-1972";
-const PHONE_TEL = "tel:7042771972";
+const PHONE_DISPLAY = DEFAULT_COMPANY_PHONE_NUMBERS;
+const PHONE_TEL = companyPhoneHref(PHONE_DISPLAY);
+const PHONE_SMS = companyPhoneSmsHref(PHONE_DISPLAY);
 const EMAIL = "ecpainting_593@outlook.com";
 const ADDRESS = "7007 Berolina Ln, Charlotte, NC 28226";
 const ADDRESS_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`;
@@ -3598,7 +3604,7 @@ function termsContent() {
         "593 EC Painting provides a 3-year workmanship warranty on our painting services, subject to the terms of your signed service agreement.",
         `The warranty covers:${ul(["Peeling, blistering, or adhesion failures caused by our application or prep work", "Workmanship defects in our painting"])}`,
         `The warranty does not cover:${ul(["Damage from storms, impact, settling, structural movement, or other causes outside our control", "Normal wear and tear", "Surfaces or substrates that fail due to underlying conditions we identified and disclosed at the time of the estimate", "Color fading from UV exposure (a normal characteristic of paint, not a defect)", "Work performed by other contractors or by the homeowner after our project is complete"])}`,
-        "To make a warranty claim, contact us at (704) 277-1972 or via the contact form. We will inspect the issue and, if covered, repair it at no charge.",
+        `To make a warranty claim, contact us at ${PHONE_DISPLAY} or via the contact form. We will inspect the issue and, if covered, repair it at no charge.`,
       ],
     ],
     [
@@ -3783,7 +3789,7 @@ function thankYouContent() {
         true,
         PHONE_TEL,
         "Text Us",
-        "sms:7042771972",
+        PHONE_SMS,
       ),
     ],
   };

@@ -18,6 +18,7 @@ import * as r2Service from "../services/r2.service";
 import { ensureSystemEmailTemplates } from "../services/system-email-templates.service";
 import { testMailchimpConnection } from "../services/mailchimp.service";
 import { BRANDING_OPTIONS, isImageMime, optimizeImage } from "../services/image-optimizer";
+import { isValidCompanyPhoneNumbers } from "@shared/company-phone";
 
 const router = Router();
 
@@ -71,12 +72,31 @@ router.get(
   })
 );
 
-const upsertSettingSchema = z.object({
-  key: z.string().min(1),
-  value: z.string(),
-  category: z.string().min(1),
-  isSecret: z.boolean().default(false),
-});
+const upsertSettingSchema = z
+  .object({
+    key: z.string().min(1),
+    value: z.string(),
+    category: z.string().min(1),
+    isSecret: z.boolean().default(false),
+  })
+  .superRefine((data, ctx) => {
+    if (data.key !== "company_phone_numbers") return;
+
+    if (data.category !== "branding" || data.isSecret) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Company phone numbers must be stored as a non-secret branding setting.",
+      });
+    }
+
+    if (!isValidCompanyPhoneNumbers(data.value)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["value"],
+        message: "Enter one or more valid phone numbers, separated by commas or new lines.",
+      });
+    }
+  });
 
 const brandingUploadSchema = z.object({
   settingKey: z.enum(["frontend_logo_url", "favicon_url"]),

@@ -1,3 +1,5 @@
+import { DEFAULT_COMPANY_PHONE_NUMBERS } from "@shared/company-phone";
+
 export interface BrandingSettings {
   frontendLogoUrl: string | null;
   faviconUrl: string | null;
@@ -69,7 +71,7 @@ export const DEFAULT_BRANDING_SETTINGS: BrandingSettings = {
   faviconUrl: "/favicon.ico",
   companyName: "593 EC Painting",
   companyAddress: "7007 Berolina Ln, Charlotte, NC 28226",
-  companyPhoneNumbers: "(704) 277-1972",
+  companyPhoneNumbers: DEFAULT_COMPANY_PHONE_NUMBERS,
   companyGoogleBusinessUrl: "https://share.google/u57kJ9pAzlWBYogu8",
   bodyFont: "inter",
   headingFont: "manrope",
