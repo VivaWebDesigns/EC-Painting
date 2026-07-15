@@ -57,7 +57,7 @@ export function buildOrganizationLd(
 
   const name = globalSeo.organizationName || globalSeo.siteName || "593 EC Painting";
   const siteUrl = (globalSeo.siteUrl || (typeof window !== "undefined" ? window.location.origin : "")).replace(/\/$/, "");
-  const logoUrl = absoluteUrl(globalSeo.organizationLogoUrl || "/img/593-ec-painting-logo-full-color.png", siteUrl);
+  const logoUrl = absoluteUrl(globalSeo.organizationLogoUrl || "/favicon-512x512.png", siteUrl);
   const imageUrl = absoluteUrl(globalSeo.defaultOgImageUrl || "/img/593-ec-painting-og.jpg", siteUrl);
 
   const sameAs: string[] = [
@@ -83,6 +83,8 @@ export function buildOrganizationLd(
     logo: {
       "@type": "ImageObject",
       url: logoUrl,
+      width: 512,
+      height: 512,
     },
     image: imageUrl,
     address: {

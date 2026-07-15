@@ -435,7 +435,7 @@ function buildOrganizationSchema(
 ) {
   if (!seo?.organizationName && !seo?.siteName) return null;
   const name = seo?.organizationName || seo?.siteName || "593 EC Painting";
-  const logoUrl = absoluteUrl(seo?.organizationLogoUrl || "/img/593-ec-painting-logo-full-color.png", siteUrl);
+  const logoUrl = absoluteUrl(seo?.organizationLogoUrl || "/favicon-512x512.png", siteUrl);
   const imageUrl = absoluteUrl(seo?.defaultOgImageUrl || "/img/593-ec-painting-og.jpg", siteUrl);
   const sameAs = [
     seo?.facebookUrl,
@@ -458,6 +458,8 @@ function buildOrganizationSchema(
     logo: {
       "@type": "ImageObject",
       url: logoUrl,
+      width: 512,
+      height: 512,
     },
     image: imageUrl,
     address: {

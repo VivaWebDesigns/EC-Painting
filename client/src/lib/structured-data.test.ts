@@ -14,5 +14,11 @@ describe("buildOrganizationLd", () => {
     );
 
     expect(schema?.telephone).toBe("+19805550100");
+    expect(schema?.logo).toEqual({
+      "@type": "ImageObject",
+      url: "https://ecpaintingcharlotte.com/favicon-512x512.png",
+      width: 512,
+      height: 512,
+    });
   });
 });

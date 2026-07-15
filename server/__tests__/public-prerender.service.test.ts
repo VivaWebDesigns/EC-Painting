@@ -98,6 +98,12 @@ describe("public-prerender.service", () => {
     );
 
     expect(organization?.telephone).toBe("+19805550100");
+    expect(organization?.logo).toEqual({
+      "@type": "ImageObject",
+      url: "https://ecpaintingcharlotte.com/favicon-512x512.png",
+      width: 512,
+      height: 512,
+    });
   });
 
   it("uses short breadcrumb labels and a trailing slash for the homepage item", async () => {

@@ -22,6 +22,7 @@ const GOOGLE_BUSINESS_URL = "https://share.google/u57kJ9pAzlWBYogu8";
 const FACEBOOK_URL = "https://www.facebook.com/ec.painting.3/";
 const INSTAGRAM_URL = "https://www.instagram.com/593ecpainting/";
 const LOGO_URL = "/img/593-ec-painting-logo-full-color.png";
+const ORGANIZATION_LOGO_URL = "/favicon-512x512.png";
 const OG_IMAGE_URL = "/img/593-ec-painting-og.jpg";
 const FAVICON_URL = "/favicon.ico";
 const SERVICE_AREA =
@@ -4289,7 +4290,7 @@ export async function seedSettings(options: SeedOptions = seedOptions(), summary
     siteUrl: SITE_URL,
     defaultOgImageUrl: OG_IMAGE_URL,
     organizationName: BRAND_NAME,
-    organizationLogoUrl: LOGO_URL,
+    organizationLogoUrl: ORGANIZATION_LOGO_URL,
     facebookUrl: FACEBOOK_URL,
     instagramUrl: INSTAGRAM_URL,
     defaultRobotsNoindex: false,
