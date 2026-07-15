@@ -7,9 +7,9 @@ import {
 } from "@shared/company-phone";
 
 const REPLACEMENTS = [
-  ["+17042771972", companyPhoneE164(DEFAULT_COMPANY_PHONE_NUMBERS)],
-  ["(704) 277-1972", DEFAULT_COMPANY_PHONE_NUMBERS],
-  ["7042771972", companyPhoneDigits(DEFAULT_COMPANY_PHONE_NUMBERS)],
+  ["+17743297109", companyPhoneE164(DEFAULT_COMPANY_PHONE_NUMBERS)],
+  ["(774) 329-7109", DEFAULT_COMPANY_PHONE_NUMBERS],
+  ["7743297109", companyPhoneDigits(DEFAULT_COMPANY_PHONE_NUMBERS)],
 ] as const;
 
 function replacePhoneNumbers(value: unknown): { value: unknown; replacements: number } {
