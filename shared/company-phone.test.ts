@@ -9,20 +9,20 @@ import {
 
 describe("company phone helpers", () => {
   it("uses the first configured phone number across newline and comma formats", () => {
-    expect(splitCompanyPhoneNumbers("(704) 277-1972\n(980) 555-0100")).toEqual([
-      "(704) 277-1972",
+    expect(splitCompanyPhoneNumbers("(774) 329-7109\n(980) 555-0100")).toEqual([
+      "(774) 329-7109",
       "(980) 555-0100",
     ]);
-    expect(getPrimaryCompanyPhone("(704) 277-1972, (980) 555-0100")).toBe("(704) 277-1972");
+    expect(getPrimaryCompanyPhone("(774) 329-7109, (980) 555-0100")).toBe("(774) 329-7109");
   });
 
   it("normalizes the configured number for links and structured data", () => {
-    expect(companyPhoneHref("(704) 277-1972")).toBe("tel:+17042771972");
-    expect(companyPhoneE164("(704) 277-1972")).toBe("+17042771972");
+    expect(companyPhoneHref("(774) 329-7109")).toBe("tel:+17743297109");
+    expect(companyPhoneE164("(774) 329-7109")).toBe("+17743297109");
   });
 
   it("validates one or more configured phone numbers", () => {
-    expect(isValidCompanyPhoneNumbers("(704) 277-1972\n+1 (980) 555-0100")).toBe(true);
+    expect(isValidCompanyPhoneNumbers("(774) 329-7109\n+1 (980) 555-0100")).toBe(true);
     expect(isValidCompanyPhoneNumbers("704-12")).toBe(false);
     expect(isValidCompanyPhoneNumbers("")).toBe(false);
   });

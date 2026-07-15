@@ -1,10 +1,15 @@
 import { pool } from "../db";
 import { storage } from "../storage";
+import {
+  DEFAULT_COMPANY_PHONE_NUMBERS,
+  companyPhoneDigits,
+  companyPhoneE164,
+} from "@shared/company-phone";
 
 const REPLACEMENTS = [
-  ["+17743297109", "+17042771972"],
-  ["(774) 329-7109", "(704) 277-1972"],
-  ["7743297109", "7042771972"],
+  ["+17042771972", companyPhoneE164(DEFAULT_COMPANY_PHONE_NUMBERS)],
+  ["(704) 277-1972", DEFAULT_COMPANY_PHONE_NUMBERS],
+  ["7042771972", companyPhoneDigits(DEFAULT_COMPANY_PHONE_NUMBERS)],
 ] as const;
 
 function replacePhoneNumbers(value: unknown): { value: unknown; replacements: number } {

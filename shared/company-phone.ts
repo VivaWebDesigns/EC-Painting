@@ -1,4 +1,4 @@
-export const DEFAULT_COMPANY_PHONE_NUMBERS = "(704) 277-1972";
+export const DEFAULT_COMPANY_PHONE_NUMBERS = "(774) 329-7109";
 
 export function splitCompanyPhoneNumbers(value: string | null | undefined): string[] {
   return (value || "")
