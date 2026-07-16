@@ -62,7 +62,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{title}</h4>
+      <h2 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{title}</h2>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {links.map((link) => (
           <li key={link.testId}>
@@ -91,7 +91,7 @@ function DynamicFooterColumn({ item }: { item: MenuItem }) {
   const allLinks = flattenFooterItems(item.children || []);
   return (
     <div>
-      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{item.label}</h4>
+      <h2 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{item.label}</h2>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {allLinks.map(({ item: child, depth }) => (
           <li key={child.id} style={depth > 0 ? { paddingLeft: `${depth * 12}px` } : undefined}>
@@ -136,7 +136,7 @@ function StandardFooterColumn({ menu }: { menu: CmsMenu }) {
 
   return (
     <div>
-      <h4 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{menu.name}</h4>
+      <h2 className="font-heading font-semibold text-sm mb-3 sm:mb-4 text-white">{menu.name}</h2>
       <ul className="space-y-2.5 sm:space-y-3 text-sm">
         {links.map((item) => (
           <li key={item.id}>
@@ -238,6 +238,8 @@ export function Footer() {
             <img
               src={footerLogo}
               alt={brandName}
+              width={1106}
+              height={278}
               className="h-10 sm:h-12 w-auto mb-4 object-contain"
             />
             <p className="text-sm text-slate-300/75 leading-relaxed max-w-xs">

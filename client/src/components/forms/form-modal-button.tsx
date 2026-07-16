@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button, type ButtonProps } from "@/components/ui/button";
+import { useBranding } from "@/components/shared/branding-provider";
+import {
+  companyPhoneHref,
+  companyPhoneSmsHref,
+  getPrimaryCompanyPhone,
+} from "@shared/company-phone";
 import { PublicFormRenderer } from "./public-form-renderer";
 
 function text(value: unknown) {
@@ -30,10 +36,25 @@ export function FormModalButton({
   testId,
   ...buttonProps
 }: FormModalButtonProps) {
+  const { companyPhoneNumbers } = useBranding();
   const [open, setOpen] = useState(false);
   const closeTimeoutRef = useRef<number | null>(null);
   const rawAction = text(action);
-  const normalizedHref = text(href) || "#";
+  const configuredHref = text(href);
+  const isPhoneLink = /^tel:/i.test(configuredHref);
+  const isSmsLink = /^sms:/i.test(configuredHref);
+  const normalizedHref = isPhoneLink
+    ? companyPhoneHref(companyPhoneNumbers)
+    : isSmsLink
+      ? companyPhoneSmsHref(companyPhoneNumbers)
+      : configuredHref || "#";
+  const resolvedLabel =
+    isPhoneLink || isSmsLink
+      ? label.replace(
+          /(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/,
+          getPrimaryCompanyPhone(companyPhoneNumbers),
+        )
+      : label;
   const normalizedAction =
     rawAction === "form-modal" || rawAction === "internal-link" || rawAction === "custom-link"
       ? rawAction
@@ -42,7 +63,7 @@ export function FormModalButton({
         : "custom-link";
   const shouldOpenInNewTab = openInNewTab === true;
   const normalizedFormSlug = text(formSlug);
-  const resolvedModalTitle = text(modalTitle) || label;
+  const resolvedModalTitle = text(modalTitle) || resolvedLabel;
   const resolvedModalDescription = text(modalDescription);
 
   useEffect(() => {
@@ -67,7 +88,7 @@ export function FormModalButton({
       >
         <DialogTrigger asChild>
           <Button {...buttonProps} data-testid={testId}>
-            {label}
+            {resolvedLabel}
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -98,23 +119,21 @@ export function FormModalButton({
 
   if (normalizedAction === "internal-link") {
     return (
-      <Link href={normalizedHref}>
-        <Button {...buttonProps} data-testid={testId}>
-          {label}
-        </Button>
-      </Link>
+      <Button {...buttonProps} asChild data-testid={testId}>
+        <Link href={normalizedHref}>{resolvedLabel}</Link>
+      </Button>
     );
   }
 
   return (
-    <a
-      href={normalizedHref}
-      target={shouldOpenInNewTab ? "_blank" : undefined}
-      rel={shouldOpenInNewTab ? "noopener noreferrer" : undefined}
-    >
-      <Button {...buttonProps} data-testid={testId}>
-        {label}
-      </Button>
-    </a>
+    <Button {...buttonProps} asChild data-testid={testId}>
+      <a
+        href={normalizedHref}
+        target={shouldOpenInNewTab ? "_blank" : undefined}
+        rel={shouldOpenInNewTab ? "noopener noreferrer" : undefined}
+      >
+        {resolvedLabel}
+      </a>
+    </Button>
   );
 }

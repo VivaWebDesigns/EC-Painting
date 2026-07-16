@@ -299,7 +299,7 @@ describe("public-prerender.service", () => {
     expect(html.indexOf('<meta name="robots"')).toBeLessThan(html.indexOf('<meta property="og:title"'));
     expect(html).toContain('"HousePainter"');
     expect(html).toContain('"priceRange":"$$"');
-    expect(html).toContain('"ratingValue":"5.0"');
+    expect(html).not.toContain('"aggregateRating"');
     expect(html).toContain('"areaServed":[{"@type":"City","name":"Charlotte, NC"}');
     expect(html).not.toContain('"addressRegion":"NC","addressCountry":"US"');
   });

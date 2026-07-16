@@ -258,9 +258,11 @@ export function Navbar() {
   }, [publicMenus]);
 
   const brandName = companyName?.trim() || "593 EC Painting";
-  const brandLogo = versionBrandAssetUrl(
-    frontendLogoUrl || "/img/593-ec-painting-logo-full-color.png",
-  );
+  const defaultBrandLogo = "/img/593-ec-painting-logo-full-color.png";
+  const rawBrandLogo = frontendLogoUrl || defaultBrandLogo;
+  const brandLogo = versionBrandAssetUrl(rawBrandLogo);
+  const brandLogoDimensions =
+    rawBrandLogo === defaultBrandLogo ? { width: 1828, height: 505 } : {};
 
   return (
     <nav
@@ -269,7 +271,12 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link href="/" data-testid="link-brand">
-          <img src={brandLogo} alt={brandName} className="h-10 w-auto md:h-12" />
+          <img
+            src={brandLogo}
+            alt={brandName}
+            {...brandLogoDimensions}
+            className="h-10 w-auto md:h-12"
+          />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
@@ -277,26 +284,30 @@ export function Navbar() {
             item.children && item.children.length > 0 ? (
               <DynamicDropdown key={item.id} item={item} location={location} />
             ) : item.openInNewTab ? (
-              <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">
-                <Button
-                  variant="ghost"
-                  className={navButtonClass}
-                  data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                >
+              <Button
+                asChild
+                key={item.id}
+                variant="ghost"
+                className={navButtonClass}
+                data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+              >
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
                   {item.label}
-                </Button>
-              </a>
+                </a>
+              </Button>
             ) : (
-              <Link key={item.id} href={item.url}>
-                <Button
-                  variant="ghost"
-                  className={location === item.url ? activeNavButtonClass : navButtonClass}
-                  data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                  aria-current={location === item.url ? "page" : undefined}
-                >
+              <Button
+                asChild
+                key={item.id}
+                variant="ghost"
+                className={location === item.url ? activeNavButtonClass : navButtonClass}
+                data-testid={`link-nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                aria-current={location === item.url ? "page" : undefined}
+              >
+                <Link href={item.url}>
                   {item.label}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ),
           )}
         </div>
@@ -311,7 +322,12 @@ export function Navbar() {
             <SheetContent side="right" className="w-72 bg-white">
               <SheetHeader>
                 <SheetTitle>
-                  <img src={brandLogo} alt={brandName} className="h-8 w-auto" />
+                  <img
+                    src={brandLogo}
+                    alt={brandName}
+                    {...brandLogoDimensions}
+                    className="h-8 w-auto"
+                  />
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-1 mt-6">
@@ -326,34 +342,37 @@ export function Navbar() {
                       {item.label}
                     </p>
                   ) : item.openInNewTab ? (
-                    <a
+                    <Button
+                      asChild
                       key={item.id}
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => setMobileOpen(false)}
+                      variant="ghost"
+                      className="w-full justify-start"
+                      style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
+                      data-testid={`link-mobile-${item.id}`}
                     >
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
-                        data-testid={`link-mobile-${item.id}`}
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMobileOpen(false)}
                       >
                         {item.label}
-                      </Button>
-                    </a>
+                      </a>
+                    </Button>
                   ) : (
-                    <Link key={item.id} href={item.url} onClick={() => setMobileOpen(false)}>
-                      <Button
-                        variant="ghost"
-                        className={`w-full justify-start ${location === item.url ? "toggle-elevate toggle-elevated" : ""}`}
-                        style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
-                        data-testid={`link-mobile-${item.id}`}
-                        aria-current={location === item.url ? "page" : undefined}
-                      >
+                    <Button
+                      asChild
+                      key={item.id}
+                      variant="ghost"
+                      className={`w-full justify-start ${location === item.url ? "toggle-elevate toggle-elevated" : ""}`}
+                      style={depth > 0 ? { paddingLeft: `${16 + depth * 16}px` } : undefined}
+                      data-testid={`link-mobile-${item.id}`}
+                      aria-current={location === item.url ? "page" : undefined}
+                    >
+                      <Link href={item.url} onClick={() => setMobileOpen(false)}>
                         {item.label}
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   ),
                 )}
 

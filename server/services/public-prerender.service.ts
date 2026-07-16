@@ -498,11 +498,6 @@ function buildOrganizationSchema(
         },
       })),
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5.0",
-      reviewCount: "21",
-    },
     sameAs: sameAs.length > 0 ? sameAs : undefined,
   };
 }
