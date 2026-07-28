@@ -6,6 +6,9 @@ const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_FROM = process.env.SMTP_FROM || "593 EC Painting <noreply@ecpaintingcharlotte.com>";
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_FROM =
+  process.env.RESEND_FROM || "593 EC Painting <website@updates.ecpaintingcharlotte.com>";
 
 const isSmtpConfigured = !!(SMTP_HOST && SMTP_USER && SMTP_PASS);
 
@@ -54,7 +57,9 @@ async function getMailgunConfig(): Promise<MailgunConfig | null> {
     }
     mailgunConfigFetched = true;
   } catch (err) {
-    logger.email.warn("Failed to load Mailgun configuration", { error: err instanceof Error ? err.message : String(err) });
+    logger.email.warn("Failed to load Mailgun configuration", {
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
   return cachedMailgunConfig;
 }
@@ -86,11 +91,7 @@ async function getEmailLogoUrl(): Promise<string | null> {
   return cachedEmailLogoUrl;
 }
 
-async function sendViaMailgun(
-  to: string,
-  subject: string,
-  html: string
-): Promise<boolean> {
+async function sendViaMailgun(to: string, subject: string, html: string): Promise<boolean> {
   const config = await getMailgunConfig();
   if (!config) return false;
 
@@ -113,11 +114,7 @@ async function sendViaMailgun(
   }
 }
 
-async function sendViaSmtp(
-  to: string,
-  subject: string,
-  html: string
-): Promise<boolean> {
+async function sendViaSmtp(to: string, subject: string, html: string): Promise<boolean> {
   if (!transporter) return false;
   try {
     await transporter.sendMail({ from: SMTP_FROM, to, subject, html });
@@ -129,7 +126,48 @@ async function sendViaSmtp(
   }
 }
 
-function baseTemplate(title: string, body: string, options: { logoUrl?: string | null } = {}): string {
+async function sendViaResend(to: string, subject: string, html: string): Promise<boolean> {
+  if (!RESEND_API_KEY) return false;
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: RESEND_FROM,
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+
+    if (!response.ok) {
+      const responseBody = await response.text();
+      logger.email.error("Resend send failed", {
+        to,
+        subject,
+        statusCode: response.status,
+        responseBody,
+      });
+      return false;
+    }
+
+    logger.email.info("Sent via Resend", { to, subject });
+    return true;
+  } catch (err) {
+    logger.email.error("Resend send failed", err, { to, subject });
+    return false;
+  }
+}
+
+function baseTemplate(
+  title: string,
+  body: string,
+  options: { logoUrl?: string | null } = {},
+): string {
   const logoMarkup = options.logoUrl
     ? `<img src="${options.logoUrl}" alt="593 EC Painting" style="display:block;max-width:220px;max-height:52px;height:auto;width:auto;margin:0 auto;" />`
     : `<div style="color:#0f5f7a;font-size:22px;font-weight:600;text-align:center;">593 EC Painting</div>`;
@@ -173,7 +211,7 @@ function renderTemplate(template: string, vars: Record<string, string | null>): 
     } else {
       result = result.replace(
         new RegExp(`\\{\\{#${key}\\}\\}[\\s\\S]*?\\{\\{/${key}\\}\\}`, "g"),
-        ""
+        "",
       );
     }
   }
@@ -184,7 +222,7 @@ async function getTemplateHtml(
   slug: string,
   vars: Record<string, string | null>,
   fallbackTitle: string,
-  fallbackBody: string
+  fallbackBody: string,
 ): Promise<{ subject: string; html: string; isActive: boolean }> {
   try {
     const { storage } = await import("../storage/index");
@@ -199,7 +237,10 @@ async function getTemplateHtml(
       };
     }
   } catch (err) {
-    logger.email.warn("Failed to load email template, using fallback", { slug, error: err instanceof Error ? err.message : String(err) });
+    logger.email.warn("Failed to load email template, using fallback", {
+      slug,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
   return {
     subject: fallbackTitle,
@@ -208,12 +249,14 @@ async function getTemplateHtml(
   };
 }
 
-export async function sendEmail(
-  to: string,
-  subject: string,
-  html: string
-): Promise<boolean> {
+export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   const { recordEmailOutcome } = await import("../utils/metrics");
+
+  const resendSent = await sendViaResend(to, subject, html);
+  if (resendSent) {
+    recordEmailOutcome(true);
+    return true;
+  }
 
   const mailgunSent = await sendViaMailgun(to, subject, html);
   if (mailgunSent) {
@@ -235,14 +278,14 @@ export async function sendEmail(
 export async function sendPasswordResetEmail(
   email: string,
   firstName: string | null,
-  resetUrl: string
+  resetUrl: string,
 ): Promise<boolean> {
   const vars = { firstName: firstName || "there", resetUrl };
   const { subject, html, isActive } = await getTemplateHtml(
     "password-reset",
     vars,
     "Reset Your Password",
-    `<p>Hi ${vars.firstName}, click here to reset your password: ${resetUrl}</p>`
+    `<p>Hi ${vars.firstName}, click here to reset your password: ${resetUrl}</p>`,
   );
   if (!isActive) return false;
   return sendEmail(email, subject, html);
@@ -252,14 +295,14 @@ export async function sendWelcomeEmail(
   email: string,
   firstName: string | null,
   loginUrl: string,
-  tempPassword: string | null
+  tempPassword: string | null,
 ): Promise<boolean> {
   const vars = { firstName: firstName || "there", loginUrl, tempPassword };
   const { subject, html, isActive } = await getTemplateHtml(
     "welcome-new-user",
     vars,
     "Welcome to 593 EC Painting",
-    `<p>Hi ${vars.firstName}, an account has been created for you.</p>`
+    `<p>Hi ${vars.firstName}, an account has been created for you.</p>`,
   );
   if (!isActive) return false;
   return sendEmail(email, subject, html);
@@ -270,19 +313,22 @@ export async function sendContactFormEmail(
   senderName: string,
   senderEmail: string,
   messageBody: string,
-  dashboardUrl: string
+  dashboardUrl: string,
 ): Promise<void> {
   const vars = { senderName, senderEmail, messageBody, dashboardUrl };
   const { subject, html, isActive } = await getTemplateHtml(
     "contact-form-submission",
     vars,
     `New Contact Form: ${senderName}`,
-    `<p>New message from ${senderName} (${senderEmail}): ${messageBody}</p>`
+    `<p>New message from ${senderName} (${senderEmail}): ${messageBody}</p>`,
   );
   if (!isActive) return;
   for (const email of adminEmails) {
     sendEmail(email, subject, html).catch((err) => {
-      logger.email.warn("Failed to notify admin of contact form", { adminEmail: email, error: err instanceof Error ? err.message : String(err) });
+      logger.email.warn("Failed to notify admin of contact form", {
+        adminEmail: email,
+        error: err instanceof Error ? err.message : String(err),
+      });
     });
   }
 }
@@ -291,14 +337,14 @@ export async function sendManagedFormSubmissionEmail(
   recipientEmails: string[],
   formName: string,
   submissionSummary: string,
-  dashboardUrl: string
+  dashboardUrl: string,
 ): Promise<void> {
   const vars = { formName, submissionSummary, dashboardUrl };
   const { subject, html, isActive } = await getTemplateHtml(
     "managed-form-submission",
     vars,
     `New Form Submission: ${formName}`,
-    `<p>A new submission was received for ${formName}.</p><p>${submissionSummary}</p>`
+    `<p>A new submission was received for ${formName}.</p><p>${submissionSummary}</p>`,
   );
   if (!isActive) return;
 
@@ -336,7 +382,7 @@ export async function sendNewMessageEmail(
   to: string,
   recipientName: string | null,
   senderName: string,
-  loginUrl: string
+  loginUrl: string,
 ): Promise<boolean> {
   const firstName = recipientName || "there";
   const html = await renderEmailShell(
@@ -349,7 +395,7 @@ export async function sendNewMessageEmail(
         Go to Message Center
       </a>
     </p>
-    <p style="color:#6b7280;font-size:13px;">If you did not expect this message, you can safely ignore this email.</p>`
+    <p style="color:#6b7280;font-size:13px;">If you did not expect this message, you can safely ignore this email.</p>`,
   );
   return sendEmail(to, `New message from ${senderName} — 593 EC Painting`, html);
 }
