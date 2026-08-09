@@ -341,8 +341,21 @@ export function Footer() {
           className="mt-8 sm:mt-10 pt-6 border-t border-slate-700/70 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-sm text-slate-300/75"
           data-testid="text-copyright"
         >
-          <span className="text-center sm:text-left">
-            &copy; {new Date().getFullYear()} {brandName}. All rights reserved.
+          <span className="inline-flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-center sm:justify-start sm:text-left">
+            <span>&copy; {new Date().getFullYear()} {brandName}. All rights reserved.</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>
+              Website by{" "}
+              <a
+                href="https://vivawebdesigns.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#021824]"
+                data-testid="link-footer-viva-web-designs"
+              >
+                Viva Web Designs
+              </a>
+            </span>
           </span>
           <div className="flex items-center gap-4 sm:gap-6">
             {legalLinks.map((link) =>
